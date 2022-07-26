@@ -1,5 +1,3 @@
-fig:nice-fig
-tab:nice-tab
 eq:binom
 thm:tri
 getting-started
@@ -7,9 +5,17 @@ location
 duke-card
 computer-access
 human-research-training
-cross
-chapters-and-sub-chapters
-captioned-figures-and-tables
+access-server
+labar-lab-shared-drive-keoki
+biac-servers
+mac-osx-users
+logging-into-the-biac-servers
+copying-files-from-the-biac-servers
+examples
+windows-users
+logging-into-the-biac-servers-1
+copying-files-from-the-biac-servers-1
+after-succesful-login
 parts
 footnotes-and-citations
 footnotes

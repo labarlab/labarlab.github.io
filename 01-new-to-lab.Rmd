@@ -2,6 +2,8 @@
 
 Text written by Gregory Steward on Jun 05, 2019.
 
+Ported to bookdown by Nathan Muncy on Jul 26, 2022.
+
 ## Location
 
 The CCN is located in the Levine Science Research Center on Research Dr. in Duke’s West campus. It is named after Leon Levine, a NC native that is the founder of the Family Dollar retail stores. The building is a multidisciplinary research center, including computer sciences, environmental sciences, and pharmacology. The building has 4 sections, designated A, B, C, and D wings. Individual rooms are named with the wing prefix followed by 3 digits, the first indicates the floor. For example, the Kevin’s office is located in B247 (B wing and 2nd floor). Doors into the building are unlocked during normal weekday business hours, however they lock in the evening, during weekends, and during holidays. You can enter the building when the doors are locked by using your Duke ID in the external door card swipe on either side of the B wing lobby.

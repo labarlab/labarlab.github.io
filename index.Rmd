@@ -1,6 +1,6 @@
 --- 
 title: "LaBaratory Wiki"
-# author: "Nathan Muncy"
+author: "Nathan Muncy"
 # date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
@@ -22,3 +22,4 @@ LaBaratory of emotion and cognition. Content is organized in the following
 chapters:
 
 * Chapter \@ref(getting-started), Getting Started
+* Chapter \@ref(access-server), Accessing Servers
