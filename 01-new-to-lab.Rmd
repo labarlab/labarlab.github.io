@@ -1,0 +1,58 @@
+# Getting Started {#getting-started}
+
+Text written by Gregory Steward on Jun 05, 2019.
+
+## Location
+
+The CCN is located in the Levine Science Research Center on Research Dr. in Duke’s West campus. It is named after Leon Levine, a NC native that is the founder of the Family Dollar retail stores. The building is a multidisciplinary research center, including computer sciences, environmental sciences, and pharmacology. The building has 4 sections, designated A, B, C, and D wings. Individual rooms are named with the wing prefix followed by 3 digits, the first indicates the floor. For example, the Kevin’s office is located in B247 (B wing and 2nd floor). Doors into the building are unlocked during normal weekday business hours, however they lock in the evening, during weekends, and during holidays. You can enter the building when the doors are locked by using your Duke ID in the external door card swipe on either side of the B wing lobby.
+
+The lab is located in B104. The lab is accessed by a door in the main lobby of the building. This door is accessible via Duke ID card swipe or a lab key.
+
+There are three testing rooms in the lab. The first is the Main testing room, which includes the Biopac MP160 psychophysiology testing system. The second is Room 2 Behavioral 2 (R2B2), which is the small testing room that can only collect behavioral data. The final testing room, 3rd - Psychophysiology Office (3PO), will contain an MP150 psychophysiology testing setup when the room gets completed.
+
+
+## Duke Card
+
+All students and employees must have a DukeCard, the official ID card for the university. There are 2 types of ID cards, a standard card (Magnetic stripe) and one with an embedded HID chip (Proximity card). All lab members should have cards with a HID chip, security doors at the hospital use these chips to determine security clearance.
+
+If you do not have a card or need a replacement, the office is located in the rear of the Telcom Building and there is an exterior door that leads into the office. The office is open M-F from 8am – 6pm. A government issued ID card (e.g., driver’s license, passport, etc.) is required to obtain a DukeCard. The lab will pay for the first card via an IR form, which has to be approved by the department HR representative. Replacement cards (lost/stolen) cost $15.
+
+You can also use your DukeCard as a pre-paid debit card through the Flexible Spending Account (FLEX). The FLEX account is automatically created when the DukeCard is issued. There is no minimum deposit to open an account. You can deposit funds into your account [online](http://dukecard.duke.edu/manage/index.php). Employees can also set up an automatic deduction from your pay by going to the Duke\@Work My Pay tab. The funds can be used at most places on campus, but you cannot use the account to withdraw cash.
+
+If you are a non-Duke student or visiting scholar, the process is similar to the above, but you will also have to get a sponsored Duke account from the LaBar lab manager before beginning the process.
+
+
+## Computer Access
+
+Keoki is the name of our data storage server. The primary folder we use in the lab is experiments2, which contains data from recently completed experiments, current experiments, lab member folders, administrative documents, and website attributes. To get on the whitelist to access Keoki, please see the LaBar lab manager.
+
+Once whitelisted, the path to map `keoki/experiments2` to your computer is `:\\ccn-keoki.win.duke.edu\experiments2` for PC or `smb://ccn-keoki.wim.duke.edu/experiments2` for Mac.
+
+
+## Human Research Training
+
+Information outlined below pertains to trainings that must be completed by all key personal part of a DUHS IRB protocol (for a research study are research personnel who are directly involved in conducting the research with human subjects through an interaction or intervention for research purposes, including participating in the consent process by either leading it or contributing to it; OR who are directly involved with recording or processing identifiable private information, including protected health information, related to those subjects for the purpose of conducting the research study):
+
+**Collaborative Training Initiative (CITI) modules for graduate students and staff:**
+
+1. Navigate to [www.citiprogram.org](www.citiprogram.org)
+2. Log in via SSO with your Duke NetID and password
+3. Choose “Duke Health”
+4. Complete required modules: Biomedical Research – Basic/Refresher
+
+New individuals are required to take nine modules (automatically populates once appropriate registration is complete).
+
+Individuals who have already completed the training will be required to renew their credentials every three years with refresher modules. CITI will send you an automated email 90 days prior to expiration.
+
+
+**Undergraduates:**
+
+1. Navigate to [www.citiprogram.org](www.citiprogram.org)
+2. Log in via SSO with your Duke NetID and password
+3. Choose “Duke University Campus IRB”
+4. Complete required modules: History and Ethical Principles
+
+If an undergraduate is going to be working on a Medical school IRB, they will have to complete the CITI training for grad students/ staff.
+
+In addition to CITI, undergraduates who will be involved in the consenting process must also complete Informed Consent Process training specifically for undergraduates. Please note that other conditions and restrictions apply, depending on which department the IRB is housed under; for more information please see the Undergraduates Engaged in Consent Policy.
+
