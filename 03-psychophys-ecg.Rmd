@@ -67,12 +67,16 @@ knitr::include_graphics("imgs/03-ECG_electrode_ankle.png")
 
 5. Have the participant clean off the Nuprep with a water wet cotton round or tissue.
 6. Have participant dry applied areas with another cotton round or tissue.
+7. While subject is drying, apply a "pea sized" drop of Gel 100 to the underside of one of the disposable electrodes.
 
-```{r img-35, fig.show='hold', fig.align='center', out.width='40%', out.height='20%', echo=F}
-knitr::include_graphics(c("imgs/03-ECG_gel.jpg","imgs/03-ECG_electrodes.jpg"))
+```{r img-35, fig.align='center', out.width='40%', echo=F}
+knitr::include_graphics("imgs/03-ECG_gel.jpg")
 ```
 
-7. While subject is drying, apply a "pea sized" drop of Gel 100 to the underside of one of the disposable electrodes.
+```{r img-36, fig.align='center', out.width='40%', echo=F}
+knitr::include_graphics("imgs/03-ECG_electrodes.jpg")
+```
+
 8. Apply the gelled electrode to one of the three sites.
 9. Repeat steps 7 and 8 for the two remaining sites.
 
