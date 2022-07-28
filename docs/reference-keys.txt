@@ -26,3 +26,14 @@ psychophys-eda
 introduction-1
 procedures
 references-1
+psychophys-egg
+psychophys-emg
+introduction-2
+supplies-1
+computer-preparation-1
+face-preparation
+electrode-preparation
+electrode-placement---corrugator-muscle
+electrode-placement---zygomaticus-muscle
+cleaning
+references-2

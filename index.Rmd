@@ -25,4 +25,5 @@ chapters:
 * Chapter \@ref(access-server), Accessing Servers
 * Chapter \@ref(psychophys-ecg), Psychophysics - ECG
 * Chapter \@ref(psychophys-eda), Psychophysics - EDA
-
+* Chapter \@ref(psychophys-egg), Psychophysics - EGG (under construction)
+* Chapter \@ref(psychophys-emg), Psychophysics - EMG
