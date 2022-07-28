@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>LaBaratory Wiki</title>
+  <title>Chapter 4 Psychophysics - EDA | LaBaratory Wiki</title>
   <meta name="description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
   <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="LaBaratory Wiki" />
+  <meta property="og:title" content="Chapter 4 Psychophysics - EDA | LaBaratory Wiki" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="LaBaratory Wiki" />
+  <meta name="twitter:title" content="Chapter 4 Psychophysics - EDA | LaBaratory Wiki" />
   
   <meta name="twitter:description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
+<link rel="prev" href="psychophys-ecg.html"/>
 
-<link rel="next" href="getting-started.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -125,31 +125,49 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">LaBaratory Wiki</h1>
-<p class="author"><em>Nathan Muncy</em></p>
+<div id="psychophys-eda" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Psychophysics - EDA<a href="psychophys-eda.html#psychophys-eda" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Written by Gregory Steward on Jun 05, 2019</p>
+<p>Ported to bookdown by Nathan Muncy on Jul 28, 2022.</p>
+<div id="introduction-1" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Introduction<a href="psychophys-eda.html#introduction-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Electrodermal activity (EDA) is the property of the human body that causes continuous variation in the electrical characteristics of the skin. Historically, EDA has been known as galvanic skin response or GSR (the MP150 has a module that is still labelled as GSR. It is believed that skin resistance varies with the state of sweat glands in the skin. Sweating is controlled by the sympathetic nervous system, and skin conductance is an indication of psychological or physiological arousal. If the sympathetic branch of the autonomic nervous system is highly aroused, then sweat gland activity also increases, which in turn increases skin conductance. In this way, skin conductance can be a measure of emotional and sympathetic responses<span class="math inline">\(^1\)</span>.</p>
+<p>Our lab in particular looks at EDA in the palm of the hand, as it allows for subjects to use their fingers to enter computer responses to stimuli, without affecting the data.</p>
 </div>
-<div id="overview" class="section level1 unnumbered hasAnchor">
-<h1>Overview<a href="index.html#overview" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>This site is under construction (Jul 26, 2022).</p>
-<p>This digital book contains resources and learning materials compiled for the
-LaBaratory of emotion and cognition. Content is organized in the following
-chapters:</p>
+<div id="procedures" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Procedures<a href="psychophys-eda.html#procedures" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The following outlines the standard procedure for collecting skin conductance data in our lab.</p>
+<p><strong>Note:</strong> Place the electrodes a minimum of 5 minutes before recording, but aim for closer to 15 minutes.</p>
+<ol style="list-style-type: decimal">
+<li>Have the subject gently wash their hands with soap and water. Use the specific soap provided by the lab for this purpose, whether in the lab or the BIAC. Moisturizers and anti-bacterial components of soap products can affect conductivity in the skin; these can be difficult to avoid for our purposes, but we can be consistent about our use. More importantly, the soap should not be abrasive (micro-scrubbing beads and such) as this damage to the skin tissue can change its composition and conductivity. Dry hands gently but completely before electrode placement.</li>
+<li>Use the disposable electrodes that come with gel already applied. Add a pea-sized drop of electrode gel on top of the gel in the electrode. We add fresh gel because the original gel dries over time and may not mix as well with the skin.</li>
+<li>Place the electrode firmly on the hypothenar eminence of the non-dominant palm at a perpendicular orientation to the eminence leaving space for two adjacent electrodes along the length of the eminence. Apply the second electrode. Apply tape if necessary to keep electrodes in place (for example, if the subject has excessively sweaty hands). While the distal phalanges may be a slightly more ideal site for recording in terms of eccrine sweat gland distribution, the size of the hypothenar eminence allows for easier and more secure electrode placement and allows for more use of the fingers on the recording hand.</li>
+<li>The subject may make responses with the fingers of the non-dominant hand as long as these responses do not occur during periods that will be analyzed for skin conductance. Further, the subject should be instructed to minimize any unnecessary movement of the recording hand since movement can introduce noise into the signal.</li>
+</ol>
+<p><img src="imgs/04-GSR_setup.jpg" width="40%" style="display: block; margin: auto;" /></p>
+<ol start="5" style="list-style-type: decimal">
+<li>Connect the wires to electrodes so they are not obstructive or uncomfortable.</li>
+<li>Begin acquisition with AcqKnowledge and check for proper signal. You can ask the subject to hold their breath briefly and then exhale to try to prompt a skin conductance response. If it seems likely the subject’s conductance will hit ceiling levels at some point, the gain switch on the front of the GSR BIOPAC module may be repositioned from 10 microsiemens/volt to 20 before beginning the task and the data rescaled in AcqKnowledge accordingly. This should rarely be necessary, but be sure to note this in the subject’s notes and replace the switch after the subject’s session is complete.
 <ul>
-<li>Chapter <a href="getting-started.html#getting-started">1</a>, Getting Started</li>
-<li>Chapter <a href="access-server.html#access-server">2</a>, Accessing Servers</li>
-<li>Chapter <a href="psychophys-ecg.html#psychophys-ecg">3</a>, Psychophysics - ECG</li>
-<li>Chapter <a href="psychophys-eda.html#psychophys-eda">4</a>, Psychophysics - EDA</li>
-</ul>
+<li><strong>AcqKnowledge note:</strong> We have been recording skin conductance at a frequency of 1 kHz in AcqKnowledge.</li>
+</ul></li>
+</ol>
+</div>
+<div id="references-1" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> References<a href="psychophys-eda.html#references-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li>Electrodermal activity. (2022, Jul 28). In <em>Wikipedia</em>. <a href="https://en.wikipedia.org/wiki/Electrodermal_activity">https://en.wikipedia.org/wiki/Electrodermal_activity</a></li>
+</ol>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
+<a href="psychophys-ecg.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="getting-started.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -180,7 +198,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/USERNAME/REPO/edit/BRANCH/index.Rmd",
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/04-psychophys-eda.Rmd",
 "text": "Edit"
 },
 "history": {

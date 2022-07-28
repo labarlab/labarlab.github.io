@@ -24,3 +24,5 @@ chapters:
 * Chapter \@ref(getting-started), Getting Started
 * Chapter \@ref(access-server), Accessing Servers
 * Chapter \@ref(psychophys-ecg), Psychophysics - ECG
+* Chapter \@ref(psychophys-eda), Psychophysics - EDA
+

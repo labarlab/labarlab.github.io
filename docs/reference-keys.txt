@@ -22,3 +22,7 @@ lead-preparation
 electrode-preparation-and-placement
 lead-application-and-clean-up
 references
+psychophys-eda
+introduction-1
+procedures
+references-1
