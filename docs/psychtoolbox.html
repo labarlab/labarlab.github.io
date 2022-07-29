@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 7 Psychophysics - RSP | LaBaratory Wiki</title>
+  <title>Chapter 9 Psychtoolbox | LaBaratory Wiki</title>
   <meta name="description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
   <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 7 Psychophysics - RSP | LaBaratory Wiki" />
+  <meta property="og:title" content="Chapter 9 Psychtoolbox | LaBaratory Wiki" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 7 Psychophysics - RSP | LaBaratory Wiki" />
+  <meta name="twitter:title" content="Chapter 9 Psychtoolbox | LaBaratory Wiki" />
   
   <meta name="twitter:description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="psychophys-emg.html"/>
-<link rel="next" href="psychophys-stim.html"/>
+<link rel="prev" href="psychophys-stim.html"/>
+
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -165,25 +165,64 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="psychophys-rsp" class="section level1 hasAnchor" number="7">
-<h1><span class="header-section-number">Chapter 7</span> Psychophysics - RSP<a href="psychophys-rsp.html#psychophys-rsp" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Written by Gregory Steward on Sep 04, 2020.</p>
+<div id="psychtoolbox" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">Chapter 9</span> Psychtoolbox<a href="psychtoolbox.html#psychtoolbox" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Created by Gregory Steward, last modified by Natasha Parikh on Jun 05, 2019.</p>
 <p>Ported to bookdown by Nathan Muncy on Jul 29, 2022.</p>
-<div id="introduction-3" class="section level2 hasAnchor" number="7.1">
-<h2><span class="header-section-number">7.1</span> Introduction<a href="psychophys-rsp.html#introduction-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The Respiratory Effort Transducer measures changes in thoracic or abdominal circumference to assess respiratory effort.</p>
+<div id="introduction-4" class="section level2 hasAnchor" number="9.1">
+<h2><span class="header-section-number">9.1</span> Introduction<a href="psychtoolbox.html#introduction-4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This wiki page will hopefully be a useful guide to the basics of Psychtoolbox (PTB). For specific questions, please take a look at our Psychtoolbox Q&amp;A <a href="psychtoolbox.html#qa">section</a>.</p>
+<p>If you are coming in with little or no MATLAB experience, it may be useful to get an overview of how the language works first, as this guide will assume basic MATLAB understanding. For a quick review of MATLAB and an introduction to PTB, it may be useful to look over the first few weeks of slides provided by Dr. Jonas Kaplan from USC: <a href="http://www.jonaskaplan.com/psych599.php">Intro to Psychtoolbox in Matlab</a>.</p>
+<p>Below we outline a few basics for working with PTB scripts. Then, we recommend you use the example scripts and demos noted in the second section to see contextual examples of more specific functions.</p>
+<div id="basics" class="section level3 hasAnchor" number="9.1.1">
+<h3><span class="header-section-number">9.1.1</span> Basics<a href="psychtoolbox.html#basics" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong><em>Screen Function.</em></strong> The Screen command is the basis of PTB scripts, as it controls the way information is displayed to the participant. Because of its fundamental nature, we decided to begin with a brief overview of its functionality so that you can get started on the framework of an experiment. Screen can have many different functions, and many functions work with Screen to create a working program.</p>
+<p>Before you can present things to the subject, you must first initialize a “window” that will contain the visual material you want to present. You create a new window with the Screen(‘OpenWindow’) function.</p>
+<p>A simple (but not perfect) way to think about this window is as a double-sided dry erase board. Each side of the board can be referred to as a buffer. At any given time, you present one side to the subject. This is the front buffer. While the subject views the material on the front buffer, you prepare the next screen you want them to see on the back buffer. For example, you can prepare text using the DrawFormattedText() function or images using the Screen(‘DrawTexture’) function. When you are ready to present the next screen, use the Screen(‘Flip’) function to flip the buffers: the back buffer switches to the front and you get a new back buffer to prepare for the next screen and so on.</p>
+<p>To end your program, you must close the window and anything drawn on it so that you can access your monitor again. To do this, you simply use Screen(‘CloseAll’).</p>
+<p>We provide a brief example with a detailed description of each function in the Screen Function <a href="psychtoolbox.html#screen-function">section</a>.</p>
+<p><strong><em>Try-Catch Structure.</em></strong> We recommend using the try-catch structure for your PTB scripts to make them more robust to errors. The next <a href="psychtoolbox.html#learn-ex">section</a> contains examples of this.</p>
+<p>The idea here is to embed the bulk of your script (the real “functional” portion) in the try block. MATLAB will attempt to execute everything in the try block per usual. If no errors occur, the catch block will be skipped entirely. If any errors do occur within the try block, MATLAB will immediately jump to the catch block and proceed through whatever commands you have included there to deal with the error situation. This way, an error is much less likely to crash your task in an especially unceremonious way (just freezing, leaving keyboard output disabled, etc.) or go unnoticed until after it is done. Rather, the catch block can be used to properly close files and restore settings as well as report info on the error.</p>
 </div>
-<div id="supplies-2" class="section level2 hasAnchor" number="7.2">
-<h2><span class="header-section-number">7.2</span> Supplies<a href="psychophys-rsp.html#supplies-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Respiratory transducer belt.</p>
-<p><img src="imgs/07-RSP_belt.jpg" width="30%" style="display: block; margin: auto;" /></p>
-<ol style="list-style-type: decimal">
-<li>Loosen one or both ends of the velcro on the transducer and wrap it around the chest of the subject (or have the subject wrap it around themselves if it is more comfortable).</li>
-<li>Tighten the Respiratory Effort Transducer around the most expanded area of the subject’s abdomen during breathing (generally about 5 cm below the armpits), and tighten one or both straps until it fits snugly but is not uncomfortable. The sensor should be placed on the front of the chest.</li>
-<li>Plug the transducer cable into the MEC100C extension cable labelled RSP.</li>
-</ol>
-<p><img src="imgs/07-RSP_plug.png" width="60%" style="display: block; margin: auto;" /></p>
-<p>If you have trouble getting a signal from the belt, try using one of the back up belts in the drawers of the testing room.</p>
+<div id="learn-ex" class="section level3 hasAnchor" number="9.1.2">
+<h3><span class="header-section-number">9.1.2</span> Learn Through Examples<a href="psychtoolbox.html#learn-ex" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>One of the best ways to get started is to look through one or more existing PTB experiments and learn how they work. You can then use relevant parts from these as a model for your own PTB script. We are linking two previous, well-commented experiments from the lab below. We believe it’s easier to learn a lot of these functions in context. So, instead of going through all the common functions one by one, we commented these scripts to try to explain what the functions and their components are doing.</p>
+<p><strong>Experiment 1</strong></p>
+<p>Code: <a href="https://github.com/labarlab.github.io/example_scripts/EmoReg1_training.m">Training Session</a>, <a href="https://github.com/labarlab.github.io/example_scripts/EmoReg1.m">Main Task</a></p>
+<p>This experiment compares different emotion regulation techniques in response to aversive pictures. It involves cuing the subject for a viewing strategy, presenting an image, and presenting several screens asking the subject to make a keyboard response. The full set of files and scripts associated with this experiment can be found in <code>ccn-keoki.win.duke.edu/experiments2/John/EmoReg1</code>.</p>
+<p>These scripts cover:</p>
+<ul>
+<li>Using arguments (input you give your script when you call it, such as the subject #).</li>
+<li>Constructing and using pseudo-randomized stimuli and condition orders.</li>
+<li>Defining and presenting screens with text or images.</li>
+<li>Working with keyboard responses.</li>
+<li>Sending signals to BIOPAC.</li>
+<li>Writing keyboard responses and trial information to an output data file.</li>
+<li>Playing audio files (for startle).</li>
+<li>Triggering screen changes with subject responses vs defined durations.</li>
+</ul>
+<p><strong>Experiment 2</strong></p>
+<p>Code: <a href="https://github.com/labarlab.github.io/example_scripts/randomStimsMC.m">Monte Carlo</a></p>
+<p>This experiment is a three day memory reconsolidation study, including encoding, reactivation with reconsolidation, and retrieval. The goal is to see whether participants can use emotion regulation as a form of reconsolidation. The task itself appears in the form of paired associate learning, where participants are presented with pairs of images, reminded of one, and tested on their memory of the associated picture. This paradigm requires displaying images, cuing regulation strategies, reading in user button presses, and keeping track of old and new images for a memory test. The full set of scripts and stimuli can be found in <code>ccn-keoki.win.duke.edu/experiments2/Natasha/EmoRegCon</code>.</p>
+<p>In addition to most of the items covered in Experiment 1, this experiment covers:</p>
+<ul>
+<li>Using mouse clicks to advance screens (practice/training files).</li>
+<li>Displaying multiple images on a single screen (Session1.m).</li>
+<li>Online pseudo-randomization in a systematic manner (organizeStims.m) or using a Monte Carlo simulation (randomStimsMC.m, linked to above).</li>
+<li>Storage and usage of stimuli across multiple scripts (all Session files).</li>
+<li>Batch scripting (stimCreationBatch.m).</li>
+</ul>
+<p><strong>BTP Demo Materials</strong></p>
+<p>There are also a few simple demos that come with the PTB software download itself. On Windows, they are stored in <code>C:\\toolbox\Psychtoolbox\PsychDemos\PsychExampleExperiments</code>, and on Mac they are in <code>Applications/Psychtoobox/PsychDemos/PsychExampleExperiments</code>. In fact, the PsychDemos folder has a lot of useful starting information, including demos of how to include video and audio, although sometimes they call functions that are a little dated.</p>
+</div>
+</div>
+<div id="qa" class="section level2 hasAnchor" number="9.2">
+<h2><span class="header-section-number">9.2</span> Questions and Answers<a href="psychtoolbox.html#qa" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><strong>Q: Which version of Psychtoolbox should I install?</strong></p>
+<p>A: The newest version of Psychtoolbox is 64-bit. If your (Windows) computer only supports 32-bit programs or you are planning to use your computer with BIOPAC, you will need to install the 32 bit version of Matlab and Psychtoolbox. This means that your psychtoolbox call will need to include a “flavor.” After downloading the DownloadPsychtoolbox script, open Matlab and use the command DownloadPsychtoolbox(‘Psychtoolbox-3.0.11’) for Windows.</p>
+</div>
+<div id="screen-function" class="section level2 hasAnchor" number="9.3">
+<h2><span class="header-section-number">9.3</span> Screen Function<a href="psychtoolbox.html#screen-function" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 
 </div>
 </div>
@@ -192,8 +231,8 @@
           </div>
         </div>
       </div>
-<a href="psychophys-emg.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="psychophys-stim.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="psychophys-stim.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -224,7 +263,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/USERNAME/REPO/edit/BRANCH/07-psychophys-rsp.Rmd",
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/09-psychtoolbox.Rmd",
 "text": "Edit"
 },
 "history": {

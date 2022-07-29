@@ -29,4 +29,5 @@ chapters:
 * Chapter \@ref(psychophys-emg), Psychophysics - EMG
 * Chapter \@ref(psychophys-rsp), Psychophysics - RSP
 * Chapter \@ref(psychophys-stim), Psychophysics - STIM
+* Chapter \@ref(psychtoolbox), Psychtoolbox
 
