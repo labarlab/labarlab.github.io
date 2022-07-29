@@ -50,7 +50,12 @@ analog-calibration
 clean-up
 psychtoolbox
 introduction-4
-basics
+basics-basics
 learn-ex
 qa
 screen-function
+psychtoolboox-use-at-biac
+loading-ptb
+triggering-experiment-start
+recording-events-onset-and-duration
+using-the-button-box
