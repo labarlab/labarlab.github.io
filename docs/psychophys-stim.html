@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 2 Accessing Servers | LaBaratory Wiki</title>
+  <title>Chapter 8 Psychophysics - STIM | LaBaratory Wiki</title>
   <meta name="description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
   <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 2 Accessing Servers | LaBaratory Wiki" />
+  <meta property="og:title" content="Chapter 8 Psychophysics - STIM | LaBaratory Wiki" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 2 Accessing Servers | LaBaratory Wiki" />
+  <meta name="twitter:title" content="Chapter 8 Psychophysics - STIM | LaBaratory Wiki" />
   
   <meta name="twitter:description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="getting-started.html"/>
-<link rel="next" href="psychophys-ecg.html"/>
+<link rel="prev" href="psychophys-rsp.html"/>
+
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -155,128 +155,91 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="access-server" class="section level1 hasAnchor" number="2">
-<h1><span class="header-section-number">Chapter 2</span> Accessing Servers<a href="access-server.html#access-server" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Written by Gregory Steward on Aug 25, 2020.</p>
-<p>Ported to bookdown by Nathan Muncy on Jul 26, 2022.</p>
-<div id="labar-lab-shared-drive-keoki" class="section level2 hasAnchor" number="2.1">
-<h2><span class="header-section-number">2.1</span> LaBar Lab Shared Drive (keoki)<a href="access-server.html#labar-lab-shared-drive-keoki" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="psychophys-stim" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Psychophysics - STIM<a href="psychophys-stim.html#psychophys-stim" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Written by Gregory Steward on Sep 16, 2019.</p>
+<p>Ported to bookdown by Nathan Muncy on Jul 29, 2022.</p>
+<div id="supplies-3" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> Supplies<a href="psychophys-stim.html#supplies-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li>Request LaBar lab whitelist permissions from the lab manager
-(can sometimes take 24 hours for the update to push through).</li>
-<li>Map the network drive
+<li>2 x EL203 disposable electrodes</li>
+<li>2 x LEAD110</li>
+<li>Paper Towel</li>
+<li>Gel 100</li>
+</ol>
+</div>
+<div id="computer-preparation-2" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> Computer Preparation<a href="psychophys-stim.html#computer-preparation-2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ol style="list-style-type: decimal">
+<li>Log into psychophysiology computer.</li>
+<li>Turn on BIOPAC system.</li>
+<li>Turn on the stim box (<strong>Note</strong>: the stim box sends out a pulse on initializing, so make sure that the subject is not connected).</li>
+<li>Make sure the stimulation level is set at 0.</li>
+<li>Open Acknowledge (5.0 for MP160 system, 4.1 for MP150 system).</li>
+<li>Load experimental file template.
 <ul>
-<li>For Windows, go to <code>My computer</code> or <code>This PC</code> and map network drive.
-Choose a drive and enter <code>\\ccn-keoki.win.duke.edu\experiments2\</code> to access
-the lab’s shared drive. Keep in mind that this is mapped to the specific PC
-you are using, so will need to remap it to other computers as needed.</li>
-<li>For Mac OSx, open <code>Finder</code> and select <code>go</code>. Select <code>connect to server</code>
-and enter <code>smb://ccn-keoki.win.duke.edu/experiments2/</code> to access the lab’s
-shared drive. Keep in mind that this is mapped to the specific PC you are
-using, so will need to remap it to other computers as needed.</li>
+<li>Check that the input is Channel 4 (analog).</li>
+<li><strong>Check where the data is being saved.</strong></li>
 </ul></li>
+<li>(<em>Optional</em>) Open Presentation for the stim work-up, ignore if calibrating manually.</li>
 </ol>
 </div>
-<div id="biac-servers" class="section level2 hasAnchor" number="2.2">
-<h2><span class="header-section-number">2.2</span> BIAC Servers<a href="access-server.html#biac-servers" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>This document contains information on installing and setting up the local
-software necessary to log into and transfer files to/from the BIAC servers.
-This is required in order to access any imaging data collected at BIAC.
-Remotely logging into the BIAC servers will also allow you to run scripts on
-the servers and use the various image analysis software packages installed there.</p>
-<p><strong>NOTE 1</strong>: BIAC recently (11/2015) began requiring Duke’s multi-factor
-authentication system in order to log into their servers. If you have not set
-this up already, see this
-<a href="https://oit.duke.edu/net-security/security/multi-factor-authentication.php">web page</a>
-for details.</p>
-<p><strong>NOTE 2</strong>: You will need a DHE account to fully log into the BIAC servers.</p>
-<div id="mac-osx-users" class="section level3 hasAnchor" number="2.2.1">
-<h3><span class="header-section-number">2.2.1</span> Mac OSx Users<a href="access-server.html#mac-osx-users" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Mac OSX comes with the software necessary to log into and transfer files from
-the BIAC servers; no additional installation is required.</p>
-<div id="logging-into-the-biac-servers" class="section level4 hasAnchor" number="2.2.1.1">
-<h4><span class="header-section-number">2.2.1.1</span> Logging into the BIAC Servers<a href="access-server.html#logging-into-the-biac-servers" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div id="electrode-preparation-and-placement-1" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> Electrode Preparation and Placement<a href="psychophys-stim.html#electrode-preparation-and-placement-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li>Open a Terminal window. The Terminal application can be found in
-<code>…/Applications/Utilities</code>.</li>
-<li>Type <code>ssh -o ServerAliveInterval=120 -o TCPKeepAlive=no -X &lt;username&gt;@hugin.biac.duke.edu</code>
-(replacing “username” with your actual user name) into the Terminal window.
-After typing in your password when prompted and completing multi-factor
-authentication you will be logged into the BIAC servers. If you are presented
-with an “are you sure you want to connect” question, just type “yes”.</li>
+<li>Have the subject wash their hands/wrists with non-moisturizing and dye-free soap then dry with a paper towel (if there is no soap following the specifications, have the participant rinse with just water).</li>
+<li>While subject is drying, apply a “pea sized” drop of Gel 100 to the underside of one of the disposable electrodes.</li>
+</ol>
+<p><img src="imgs/03-ECG_gel.jpg" width="40%" style="display: block; margin: auto;" /></p>
+<p><img src="imgs/03-ECG_electrodes.jpg" width="40%" style="display: block; margin: auto;" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Apply the gelled electrodes the left forearm in close proximity, but not overlapping.</li>
+</ol>
+<p><img src="imgs/08-Stim_wrist.png" width="30%" style="display: block; margin: auto;" /></p>
+<ol start="4" style="list-style-type: decimal">
+<li>Take the two leads attached to the stim cable and connect to the recently placed electrodes.</li>
 </ol>
 </div>
-<div id="copying-files-from-the-biac-servers" class="section level4 hasAnchor" number="2.2.1.2">
-<h4><span class="header-section-number">2.2.1.2</span> Copying Files from the BIAC Servers<a href="access-server.html#copying-files-from-the-biac-servers" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div id="stim-calibration" class="section level2 hasAnchor" number="8.4">
+<h2><span class="header-section-number">8.4</span> Stim Calibration<a href="psychophys-stim.html#stim-calibration" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Because the tolerance for electrical stimulation can vary wildly by individual subject, we calibrate the voltage level of stimulation each subject receives in a process called “stim work-up.”</p>
+<p>There are two means of doing the stim work-up; digital and analog. The primary difference is the duration of the stimulation, where you can set the digital to any time length (6 ms usually), whereas the analog is at a fixed 15ms.</p>
+<div id="digital-calibration" class="section level3 hasAnchor" number="8.4.1">
+<h3><span class="header-section-number">8.4.1</span> Digital calibration<a href="psychophys-stim.html#digital-calibration" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ol style="list-style-type: decimal">
-<li>Open a Terminal window. The Terminal application can be found in
-<code>…/Applications/Utilities</code>.</li>
-<li>Use the <code>scp</code> command to copy files between the BIAC servers and your
-local computer.</li>
+<li>Open the stim work-up file for the Presentation software (make sure the stim box voltage level is set to 0, or that the subject is disconnected from the electrode leads).</li>
+<li>Set the voltage level to 10 volts on the stim box.</li>
+<li>Tell the subject that we are going to tailor their level of stimulation to a point that they find annoying, but not painful and that you will start with a low level starter pulse.</li>
+<li>Trigger the presentation software to send a pulse (it should be using port code 21).</li>
+<li>Ask the subject how they feel.</li>
+<li>Increase the voltage by 10 if the subject feels the level is weak.</li>
+<li>Repeat steps 4-6 until the subject starts to feel something stronger.</li>
+<li>Fine tune by increments of 2-5 volts until you find the level where the subject says the stimulation is annoying but not painful.</li>
 </ol>
 </div>
-<div id="examples" class="section level4 hasAnchor" number="2.2.1.3">
-<h4><span class="header-section-number">2.2.1.3</span> Examples<a href="access-server.html#examples" class="anchor-section" aria-label="Anchor link to header"></a></h4>
-<p>Copy from BIAC to local:</p>
-<p><code>scp &lt;username&gt;@hugin.biac.duke.edu:/path/to/file /localpath/</code></p>
-<p>Copy from local to BIAC:</p>
-<p><code>scp &lt;-r&gt; /localpath/ &lt;username&gt;@hugin.biac.duke.edu:/path/to/file</code></p>
-<p>In the examples above, replace “username” with your user name, “path” with the
-full path to the desired directory on the BIAC server, “file” with the name of
-the file (including 3-character file extension), and “localpath” with the full
-path to the desired local directory. Note that the scp command has options
-for copying multiple files at once, for more info on scp, see <a href="http://man7.org/linux/man-pages/man1/scp.1.html">here</a>.</p>
-</div>
-</div>
-<div id="windows-users" class="section level3 hasAnchor" number="2.2.2">
-<h3><span class="header-section-number">2.2.2</span> Windows Users<a href="access-server.html#windows-users" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Two additional programs will need to be installed, one that handles logging
-into the BIAC servers and another that handles file transfer.</p>
-<div id="logging-into-the-biac-servers-1" class="section level4 hasAnchor" number="2.2.2.1">
-<h4><span class="header-section-number">2.2.2.1</span> Logging into the BIAC Servers<a href="access-server.html#logging-into-the-biac-servers-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div id="analog-calibration" class="section level3 hasAnchor" number="8.4.2">
+<h3><span class="header-section-number">8.4.2</span> Analog calibration<a href="psychophys-stim.html#analog-calibration" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <ol style="list-style-type: decimal">
-<li>Download and install <code>X-Win32</code>. This can be done via Duke’s OIT<br />
-<a href="http://oit.duke.edu/comp-print/software/index.php">site</a>
-(Browse and Order Software).</li>
-<li>Set up <code>X-Win32</code> to get to the BIAC servers. Follow the instructions <a href="https://wiki.biac.duke.edu/biac:cluster:access">here</a>.</li>
-<li>Once X-Win is set up, select the <code>hugin</code> connection (or whatever you named
-it) and click “Launch”. Enter your password/multi-factor authenticate when
-prompted and you should end up with a BIAC server terminal window. If you
-receive an “are you sure you want to connect” question, just type “yes.”</li>
+<li>Set the voltage level to 10 volts on the stim box.</li>
+<li>Tell the subject that we are going to tailor their level of stimulation to a point that they find annoying, but not painful and that you will start with a low level starter pulse.</li>
+<li>Press the manual pulse button on the back of the stim box.</li>
+<li>Ask the subject how they feel.</li>
+<li>Increase the voltage by 10 if the subject feels the level is weak.</li>
+<li>Repeat steps 4-6 until the subject starts to feel something stronger.</li>
+<li>Fine tune by increments of 2-5 volts until you find the level where the subject says the stimulation is annoying but not painful.</li>
 </ol>
 </div>
-<div id="copying-files-from-the-biac-servers-1" class="section level4 hasAnchor" number="2.2.2.2">
-<h4><span class="header-section-number">2.2.2.2</span> Copying Files from the BIAC Servers<a href="access-server.html#copying-files-from-the-biac-servers-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+</div>
+<div id="clean-up" class="section level2 hasAnchor" number="8.5">
+<h2><span class="header-section-number">8.5</span> Clean Up<a href="psychophys-stim.html#clean-up" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ol style="list-style-type: decimal">
-<li><p>Download and install <code>WinSCP</code>. This can be done from Duke’s OIT
-<a href="http://oit.duke.edu/comp-print/software/index.php">site</a>
-(Browse and Order Software).</p></li>
-<li><p>Set up <code>WinSCP</code> to get to the BIAC servers. Create a new “Site” in <code>WinSCP</code>
-(this can be called whatever you want, but “BIAC” is a good suggestion) with
-the following values:</p>
-<pre><code> File Protocol: SFTP
- Host name: nernst.biac.duke.edu
- Port number: 22
- User Name: (your user name)</code></pre></li>
-<li><p>Once the new site is created, highlight it and click “Login”. After
-password/authentication prompts this should provide a graphical interface
-for transferring files, very similar in appearance and function to Windows
-Explorer.</p></li>
+<li>Set the stim box voltage to 0 volts.</li>
+<li>Turn off the stim box (if the stim box is left on overnight it will likely blow a fuse).</li>
+<li>Remove the leads from the subject and hang them back up on the stim hook.</li>
+<li>Instruct the subject to remove the electrodes from their arm and dispose of them.</li>
+<li>Offer the subjects a wet paper towel or show them the sink to clean excess gel left on their arm.</li>
 </ol>
-</div>
-</div>
-<div id="after-succesful-login" class="section level3 hasAnchor" number="2.2.3">
-<h3><span class="header-section-number">2.2.3</span> After Succesful Login<a href="access-server.html#after-succesful-login" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>The BIAC servers run linux. You’ll need to type linux commands at the command
-prompt in order to do anything. An introduction to this environment can be
-found <a href="http://linuxcommand.org/lc3_learning_the_shell.php">here</a>.</p>
-<p>The BIAC servers also have a variety of image analysis software packages
-installed. In order to use any of them, you’ll need to enter “interactive” mode
-by simply typing “qinteract” into the command line. This may prompt another
-password/authentication request. The list of installed software can be found
-<a href="https://wiki.biac.duke.edu/biac:cluster:packages">here</a>.</p>
 
-</div>
 </div>
 </div>
             </section>
@@ -284,8 +247,8 @@ password/authentication request. The list of installed software can be found
           </div>
         </div>
       </div>
-<a href="getting-started.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="psychophys-ecg.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="psychophys-rsp.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -316,7 +279,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/USERNAME/REPO/edit/BRANCH/02-access-servers.Rmd",
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/08-psychophys-stim.Rmd",
 "text": "Edit"
 },
 "history": {

@@ -1,6 +1,6 @@
 # Psychophysics - ECG {#psychophys-ecg}
 
-Written by Gregory Steward on Jun 05, 2019
+Written by Gregory Steward on Jun 05, 2019.
 
 Ported to bookdown by Nathan Muncy on Jul 27, 2022.
 

@@ -37,3 +37,14 @@ electrode-placement---corrugator-muscle
 electrode-placement---zygomaticus-muscle
 cleaning
 references-2
+psychophys-rsp
+introduction-3
+supplies-2
+psychophys-stim
+supplies-3
+computer-preparation-2
+electrode-preparation-and-placement-1
+stim-calibration
+digital-calibration
+analog-calibration
+clean-up
