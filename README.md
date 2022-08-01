@@ -1,13 +1,11 @@
 Welcome! 
 
-This is a minimal example of a book based on R Markdown and **bookdown** (https://github.com/rstudio/bookdown). 
+This repository serves as the codebase for the [LaBarLab Manual](https://labarlab.github.io).
 
-This template provides a skeleton file structure that you can edit to create your book. 
-
-The contents inside the .Rmd files provide some pointers to help you get started, but feel free to also delete the content in each file and start fresh.
+Chapters are written in R Markdown and [bookdown](https://github.com/rstudio/bookdown) is used to build the book.
 
 Additional resources:
 
-The **bookdown** book: https://bookdown.org/yihui/bookdown/
-
-The **bookdown** package reference site: https://pkgs.rstudio.com/bookdown
+- YouTube [tutorial](https://www.youtube.com/watch?v=RdSmYvbQkhs) for building with bookdown and serving with GitHub Pages.
+- The bookdown package reference [site]( https://pkgs.rstudio.com/bookdown).
+- A nice [example](https://github.com/EcoRepSci/reproducible-science) of another bookdown GitHub Page.
