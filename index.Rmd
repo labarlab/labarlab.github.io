@@ -23,11 +23,6 @@ chapters:
 
 * Chapter \@ref(getting-started), Getting Started
 * Chapter \@ref(access-server), Accessing Servers
-* Chapter \@ref(psychophys-ecg), Psychophysics - ECG
-* Chapter \@ref(psychophys-eda), Psychophysics - EDA
-* Chapter \@ref(psychophys-egg), Psychophysics - EGG (under construction)
-* Chapter \@ref(psychophys-emg), Psychophysics - EMG
-* Chapter \@ref(psychophys-rsp), Psychophysics - RSP
-* Chapter \@ref(psychophys-stim), Psychophysics - STIM
+* Chapter \@ref(psychophys), Psychophysics
 * Chapter \@ref(psychtoolbox), Psychtoolbox
 
