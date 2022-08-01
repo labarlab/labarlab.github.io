@@ -14,6 +14,7 @@ windows-users
 logging-into-the-biac-servers-1
 copying-files-from-the-biac-servers-1
 after-succesful-login
+psychophys
 psychophys-ecg
 introduction
 supplies
@@ -50,7 +51,7 @@ analog-calibration
 clean-up
 psychtoolbox
 introduction-4
-basics-basics
+basics
 learn-ex
 qa
 screen-function

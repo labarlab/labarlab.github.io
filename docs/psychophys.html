@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Psychophysics | LaBaratory Wiki</title>
+  <meta name="description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
+  <meta name="generator" content="bookdown 0.27 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Psychophysics | LaBaratory Wiki" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Psychophysics | LaBaratory Wiki" />
+  
+  <meta name="twitter:description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
+  
+
+<meta name="author" content="Nathan Muncy" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="access-server.html"/>
+<link rel="next" href="psychtoolbox.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">LaBaratory Wiki</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a></li>
+<li class="chapter" data-level="1" data-path="getting-started.html"><a href="getting-started.html"><i class="fa fa-check"></i><b>1</b> Getting Started</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="getting-started.html"><a href="getting-started.html#location"><i class="fa fa-check"></i><b>1.1</b> Location</a></li>
+<li class="chapter" data-level="1.2" data-path="getting-started.html"><a href="getting-started.html#duke-card"><i class="fa fa-check"></i><b>1.2</b> Duke Card</a></li>
+<li class="chapter" data-level="1.3" data-path="getting-started.html"><a href="getting-started.html#computer-access"><i class="fa fa-check"></i><b>1.3</b> Computer Access</a></li>
+<li class="chapter" data-level="1.4" data-path="getting-started.html"><a href="getting-started.html#human-research-training"><i class="fa fa-check"></i><b>1.4</b> Human Research Training</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="access-server.html"><a href="access-server.html"><i class="fa fa-check"></i><b>2</b> Accessing Servers</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="access-server.html"><a href="access-server.html#labar-lab-shared-drive-keoki"><i class="fa fa-check"></i><b>2.1</b> LaBar Lab Shared Drive (keoki)</a></li>
+<li class="chapter" data-level="2.2" data-path="access-server.html"><a href="access-server.html#biac-servers"><i class="fa fa-check"></i><b>2.2</b> BIAC Servers</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="access-server.html"><a href="access-server.html#mac-osx-users"><i class="fa fa-check"></i><b>2.2.1</b> Mac OSx Users</a></li>
+<li class="chapter" data-level="2.2.2" data-path="access-server.html"><a href="access-server.html#windows-users"><i class="fa fa-check"></i><b>2.2.2</b> Windows Users</a></li>
+<li class="chapter" data-level="2.2.3" data-path="access-server.html"><a href="access-server.html#after-succesful-login"><i class="fa fa-check"></i><b>2.2.3</b> After Succesful Login</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="psychophys.html"><a href="psychophys.html"><i class="fa fa-check"></i><b>3</b> Psychophysics</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="psychophys.html"><a href="psychophys.html#psychophys-ecg"><i class="fa fa-check"></i><b>3.1</b> Psychophysics - ECG</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="psychophys.html"><a href="psychophys.html#introduction"><i class="fa fa-check"></i><b>3.1.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.1.2" data-path="psychophys.html"><a href="psychophys.html#supplies"><i class="fa fa-check"></i><b>3.1.2</b> Supplies</a></li>
+<li class="chapter" data-level="3.1.3" data-path="psychophys.html"><a href="psychophys.html#computer-preparation"><i class="fa fa-check"></i><b>3.1.3</b> Computer Preparation</a></li>
+<li class="chapter" data-level="3.1.4" data-path="psychophys.html"><a href="psychophys.html#lead-preparation"><i class="fa fa-check"></i><b>3.1.4</b> Lead Preparation</a></li>
+<li class="chapter" data-level="3.1.5" data-path="psychophys.html"><a href="psychophys.html#electrode-preparation-and-placement"><i class="fa fa-check"></i><b>3.1.5</b> Electrode Preparation and Placement</a></li>
+<li class="chapter" data-level="3.1.6" data-path="psychophys.html"><a href="psychophys.html#lead-application-and-clean-up"><i class="fa fa-check"></i><b>3.1.6</b> Lead Application and Clean Up</a></li>
+<li class="chapter" data-level="3.1.7" data-path="psychophys.html"><a href="psychophys.html#references"><i class="fa fa-check"></i><b>3.1.7</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="psychophys.html"><a href="psychophys.html#psychophys-eda"><i class="fa fa-check"></i><b>3.2</b> Psychophysics - EDA</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="psychophys.html"><a href="psychophys.html#introduction-1"><i class="fa fa-check"></i><b>3.2.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.2.2" data-path="psychophys.html"><a href="psychophys.html#procedures"><i class="fa fa-check"></i><b>3.2.2</b> Procedures</a></li>
+<li class="chapter" data-level="3.2.3" data-path="psychophys.html"><a href="psychophys.html#references-1"><i class="fa fa-check"></i><b>3.2.3</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="psychophys.html"><a href="psychophys.html#psychophys-egg"><i class="fa fa-check"></i><b>3.3</b> Psychophysics - EGG</a></li>
+<li class="chapter" data-level="3.4" data-path="psychophys.html"><a href="psychophys.html#psychophys-emg"><i class="fa fa-check"></i><b>3.4</b> Psychophysics - EMG</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="psychophys.html"><a href="psychophys.html#introduction-2"><i class="fa fa-check"></i><b>3.4.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.4.2" data-path="psychophys.html"><a href="psychophys.html#supplies-1"><i class="fa fa-check"></i><b>3.4.2</b> Supplies</a></li>
+<li class="chapter" data-level="3.4.3" data-path="psychophys.html"><a href="psychophys.html#computer-preparation-1"><i class="fa fa-check"></i><b>3.4.3</b> Computer Preparation</a></li>
+<li class="chapter" data-level="3.4.4" data-path="psychophys.html"><a href="psychophys.html#face-preparation"><i class="fa fa-check"></i><b>3.4.4</b> Face Preparation</a></li>
+<li class="chapter" data-level="3.4.5" data-path="psychophys.html"><a href="psychophys.html#electrode-preparation"><i class="fa fa-check"></i><b>3.4.5</b> Electrode Preparation</a></li>
+<li class="chapter" data-level="3.4.6" data-path="psychophys.html"><a href="psychophys.html#electrode-placement---corrugator-muscle"><i class="fa fa-check"></i><b>3.4.6</b> Electrode Placement - corrugator muscle</a></li>
+<li class="chapter" data-level="3.4.7" data-path="psychophys.html"><a href="psychophys.html#electrode-placement---zygomaticus-muscle"><i class="fa fa-check"></i><b>3.4.7</b> Electrode Placement - zygomaticus muscle</a></li>
+<li class="chapter" data-level="3.4.8" data-path="psychophys.html"><a href="psychophys.html#cleaning"><i class="fa fa-check"></i><b>3.4.8</b> Cleaning</a></li>
+<li class="chapter" data-level="3.4.9" data-path="psychophys.html"><a href="psychophys.html#references-2"><i class="fa fa-check"></i><b>3.4.9</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="psychophys.html"><a href="psychophys.html#psychophys-rsp"><i class="fa fa-check"></i><b>3.5</b> Psychophysics - RSP</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="psychophys.html"><a href="psychophys.html#introduction-3"><i class="fa fa-check"></i><b>3.5.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.5.2" data-path="psychophys.html"><a href="psychophys.html#supplies-2"><i class="fa fa-check"></i><b>3.5.2</b> Supplies</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="psychophys.html"><a href="psychophys.html#psychophys-stim"><i class="fa fa-check"></i><b>3.6</b> Psychophysics - STIM</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="psychophys.html"><a href="psychophys.html#supplies-3"><i class="fa fa-check"></i><b>3.6.1</b> Supplies</a></li>
+<li class="chapter" data-level="3.6.2" data-path="psychophys.html"><a href="psychophys.html#computer-preparation-2"><i class="fa fa-check"></i><b>3.6.2</b> Computer Preparation</a></li>
+<li class="chapter" data-level="3.6.3" data-path="psychophys.html"><a href="psychophys.html#electrode-preparation-and-placement-1"><i class="fa fa-check"></i><b>3.6.3</b> Electrode Preparation and Placement</a></li>
+<li class="chapter" data-level="3.6.4" data-path="psychophys.html"><a href="psychophys.html#stim-calibration"><i class="fa fa-check"></i><b>3.6.4</b> Stim Calibration</a></li>
+<li class="chapter" data-level="3.6.5" data-path="psychophys.html"><a href="psychophys.html#clean-up"><i class="fa fa-check"></i><b>3.6.5</b> Clean Up</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="psychtoolbox.html"><a href="psychtoolbox.html"><i class="fa fa-check"></i><b>4</b> Psychtoolbox</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="psychtoolbox.html"><a href="psychtoolbox.html#introduction-4"><i class="fa fa-check"></i><b>4.1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="psychtoolbox.html"><a href="psychtoolbox.html#basics"><i class="fa fa-check"></i><b>4.1.1</b> Basics</a></li>
+<li class="chapter" data-level="4.1.2" data-path="psychtoolbox.html"><a href="psychtoolbox.html#learn-ex"><i class="fa fa-check"></i><b>4.1.2</b> Learn Through Examples</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="psychtoolbox.html"><a href="psychtoolbox.html#qa"><i class="fa fa-check"></i><b>4.2</b> Questions and Answers</a></li>
+<li class="chapter" data-level="4.3" data-path="psychtoolbox.html"><a href="psychtoolbox.html#screen-function"><i class="fa fa-check"></i><b>4.3</b> Screen Function</a></li>
+<li class="chapter" data-level="4.4" data-path="psychtoolbox.html"><a href="psychtoolbox.html#psychtoolboox-use-at-biac"><i class="fa fa-check"></i><b>4.4</b> Psychtoolboox use at BIAC</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="psychtoolbox.html"><a href="psychtoolbox.html#loading-ptb"><i class="fa fa-check"></i><b>4.4.1</b> Loading PTB</a></li>
+<li class="chapter" data-level="4.4.2" data-path="psychtoolbox.html"><a href="psychtoolbox.html#triggering-experiment-start"><i class="fa fa-check"></i><b>4.4.2</b> Triggering Experiment Start</a></li>
+<li class="chapter" data-level="4.4.3" data-path="psychtoolbox.html"><a href="psychtoolbox.html#recording-events-onset-and-duration"><i class="fa fa-check"></i><b>4.4.3</b> Recording Events Onset and Duration</a></li>
+<li class="chapter" data-level="4.4.4" data-path="psychtoolbox.html"><a href="psychtoolbox.html#using-the-button-box"><i class="fa fa-check"></i><b>4.4.4</b> Using the Button Box</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">LaBaratory Wiki</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="psychophys" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Psychophysics<a href="psychophys.html#psychophys" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="psychophys-ecg" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Psychophysics - ECG<a href="psychophys.html#psychophys-ecg" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Created on 2019 Jun 05 by Gregory Steward.</p>
+<p>Ported to bookdown on 2022 Jul 27 by Nathan Muncy.</p>
+<div id="introduction" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Introduction<a href="psychophys.html#introduction" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>An electrocardiogram (ECG) is a recording of the electrical activity of the heart using electrodes placed on the skin. These electrodes detect the small electrical changes that are a consequence of cardiac muscle depolarization followed by repolarization during each cardiac cycle (heartbeat)<span class="math inline">\(^1\)</span>.</p>
+<p>Our lab uses a 3 lead setup, where electrodes will be placed at 3 points on the body. Specifically, we follow a lead II configuration (see the diagram below).</p>
+<p><img src="imgs/03-ECG_eithoven.png" width="50%" style="display: block; margin: auto;" /></p>
+<p>The lead II configuration consists of having the negative lead attached to the right wrist, the positive lead attached to the left ankle, and a grounded lead attached to the right ankle.</p>
+<p>We prefer to use this configuration as the electrode placements interfere the least with other psychophysiology measure electrode placements. You can run using other configurations, but keep in mind the possible interference from other electrodes.</p>
+</div>
+<div id="supplies" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Supplies<a href="psychophys.html#supplies" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>3 x EL203 disposable electrodes</li>
+<li>LEAD110</li>
+<li>LEAD110S-R (the shielded red lead)</li>
+<li>LEAD110S-W (the shielded white lead)</li>
+<li>Paper towel</li>
+<li>Nuprep</li>
+<li>3 x Q-Tips</li>
+<li>Cotton wipe/ cotton round/ tissue</li>
+<li>Gel 100</li>
+</ol>
+</div>
+<div id="computer-preparation" class="section level3 hasAnchor" number="3.1.3">
+<h3><span class="header-section-number">3.1.3</span> Computer Preparation<a href="psychophys.html#computer-preparation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Log into psychophysiology computer.</li>
+<li>Turn on BIOPAC system.</li>
+<li>Open Acknowledge (5.0 for MP160 system, 4.1 for MP150 system).</li>
+<li>Load experimental file template.
+<ul>
+<li>Check that the input is Channel 4 (analog).</li>
+<li><strong>Check where the data is being saved.</strong></li>
+</ul></li>
+</ol>
+</div>
+<div id="lead-preparation" class="section level3 hasAnchor" number="3.1.4">
+<h3><span class="header-section-number">3.1.4</span> Lead Preparation<a href="psychophys.html#lead-preparation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Take the red lead and attach it to the ECG cable in the testing room by attaching the red insert into the Vin<span class="math inline">\(+\)</span> slot and the black insert into the top shield slot.</li>
+<li>Repeat with the white lead by attaching the white insert into the Vin<span class="math inline">\(-\)</span> slot and the black insert into the bottom shield slot.</li>
+<li>Insert the black lead with the CBL205 attachment into the GND slot on the ECG cable.</li>
+</ol>
+<p><img src="imgs/03-ECG_mec.jpg" width="40%" height="20%" style="display: block; margin: auto;" /><img src="imgs/03-ECG_leads.jpg" width="40%" height="20%" style="display: block; margin: auto;" /><img src="imgs/03-ECG_ground_cable.jpg" width="40%" height="20%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="electrode-preparation-and-placement" class="section level3 hasAnchor" number="3.1.5">
+<h3><span class="header-section-number">3.1.5</span> Electrode Preparation and Placement<a href="psychophys.html#electrode-preparation-and-placement" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Have the subject wash their hands/wrists with non-moisturizing and dye-free soap then dry with a paper towel (if there is no soap following the specifications, have the participant rinse with just water).</li>
+<li>Prepare the q-tips with a drop of Nuprep each.</li>
+<li>Instruct the participant to scrub an area of the lower right wrist/ upper right forearm (see below) with a prepped q-tip (make sure the location is slightly offset to the left of the arm mid-line).</li>
+</ol>
+<p><img src="imgs/03-ECG_electrode_wrist.png" width="20%" style="display: block; margin: auto;" /></p>
+<ol start="4" style="list-style-type: decimal">
+<li>Repeat step 3 with the remaining q-tips for the areas behind the participant’s ankles (see below, which is not directly on the ankle, but behind the ankle before the Achilles tendon slightly below the ankle mid-line).</li>
+</ol>
+<p><img src="imgs/03-ECG_electrode_ankle.png" width="20%" style="display: block; margin: auto;" /></p>
+<ol start="5" style="list-style-type: decimal">
+<li>Have the participant clean off the Nuprep with a water wet cotton round or tissue.</li>
+<li>Have participant dry applied areas with another cotton round or tissue.</li>
+<li>While subject is drying, apply a “pea sized” drop of Gel 100 to the underside of one of the disposable electrodes.</li>
+</ol>
+<p><img src="imgs/03-ECG_gel.jpg" width="40%" style="display: block; margin: auto;" /></p>
+<p><img src="imgs/03-ECG_electrodes.jpg" width="40%" style="display: block; margin: auto;" /></p>
+<ol start="8" style="list-style-type: decimal">
+<li>Apply the gelled electrode to one of the three sites.</li>
+<li>Repeat steps 7 and 8 for the two remaining sites.</li>
+</ol>
+</div>
+<div id="lead-application-and-clean-up" class="section level3 hasAnchor" number="3.1.6">
+<h3><span class="header-section-number">3.1.6</span> Lead Application and Clean Up<a href="psychophys.html#lead-application-and-clean-up" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Unlike other psychophysiology measures in the lab, it is absolutely critical to attach and remove the leads to the participant in the correct order!</p>
+<ol style="list-style-type: decimal">
+<li>Take black ground lead and attach it to the subject’s right ankle electrode.</li>
+<li>Take the white lead and attach it to the subject’s right arm electrode.</li>
+<li>Take the red lead and attach it to the subject’s left ankle electrode.</li>
+<li>Run the experiment.</li>
+<li>When finished, remove the leads in the inverse order you applied them (Red lead, white lead, black lead).</li>
+<li>Have the subjects peel off the electrodes and dispose of them in the trash.</li>
+<li>Offer the subject a wet paper towel or alcohol wipe to clean up any excess electrode gel that may be on them.</li>
+<li>Hang all three leads back onto the ECG hook in the testing room.</li>
+</ol>
+</div>
+<div id="references" class="section level3 hasAnchor" number="3.1.7">
+<h3><span class="header-section-number">3.1.7</span> References<a href="psychophys.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Electrocardiography. (2022, Jul 27). In <em>Wikipedia</em>. <a href="https://en.wikipedia.org/wiki/Electrocardiography">https://en.wikipedia.org/wiki/Electrocardiography</a></li>
+</ol>
+</div>
+</div>
+<div id="psychophys-eda" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Psychophysics - EDA<a href="psychophys.html#psychophys-eda" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Created on 2019 Jun 05 by Gregory Steward.</p>
+<p>Ported to bookdown on 2022 Jul 28 by Nathan Muncy.</p>
+<div id="introduction-1" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Introduction<a href="psychophys.html#introduction-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Electrodermal activity (EDA) is the property of the human body that causes continuous variation in the electrical characteristics of the skin. Historically, EDA has been known as galvanic skin response or GSR (the MP150 has a module that is still labelled as GSR. It is believed that skin resistance varies with the state of sweat glands in the skin. Sweating is controlled by the sympathetic nervous system, and skin conductance is an indication of psychological or physiological arousal. If the sympathetic branch of the autonomic nervous system is highly aroused, then sweat gland activity also increases, which in turn increases skin conductance. In this way, skin conductance can be a measure of emotional and sympathetic responses<span class="math inline">\(^1\)</span>.</p>
+<p>Our lab in particular looks at EDA in the palm of the hand, as it allows for subjects to use their fingers to enter computer responses to stimuli, without affecting the data.</p>
+</div>
+<div id="procedures" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Procedures<a href="psychophys.html#procedures" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The following outlines the standard procedure for collecting skin conductance data in our lab.</p>
+<p><strong>Note:</strong> Place the electrodes a minimum of 5 minutes before recording, but aim for closer to 15 minutes.</p>
+<ol style="list-style-type: decimal">
+<li>Have the subject gently wash their hands with soap and water. Use the specific soap provided by the lab for this purpose, whether in the lab or the BIAC. Moisturizers and anti-bacterial components of soap products can affect conductivity in the skin; these can be difficult to avoid for our purposes, but we can be consistent about our use. More importantly, the soap should not be abrasive (micro-scrubbing beads and such) as this damage to the skin tissue can change its composition and conductivity. Dry hands gently but completely before electrode placement.</li>
+<li>Use the disposable electrodes that come with gel already applied. Add a pea-sized drop of electrode gel on top of the gel in the electrode. We add fresh gel because the original gel dries over time and may not mix as well with the skin.</li>
+<li>Place the electrode firmly on the hypothenar eminence of the non-dominant palm at a perpendicular orientation to the eminence leaving space for two adjacent electrodes along the length of the eminence. Apply the second electrode. Apply tape if necessary to keep electrodes in place (for example, if the subject has excessively sweaty hands). While the distal phalanges may be a slightly more ideal site for recording in terms of eccrine sweat gland distribution, the size of the hypothenar eminence allows for easier and more secure electrode placement and allows for more use of the fingers on the recording hand.</li>
+<li>The subject may make responses with the fingers of the non-dominant hand as long as these responses do not occur during periods that will be analyzed for skin conductance. Further, the subject should be instructed to minimize any unnecessary movement of the recording hand since movement can introduce noise into the signal.</li>
+</ol>
+<p><img src="imgs/03-GSR_setup.jpg" width="40%" style="display: block; margin: auto;" /></p>
+<ol start="5" style="list-style-type: decimal">
+<li>Connect the wires to electrodes so they are not obstructive or uncomfortable.</li>
+<li>Begin acquisition with AcqKnowledge and check for proper signal. You can ask the subject to hold their breath briefly and then exhale to try to prompt a skin conductance response. If it seems likely the subject’s conductance will hit ceiling levels at some point, the gain switch on the front of the GSR BIOPAC module may be repositioned from 10 microsiemens/volt to 20 before beginning the task and the data rescaled in AcqKnowledge accordingly. This should rarely be necessary, but be sure to note this in the subject’s notes and replace the switch after the subject’s session is complete.
+<ul>
+<li><strong>AcqKnowledge note:</strong> We have been recording skin conductance at a frequency of 1 kHz in AcqKnowledge.</li>
+</ul></li>
+</ol>
+</div>
+<div id="references-1" class="section level3 hasAnchor" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> References<a href="psychophys.html#references-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Electrodermal activity. (2022, Jul 28). In <em>Wikipedia</em>. <a href="https://en.wikipedia.org/wiki/Electrodermal_activity">https://en.wikipedia.org/wiki/Electrodermal_activity</a></li>
+</ol>
+</div>
+</div>
+<div id="psychophys-egg" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Psychophysics - EGG<a href="psychophys.html#psychophys-egg" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>To be constructed (Jul 28, 2022).</p>
+</div>
+<div id="psychophys-emg" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Psychophysics - EMG<a href="psychophys.html#psychophys-emg" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Created on 2020 Feb 12 by Gregory Steward.</p>
+<p>Ported to bookdown on 2022 Jul 28 by Nathan Muncy.</p>
+<div id="introduction-2" class="section level3 hasAnchor" number="3.4.1">
+<h3><span class="header-section-number">3.4.1</span> Introduction<a href="psychophys.html#introduction-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>An electromyogram (EMG) is a psychophysiology measure for evaluating and recording the electrical activity produced by skeletal muscles. An electromyograph detects the electric potential generated by muscle cells when these cells are electrically or neurologically activated. The LaBar lab most frequently studies Corrugator Facial EMG and Zygomaticus Facial EMG , which focuses on the coruggator supercili group of muscles above the eye and the zygomaticus major muscle along the cheek, respectively<span class="math inline">\(^1\)</span>.</p>
+</div>
+<div id="supplies-1" class="section level3 hasAnchor" number="3.4.2">
+<h3><span class="header-section-number">3.4.2</span> Supplies<a href="psychophys.html#supplies-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>4 x EL254S reusable shielded electrodes</li>
+<li>1 x EL254 reusable un-shielded electrode</li>
+<li>5 x ADD204 Stickers</li>
+<li>Biopac gel 100/ Signa Gel</li>
+<li>Non moisturizing alcohol wipe</li>
+<li>Nu-prep</li>
+<li>Q-tips</li>
+<li>Tissues</li>
+<li>Cotton swab/ cotton round</li>
+</ol>
+</div>
+<div id="computer-preparation-1" class="section level3 hasAnchor" number="3.4.3">
+<h3><span class="header-section-number">3.4.3</span> Computer Preparation<a href="psychophys.html#computer-preparation-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Log into psychophysiology computer.</li>
+<li>Check that the BIOPAC EMG module is set to the following:
+<ul>
+<li>5000 gain</li>
+<li>500 Hz low pass filter</li>
+<li>100 Hz high pass filter turned off</li>
+<li>10 Hz high pass filter</li>
+</ul></li>
+<li>Turn on BIOPAC system.</li>
+<li>Open Acknowledge (5.0 for MP160 system, 4.1 for MP150 system).</li>
+<li>Load experimental file template.
+<ul>
+<li>Check that the sampling rate is 1000 kHz.</li>
+<li>Check that the input is Channel 2 (for EMG1) or 3 (for EMG2).</li>
+<li>Check where the data is being saved.</li>
+</ul></li>
+</ol>
+</div>
+<div id="face-preparation" class="section level3 hasAnchor" number="3.4.4">
+<h3><span class="header-section-number">3.4.4</span> Face Preparation<a href="psychophys.html#face-preparation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Clean face with an alcohol wipe.</li>
+</ol>
+<p><img src="imgs/03-EMG_supplies.jpg" width="40%" style="display: block; margin: auto;" /></p>
+<ol start="2" style="list-style-type: decimal">
+<li><strong>OPTIONAL</strong> - electrode face preparation can proceed just with the alcohol wipe) Apply the NuPrep (shown in the image above) with a Q-tip to the areas where the electrodes will be applied (see figure below for clarification on electrode placement sites). Apply mild pressure to scrub these areas with the Q-tip. Skin should be slightly red. This step helps to ensure that we are able to remove dead skin cells and have better conductance. If using NuPrep, make sure swabbed area is dry before applying electrodes.</li>
+<li>Clean the NuPrep off with a cotton round or tissue.</li>
+<li>Throw away all cotton pads, tissues, and Q-tips used during face prep.</li>
+</ol>
+</div>
+<div id="electrode-preparation" class="section level3 hasAnchor" number="3.4.5">
+<h3><span class="header-section-number">3.4.5</span> Electrode Preparation<a href="psychophys.html#electrode-preparation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Obtain 2 clean shielded EMG electrodes and 1 un-shielded EMG electrodes. The need for an un-shielded electrode is to establish a ground to help reduce noise. If you have a grounded lead already established with either ECG or EDA, you will not need to add this additional ground.</li>
+</ol>
+<p><img src="imgs/03-EMG_shielded.jpg" width="40%" height="10%" style="display: block; margin: auto;" /><img src="imgs/03-EMG_electrodes.png" width="40%" height="10%" style="display: block; margin: auto;" /></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Place the circle stickers on the lead so that the hole of the lead align, and so the tab of the sticker is the same direction of the wire as shown in the image below.</li>
+</ol>
+<p><img src="imgs/03-EMG_adhesivediscs.png" width="40%" style="display: block; margin: auto;" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li><em>(Optional for Corrugator)</em> Cut off the top edge and the left edge of the sticker that hang over the edge of the lead for the shielded leads.</li>
+</ol>
+<p><img src="imgs/03-EMG_adhesivediscs2.png" width="40%" style="display: block; margin: auto;" /></p>
+<ol start="4" style="list-style-type: decimal">
+<li>Place signa gel into electrode well. Using a gel filled syringe, gently fill the well without touching the needle tip to the inside of the electrode. Make sure to fill it to the top of the well, but not too excessively. To get rid of any remaining air bubbles, use the packaging from the alcohol wipe or other rolled scrap of paper to stir the gel.</li>
+</ol>
+<p><img src="imgs/03-EMG_electrode_filling.jpg" width="30%" height="10%" style="display: block; margin: auto;" /><img src="imgs/03-EMG_electrode_filled2.jpg" width="30%" height="10%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="electrode-placement---corrugator-muscle" class="section level3 hasAnchor" number="3.4.6">
+<h3><span class="header-section-number">3.4.6</span> Electrode Placement - corrugator muscle<a href="psychophys.html#electrode-placement---corrugator-muscle" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Place first electrode so that it is in line with the inner corner of the subject’s right eye and just above the subject’s eyebrow. The electrode should be placed so that the wire sits perpendicular to the subject’s eyebrow.</li>
+<li>Place the second electrode to the left of the first electrode (to the subject’s right). The electrode should be placed so that the wire sits parallel to the subject’s eyebrow.</li>
+</ol>
+<p><img src="imgs/03-EMG_placement_diagram.png" width="60%" style="display: block; margin: auto;" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li>If needed place the third un-shielded electrode in the middle of the forehead close to the hairline.</li>
+<li>Place the lead wires behind the subject’s right ear and tape them to their right shoulder while the subject looks to their left. This will allow the subject to move or turn without tugging the wires.</li>
+<li>For the shielded electrodes, plug the black wire (with the green shield marker) into the EMG plugs that say “shield”. Plug the white signal wires into the the ports that say “VIN+” or “VIN-”. Lastly, if you need a ground electrode, plug it into the center hole labelled “GND.”</li>
+</ol>
+<p><img src="imgs/03-EMG_electrode_wiring.jpg" width="60%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="electrode-placement---zygomaticus-muscle" class="section level3 hasAnchor" number="3.4.7">
+<h3><span class="header-section-number">3.4.7</span> Electrode Placement - zygomaticus muscle<a href="psychophys.html#electrode-placement---zygomaticus-muscle" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Have the subject smile to see if you can see the general area of the zygomaticus muscle.</li>
+<li>Place first shielded electrode so that is directly on the muscle, which should be about halfway from the middle of the subject’s ear to the corner of the subject’s mouth.</li>
+</ol>
+<p><img src="imgs/03-EMG_zygo_placement_diagram.png" width="60%" style="display: block; margin: auto;" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Place the second shielded electrode adjacent to the first in the direction closer to the corner of the subject’s mouth.</li>
+<li>If needed place the third un-shielded electrode in the middle of the forehead close to the hairline and tuck the electrode lead wire behind the subject’s ear.</li>
+<li>Tape the electrodes to their right shoulder while the subject looks to their left. This will allow the subject to move or turn without tugging the wires.</li>
+<li>For the shielded electrodes, plug the black wire (with the green shield marker) into the EMG plugs that say “shield”. Plug the white signal wires into the the ports that say “VIN+” or “VIN-”. Lastly, if you need a ground electrode, plug it into the center hole labelled “GND.”</li>
+</ol>
+<p><img src="imgs/03-EMG_electrode_wiring2.jpg" width="60%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cleaning" class="section level3 hasAnchor" number="3.4.8">
+<h3><span class="header-section-number">3.4.8</span> Cleaning<a href="psychophys.html#cleaning" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>When finished with the experiment, remove the stickers from the electrodes and dispose of them.</li>
+<li>Use the distilled water squeeze bottle by the sink to clean the gel completely out of the leads.</li>
+</ol>
+<p><img src="imgs/03-EMG_electrode_clean.png" width="40%" style="display: block; margin: auto;" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li>If necessary, soak the electrode heads in a small cup of distilled water for 15 minutes and up to 1 hour and re-rinse with the squeeze bottle.</li>
+<li>Hang the leads on the rack opposite of the sink to dry completely before using again.</li>
+<li>Return all the gels, NuPrep, and stickers to their original locations.</li>
+</ol>
+<p><img src="imgs/03-EMG_electrode_rack.jpg" width="60%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="references-2" class="section level3 hasAnchor" number="3.4.9">
+<h3><span class="header-section-number">3.4.9</span> References<a href="psychophys.html#references-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Electromyography. (2022, Jul 27). In <em>Wikipedia</em>. <a href="https://en.wikipedia.org/wiki/Electromyography">https://en.wikipedia.org/wiki/Electromyography</a></li>
+</ol>
+</div>
+</div>
+<div id="psychophys-rsp" class="section level2 hasAnchor" number="3.5">
+<h2><span class="header-section-number">3.5</span> Psychophysics - RSP<a href="psychophys.html#psychophys-rsp" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Created on 2020 Sep 04 by Gregory Steward.</p>
+<p>Ported to bookdown on 2022 Jul 29 by Nathan Muncy.</p>
+<div id="introduction-3" class="section level3 hasAnchor" number="3.5.1">
+<h3><span class="header-section-number">3.5.1</span> Introduction<a href="psychophys.html#introduction-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The Respiratory Effort Transducer measures changes in thoracic or abdominal circumference to assess respiratory effort.</p>
+</div>
+<div id="supplies-2" class="section level3 hasAnchor" number="3.5.2">
+<h3><span class="header-section-number">3.5.2</span> Supplies<a href="psychophys.html#supplies-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Respiratory transducer belt.</p>
+<p><img src="imgs/03-RSP_belt.jpg" width="30%" style="display: block; margin: auto;" /></p>
+<ol style="list-style-type: decimal">
+<li>Loosen one or both ends of the velcro on the transducer and wrap it around the chest of the subject (or have the subject wrap it around themselves if it is more comfortable).</li>
+<li>Tighten the Respiratory Effort Transducer around the most expanded area of the subject’s abdomen during breathing (generally about 5 cm below the armpits), and tighten one or both straps until it fits snugly but is not uncomfortable. The sensor should be placed on the front of the chest.</li>
+<li>Plug the transducer cable into the MEC100C extension cable labelled RSP.</li>
+</ol>
+<p><img src="imgs/03-RSP_plug.png" width="60%" style="display: block; margin: auto;" /></p>
+<p>If you have trouble getting a signal from the belt, try using one of the back up belts in the drawers of the testing room.</p>
+</div>
+</div>
+<div id="psychophys-stim" class="section level2 hasAnchor" number="3.6">
+<h2><span class="header-section-number">3.6</span> Psychophysics - STIM<a href="psychophys.html#psychophys-stim" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Created on 2019 Sep 16 by Gregory Steward.</p>
+<p>Ported to bookdown on 2022 Jul 29 by Nathan Muncy.</p>
+<div id="supplies-3" class="section level3 hasAnchor" number="3.6.1">
+<h3><span class="header-section-number">3.6.1</span> Supplies<a href="psychophys.html#supplies-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>2 x EL203 disposable electrodes</li>
+<li>2 x LEAD110</li>
+<li>Paper Towel</li>
+<li>Gel 100</li>
+</ol>
+</div>
+<div id="computer-preparation-2" class="section level3 hasAnchor" number="3.6.2">
+<h3><span class="header-section-number">3.6.2</span> Computer Preparation<a href="psychophys.html#computer-preparation-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Log into psychophysiology computer.</li>
+<li>Turn on BIOPAC system.</li>
+<li>Turn on the stim box (<strong>Note</strong>: the stim box sends out a pulse on initializing, so make sure that the subject is not connected).</li>
+<li>Make sure the stimulation level is set at 0.</li>
+<li>Open Acknowledge (5.0 for MP160 system, 4.1 for MP150 system).</li>
+<li>Load experimental file template.
+<ul>
+<li>Check that the input is Channel 4 (analog).</li>
+<li><strong>Check where the data is being saved.</strong></li>
+</ul></li>
+<li>(<em>Optional</em>) Open Presentation for the stim work-up, ignore if calibrating manually.</li>
+</ol>
+</div>
+<div id="electrode-preparation-and-placement-1" class="section level3 hasAnchor" number="3.6.3">
+<h3><span class="header-section-number">3.6.3</span> Electrode Preparation and Placement<a href="psychophys.html#electrode-preparation-and-placement-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Have the subject wash their hands/wrists with non-moisturizing and dye-free soap then dry with a paper towel (if there is no soap following the specifications, have the participant rinse with just water).</li>
+<li>While subject is drying, apply a “pea sized” drop of Gel 100 to the underside of one of the disposable electrodes.</li>
+</ol>
+<p><img src="imgs/03-ECG_gel.jpg" width="40%" style="display: block; margin: auto;" /></p>
+<p><img src="imgs/03-ECG_electrodes.jpg" width="40%" style="display: block; margin: auto;" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Apply the gelled electrodes the left forearm in close proximity, but not overlapping.</li>
+</ol>
+<p><img src="imgs/03-STIM_wrist.png" width="30%" style="display: block; margin: auto;" /></p>
+<ol start="4" style="list-style-type: decimal">
+<li>Take the two leads attached to the stim cable and connect to the recently placed electrodes.</li>
+</ol>
+</div>
+<div id="stim-calibration" class="section level3 hasAnchor" number="3.6.4">
+<h3><span class="header-section-number">3.6.4</span> Stim Calibration<a href="psychophys.html#stim-calibration" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Because the tolerance for electrical stimulation can vary wildly by individual subject, we calibrate the voltage level of stimulation each subject receives in a process called “stim work-up.”</p>
+<p>There are two means of doing the stim work-up; digital and analog. The primary difference is the duration of the stimulation, where you can set the digital to any time length (6 ms usually), whereas the analog is at a fixed 15ms.</p>
+<div id="digital-calibration" class="section level4 hasAnchor" number="3.6.4.1">
+<h4><span class="header-section-number">3.6.4.1</span> Digital calibration<a href="psychophys.html#digital-calibration" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ol style="list-style-type: decimal">
+<li>Open the stim work-up file for the Presentation software (make sure the stim box voltage level is set to 0, or that the subject is disconnected from the electrode leads).</li>
+<li>Set the voltage level to 10 volts on the stim box.</li>
+<li>Tell the subject that we are going to tailor their level of stimulation to a point that they find annoying, but not painful and that you will start with a low level starter pulse.</li>
+<li>Trigger the presentation software to send a pulse (it should be using port code 21).</li>
+<li>Ask the subject how they feel.</li>
+<li>Increase the voltage by 10 if the subject feels the level is weak.</li>
+<li>Repeat steps 4-6 until the subject starts to feel something stronger.</li>
+<li>Fine tune by increments of 2-5 volts until you find the level where the subject says the stimulation is annoying but not painful.</li>
+</ol>
+</div>
+<div id="analog-calibration" class="section level4 hasAnchor" number="3.6.4.2">
+<h4><span class="header-section-number">3.6.4.2</span> Analog calibration<a href="psychophys.html#analog-calibration" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<ol style="list-style-type: decimal">
+<li>Set the voltage level to 10 volts on the stim box.</li>
+<li>Tell the subject that we are going to tailor their level of stimulation to a point that they find annoying, but not painful and that you will start with a low level starter pulse.</li>
+<li>Press the manual pulse button on the back of the stim box.</li>
+<li>Ask the subject how they feel.</li>
+<li>Increase the voltage by 10 if the subject feels the level is weak.</li>
+<li>Repeat steps 4-6 until the subject starts to feel something stronger.</li>
+<li>Fine tune by increments of 2-5 volts until you find the level where the subject says the stimulation is annoying but not painful.</li>
+</ol>
+</div>
+</div>
+<div id="clean-up" class="section level3 hasAnchor" number="3.6.5">
+<h3><span class="header-section-number">3.6.5</span> Clean Up<a href="psychophys.html#clean-up" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ol style="list-style-type: decimal">
+<li>Set the stim box voltage to 0 volts.</li>
+<li>Turn off the stim box (if the stim box is left on overnight it will likely blow a fuse).</li>
+<li>Remove the leads from the subject and hang them back up on the stim hook.</li>
+<li>Instruct the subject to remove the electrodes from their arm and dispose of them.</li>
+<li>Offer the subjects a wet paper towel or show them the sink to clean excess gel left on their arm.</li>
+</ol>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="access-server.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="psychtoolbox.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/03-psychophys.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["labarlab.github.io.pdf", "labarlab.github.io.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

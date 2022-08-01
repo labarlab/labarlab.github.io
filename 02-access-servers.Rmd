@@ -1,8 +1,8 @@
 # Accessing Servers {#access-server}
 
-Written by Gregory Steward on Aug 25, 2020.
+Created on 2020 Aug 25 by Gregory Steward.
 
-Ported to bookdown by Nathan Muncy on Jul 26, 2022.
+Ported to bookdown on 2022 Jul 26 by Nathan Muncy.
 
 ## LaBar Lab Shared Drive (keoki)
 

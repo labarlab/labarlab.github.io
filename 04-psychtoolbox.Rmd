@@ -1,0 +1,185 @@
+# Psychtoolbox {#psychtoolbox}
+
+Created by Gregory Steward, last edited on 2019 Jun 05 by Natasha Parikh.
+
+Ported to bookdown on 2022 Jul 29 by Nathan Muncy.
+
+## Introduction
+
+This wiki page will hopefully be a useful guide to the basics of Psychtoolbox (PTB). For specific questions, please take a look at our Psychtoolbox Q&A [section](#qa). 
+
+If you are coming in with little or no MATLAB experience, it may be useful to get an overview of how the language works first, as this guide will assume basic MATLAB understanding. For a quick review of MATLAB and an introduction to PTB, it may be useful to look over the first few weeks of slides provided by Dr. Jonas Kaplan from USC: [Intro to Psychtoolbox in Matlab](http://www.jonaskaplan.com/psych599.php).
+
+Below we outline a few basics for working with PTB scripts. Then, we recommend you use the example scripts and demos noted in the second section to see contextual examples of more specific functions.
+
+### Basics {#basics}
+
+***Screen Function.*** The Screen command is the basis of PTB scripts, as it controls the way information is displayed to the participant. Because of its fundamental nature, we decided to begin with a brief overview of its functionality so that you can get started on the framework of an experiment. Screen can have many different functions, and many functions work with Screen to create a working program.
+
+Before you can present things to the subject, you must first initialize a "window" that will contain the visual material you want to present. You create a new window with the Screen('OpenWindow') function.
+
+A simple (but not perfect) way to think about this window is as a double-sided dry erase board. Each side of the board can be referred to as a buffer. At any given time, you present one side to the subject. This is the front buffer. While the subject views the material on the front buffer, you prepare the next screen you want them to see on the back buffer. For example, you can prepare text using the DrawFormattedText() function or images using the Screen('DrawTexture') function. When you are ready to present the next screen, use the Screen('Flip') function to flip the buffers: the back buffer switches to the front and you get a new back buffer to prepare for the next screen and so on.
+
+To end your program, you must close the window and anything drawn on it so that you can access your monitor again. To do this, you simply use Screen('CloseAll').
+
+We provide a brief example with a detailed description of each function in the Screen Function [section](#screen-function).
+
+***Try-Catch Structure.*** We recommend using the try-catch structure for your PTB scripts to make them more robust to errors. The next [section](#learn-ex) contains examples of this.
+
+The idea here is to embed the bulk of your script (the real "functional" portion) in the try block. MATLAB will attempt to execute everything in the try block per usual. If no errors occur, the catch block will be skipped entirely. If any errors do occur within the try block, MATLAB will immediately jump to the catch block and proceed through whatever commands you have included there to deal with the error situation. This way, an error is much less likely to crash your task in an especially unceremonious way (just freezing, leaving keyboard output disabled, etc.) or go unnoticed until after it is done. Rather, the catch block can be used to properly close files and restore settings as well as report info on the error.
+
+### Learn Through Examples {#learn-ex}
+
+One of the best ways to get started is to look through one or more existing PTB experiments and learn how they work. You can then use relevant parts from these as a model for your own PTB script. We are linking two previous, well-commented experiments from the lab below. We believe it's easier to learn a lot of these functions in context. So, instead of going through all the common functions one by one, we commented these scripts to try to explain what the functions and their components are doing.
+
+**Experiment 1**
+
+Code: [Training Session](https://github.com/labarlab.github.io/tree/master/example_scripts/EmoReg1_training.m), [Main Task](https://github.com/tree/master/labarlab.github.io/example_scripts/EmoReg1.m)
+
+This experiment compares different emotion regulation techniques in response to aversive pictures. It involves cuing the subject for a viewing strategy, presenting an image, and presenting several screens asking the subject to make a keyboard response. The full set of files and scripts associated with this experiment can be found in `ccn-keoki.win.duke.edu/experiments2/John/EmoReg1`.
+
+These scripts cover:
+
+- Using arguments (input you give your script when you call it, such as the subject #).
+- Constructing and using pseudo-randomized stimuli and condition orders.
+- Defining and presenting screens with text or images.
+- Working with keyboard responses.
+- Sending signals to BIOPAC.
+- Writing keyboard responses and trial information to an output data file.
+- Playing audio files (for startle).
+- Triggering screen changes with subject responses vs defined durations.
+
+**Experiment 2**
+
+Code: [Monte Carlo](https://github.com/labarlab.github.io/tree/master/example_scripts/randomStimsMC.m)
+
+This experiment is a three day memory reconsolidation study, including encoding, reactivation with reconsolidation, and retrieval. The goal is to see whether participants can use emotion regulation as a form of reconsolidation. The task itself appears in the form of paired associate learning, where participants are presented with pairs of images, reminded of one, and tested on their memory of the associated picture. This paradigm requires displaying images, cuing regulation strategies, reading in user button presses, and keeping track of old and new images for a memory test. The full set of scripts and stimuli can be found in `ccn-keoki.win.duke.edu/experiments2/Natasha/EmoRegCon`.
+
+In addition to most of the items covered in Experiment 1, this experiment covers:
+
+- Using mouse clicks to advance screens (practice/training files).
+- Displaying multiple images on a single screen (Session1.m).
+- Online pseudo-randomization in a systematic manner (organizeStims.m) or using a Monte Carlo simulation (randomStimsMC.m, linked to above).
+- Storage and usage of stimuli across multiple scripts (all Session files).
+- Batch scripting (stimCreationBatch.m).
+
+**BTP Demo Materials**
+
+There are also a few simple demos that come with the PTB software download itself. On Windows, they are stored in `C:\\toolbox\Psychtoolbox\PsychDemos\PsychExampleExperiments`, and on Mac they are in `Applications/Psychtoobox/PsychDemos/PsychExampleExperiments`. In fact, the PsychDemos folder has a lot of useful starting information, including demos of how to include video and audio, although sometimes they call functions that are a little dated.
+
+
+## Questions and Answers {#qa}
+
+**Q: Which version of Psychtoolbox should I install?**
+
+A: The newest version of Psychtoolbox is 64-bit. If your (Windows) computer only supports 32-bit programs or you are planning to use your computer with BIOPAC, you will need to install the 32 bit version of Matlab and Psychtoolbox. This means that your psychtoolbox call will need to include a "flavor." After downloading the DownloadPsychtoolbox script, open Matlab and use the command DownloadPsychtoolbox('Psychtoolbox-3.0.11') for Windows.
+
+**Q: I'm getting warnings about GStreamer when I open Matlab. What is the correct way to install this add-on?**
+
+A: This was a common problem in the lab, and each person dealt with it differently. Here are things that worked for us: If you manually downloaded the 64-bit version from the folders located at [gstreamer-org](https://gstreamer.freedesktop.org/data/pkg/windows/), make sure you downloaded all the files in the newest version, and the folder is located in the same place as your Program Files folder if using Windows (usually in your Local Disk). You may also need to run "SetupPsychtoolbox" or "startup" when you open Matlab. Another fix is to do the automatic download from [GStreamer](https://gstreamer.freedesktop.org/) (look for the big green button partway down the page). This site also lets you differentiate between 32-bit and 64-bit versions.
+
+**Q: I've installed the latest version of GStreamer but it causes Matlab to crash as soon as it tries to load a movie. What's going on?**
+
+Unfortunately, there seem to be some incompatibilities between the recent releases of GStreamer and some versions of Matlab on Windows. There is a very, very long discussion thread on Yahoo groups here (*link broken, NM Jul 29 2022*) between several people trying to debug this issue. The recent version of GStreamer (2013.6 Congo) has been verified in the lab to work with Matlab R2010a. It has also been verified to NOT work with R2013b. Some suggestions from the Yahoo thread include using the 32-bit version of GStreamer or using an earlier release of the 64-bit version. None of these have been tested locally.
+
+**Q: How do you display multiple pictures on a single screen?**
+
+A: Though PTB documentation suggests using Screen('DrawTextures', ...), this call seemed to create a memory error with 3 pictures. Instead, make separate Screen('DrawTexture', ...) calls for each picture, where you specify the window in which the picture can be drawn. For example, Screen('DrawTexture', w, tex, [], [0 0 50 50]); will draw your entire picture that is stored in the texture "tex" in a 50x50 pixel square in the top left corner of the screen. Once you have drawn all the textures relating to the pictures you want to show on the single screen, use the flip command to display them all. For more information about the Screen command, see the Basics [section](#basics) and example code in Screen Function [section](#screen-function).
+
+
+## Screen Function {#screen-function}
+
+In this introduction to the Screen function, we provide some simple code with explanations to orient you to PTB's structure. Here is an example of the functions mentioned above with supporting functions required to make a working program.
+
+```
+[w, wRect] = Screen('OpenWindow', 0, BlackIndex(0));
+Screen('TextSize', w, 32);
+Screen('TextFont', w, 'Helvetica');
+
+DrawFormattedText(w, 'Hi, there', 'center', 'center', WhiteIndex(w));
+Screen('Flip', w);
+WaitSecs(2.0);
+
+DrawFormattedText(w, 'How are you?', 'center', 'center', GrayIndex(w));
+Screen('Flip', w);
+WaitSecs(2.0);
+
+picture = imread('smiley.jpg');
+tex = Screen('MakeTexture', w, picture);
+Screen('DrawTexture', w, tex);
+Screen('Flip', w);
+WaitSecs(2.0);
+
+Screen('CloseAll');
+```
+
+First, we initialize the double-buffered window we will use for presentation. 0 is the screen number (monitor/display) we want to use for presentation. On a Windows OS, 0 refers to all displays. BlackIndex() is defining the background color for our new window as the standard black value for screen number 0 on the current system. The initialized window is saved as an output ("w" here, referred to as a window pointer). The size of the full window is saved as a 4 component vector, stored in wRect here. Let's say the vector looks like [0 0 1680 1050]. Each number represents the pixel x or y value of the window, specifically [left (x1), top (y1), right (x2), bottom (y2)]. In our example, (0, 0) would the be the coordinates of the top left corner, and (1680, 1050) would be the coordinates of the bottom right corner. Most of the time, you won't need to use wRect at all, but we will give an example of where it can be used below.
+
+Next are a couple of commands to set the font and font size of text for our new window w. Then, the DrawFormattedText() command tells PTB to write the text 'Hi, there' in the vertical and horizontal center of the back buffer (automatically the back buffer) of w in white text. Note, the BlackIndex(), WhiteIndex(), and GrayIndex() functions will accept either a screen number (here is 0) or window pointer (here is w).
+
+As soon as the Screen('Flip') command is executed, the screen with 'Hi, there.' becomes visible to the viewer. Then, we prepare another message for presentation, 'How are you?' in gray text. To keep this screen from replacing the first message after only a handful of milliseconds (the next monitor refresh), we threw in a WaitSecs() command to ensure 'Hi, there' is presented for 2 seconds before Screen('Flip') replaces it with 'How are you?'. Similarly, we show this message for 2 seconds before moving on to the next set of changes to the screen.
+
+After the text commands, we have commands that work in conjunction to display a picture on the screen. First, we load the image into a matrix that represents colors by pixel. This process is accomplished by imread(). Next, we prepare the image to be drawn onto the back buffer; think of the Screen('MakeTexture') command as creating a stencil so that drawing the image on the dry erase board will take much less time. Lastly, the picture is drawn onto the back buffer using the Screen('DrawTexture') function. The screen is flipped and the image is displayed for 2 seconds.
+
+The Screen('DrawTexture') function can be run with many extra inputs to change the display settings of the picture. After w and the texture input, the fourth input to the function can be a vector specifying how much of the image to display. For example, if you only want to show the top left 50x50 pixel square of the image, you can put in [0 0 50 50] as the fourth input. Similarly, the fifth input specifies where on the screen you want to display the image. This is where wRect comes in useful. Say you only want to show the picture on the top half of the screen. You can input [0 0 wRect(3) wRect(4)/2], where the second y value is divided by 2, implying that this new rectangle only goes halfway down the screen.
+
+The last line in our example above is required to properly close the window and anything drawn on it. This call also quits PTB. Generally, you want to call Screen('CloseAll') at the end of your script, but there is also a function called Screen('Close'). This call is useful if you have an excessive number of Screen commands in succession (like in a for loop for an event-based paradigm). Like marker residue on a dry erase board, it seems as though PTB doesn't do a perfect job of erasing the back buffer before drawing the next item onto it. Thus, multiple Screen calls can create a buildup of memory, causing commands to slow down. Adding Screen('Close') at the end of the for loop will properly close all previously drawn objects while keeping the front buffer intact.
+
+
+## Psychtoolboox use at BIAC
+
+Even if you are familiar with Psychtoolbox, getting it to work on the BIAC computers presents a few challenges. Here is a list of some of the things lab members have experienced so that we don't have to reinvent the wheel every time.
+
+### Loading PTB
+
+If you try to run your tested PTB code on a BIAC computer without any changes, you will notice that simple PTB commands will fail. For example, AssertOpenGL or a simple OpenWindow using the Screen function may throw errors. It turns out that PTB needs to be set up every time you open MATLAB. You can either do this by navigating to the Psychtoolbox folder on Munin, or add the following two lines of code to your program. If you have many runs that use the same function call, you can also make this a conditional so it only sets up PTB on the first run.
+
+```
+addpath('\\Munin\Data\Programs\MATLAB\PsychToolbox\3.0.11');
+BIACSetupPsychtoolbox;
+```
+
+### Triggering Experiment Start
+
+Various lab members have had a lot of trouble with this, especially because BIAC5 and BIAC6 seem to work differently. However, code provided to us by Chris Petty seems to work on both scanners. Near the top of your code, you need to make sure you can access and send information to the daq (data acquisition device. To do that, put in the following lines:
+
+```
+try
+daq = DaqDeviceIndex();
+catch
+error('Daq device not found');
+end
+```
+
+Then, right before the start of your experiment, you can paste the following code. This will take the number that the counter is at (which counts the number of TTL pulses) and wait for another to be sent out before continuing. Note that there is a pulse per slice acquisition.
+
+```
+curcount = DaqCIn(daq);
+while 1
+if DaqCIn(daq) > curcount
+% start your task
+break
+else
+pause(.05)
+% do short sleep here just so you’re not executing
+% the counter check a billion times
+end
+end
+```
+
+### Recording Events Onset and Duration
+
+To do fMRI analysis, it is important to know the onset time and duration of each event that occurs in your task. There are a few easy ways to do this with PTB. Firstly, if you want to manually get the time whenever you want, you can use the command GetSecs; to retrieve the current computer time. You should do this near the beginning of your task and after your disdaqs to get a sense of your start time; this start time can be subtracted out of all other timing calls in the future to get a relative time (in terms of start of experiment/scan) instead of the absolute computer time. You can also use timing output from the command Screen('Flip'). There are three timing outputs from this command; the second is the one that is closest to stimulus presentation. So, using the code `[~ onsetTime] = Screen('Flip');` will give you the time at which the stimulus shown on the next screen is displayed (in the same format as GetSecs, so the absolute computer time). You can use this to get specific onsets of stimulus presentations. Note that both of these will be in milliseconds, so divide the output by 1000 for seconds.
+
+Similarly, you can use either of these two methods to get durations -- simply get the timing after an event goes away (using either method) and subtract the onset time to get the duration. Both onset and duration are important for fMRI analysis.
+
+### Using the Button Box
+
+If you're using the button box(es) for responses in the scanner, it is useful to know that the buttons do not linearly increase from left to right. If you're only using one box, specifically, the right one, you should be fine, but the problem comes when you try to use both. Here is the coding for the buttons, from left to right.
+
+`Left hand: 9 8 7 6, Right hand: 1 2 3 4`
+
+Also, the buttons register as if they are the numbers on the top of the keyboard, so all of them will have a KbName of 1!, 2@, etc. Also, the button presses are extra sticky in the scanner. This isn't a problem usually when you're looking for a response in a certain time window, but it can be an issue if you have responses advancing your screens. Add in extra wait times after those.
+
+Other thing of note: the projected screen into the scanner is quite small, pixelwise, so try to leave extra space around your words/images when testing elsewhere. Hopefully that proved at least a little helpful! Good luck!
+
