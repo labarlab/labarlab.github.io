@@ -1,6 +1,6 @@
 # Accessing Servers {#access-server}
 
-Created on 2020 Aug 25 by Gregory Steward.
+Created on 2020 Aug 25 by Gregory Stewart.
 
 Ported to bookdown on 2022 Jul 26 by Nathan Muncy.
 

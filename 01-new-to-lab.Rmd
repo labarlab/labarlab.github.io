@@ -1,6 +1,6 @@
 # Getting Started {#getting-started}
 
-Created on 2019 Jun 05 by Gregory Steward.
+Created on 2019 Jun 05 by Gregory Stewart.
 
 Ported to bookdown on 2022 Jul 26 by Nathan Muncy.
 

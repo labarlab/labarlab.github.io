@@ -2,7 +2,7 @@
 
 ##  Psychophysics - ECG {#psychophys-ecg}
 
-Created on 2019 Jun 05 by Gregory Steward.
+Created on 2019 Jun 05 by Gregory Stewart.
 
 Ported to bookdown on 2022 Jul 27 by Nathan Muncy.
 
@@ -102,7 +102,7 @@ Unlike other psychophysiology measures in the lab, it is absolutely critical to 
 
 ## Psychophysics - EDA {#psychophys-eda}
 
-Created on 2019 Jun 05 by Gregory Steward.
+Created on 2019 Jun 05 by Gregory Stewart.
 
 Ported to bookdown on 2022 Jul 28 by Nathan Muncy.
 
@@ -144,7 +144,7 @@ To be constructed (Jul 28, 2022).
 
 ## Psychophysics - EMG {#psychophys-emg}
 
-Created on 2020 Feb 12 by Gregory Steward.
+Created on 2020 Feb 12 by Gregory Stewart.
 
 Ported to bookdown on 2022 Jul 28 by Nathan Muncy.
 
@@ -276,7 +276,7 @@ knitr::include_graphics("imgs/03-EMG_electrode_rack.jpg")
 
 ## Psychophysics - RSP {#psychophys-rsp}
 
-Created on 2020 Sep 04 by Gregory Steward.
+Created on 2020 Sep 04 by Gregory Stewart.
 
 Ported to bookdown on 2022 Jul 29 by Nathan Muncy.
 
@@ -305,7 +305,7 @@ If you have trouble getting a signal from the belt, try using one of the back up
 
 ## Psychophysics - STIM {#psychophys-stim}
 
-Created on 2019 Sep 16 by Gregory Steward.
+Created on 2019 Sep 16 by Gregory Stewart.
 
 Ported to bookdown on 2022 Jul 29 by Nathan Muncy.
 
