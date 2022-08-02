@@ -1,7 +1,8 @@
 --- 
-title: "LaBaratory Wiki"
-author: "Nathan Muncy"
-# date: "`r Sys.Date()`"
+title: "LaBaratory Manual"
+author: 
+  - Nathan Muncy^[Duke University, nathan.muncy@duke.edu]
+date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
@@ -15,14 +16,24 @@ github-repo: rstudio/bookdown-demo
 
 # Overview {-}
 
-This site is under construction (Jul 26, 2022).
+```{r img-00-masks, fig.align='center', out.width="50%", echo=F}
+knitr::include_graphics("imgs/00-masks.png")
+```
 
-This digital book contains resources and learning materials compiled for the 
-LaBaratory of emotion and cognition. Content is organized in the following 
-chapters:
+This digital book contains resources and learning materials compiled for Kevin Labar's [Laboratory](http://www.labarlab.com/) of Emotion and Cognition. Content is organized in the following chapters:
 
 * Chapter \@ref(getting-started), Getting Started
 * Chapter \@ref(access-server), Accessing Servers
 * Chapter \@ref(psychophys), Psychophysics
 * Chapter \@ref(psychtoolbox), Psychtoolbox
 * Chapter \@ref(fmri), Functional MRI
+
+## Planned content additions {-}
+
+- Git tutorial
+- Shell scripting
+- Shell scripting, advanced
+- Matlab scripting
+- Python, R, and Shell best practices
+- NeuroImaging and the Duke Compute Cluster
+- FMRI processing and analyses guide
