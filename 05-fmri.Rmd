@@ -103,7 +103,55 @@ Remember to move data files to a secure location at the end of the session (usua
 Even if the BIAC subject pool coordinator schedules a session, the researcher is responsible for completing calendar entries after the session (sometimes the techs will complete the scanner calendar entries; see “Using the BIAC Calendar” above for more information). Entries for MOCK1 and TEST1 calendars must be completed as well (sometimes this just involves opening them and saving them).
 
 
-## FMRI preprocessing steps
+
+
+## SPM
+
+Created by Greg Stewart, last modified on 2018 Feb 18 by Natasha Parikh.
+
+Ported to bookdown on 2022 Aug 01 by Nathan Muncy.
+
+### Installing and Using SPM Preprocessing Batch Script Templates {-}
+
+This document contains instructions for installing and using the SPM fMRI preprocessing template batch scripts. These scripts are designed to perform initial preprocessing on an fMRI image and a matched T1 anatomical image. The two images should be roughly in alignment before putting them into this preprocessing (if they were acquired during the same scan session the initial alignment should be okay). This preprocessing will produce a version of the fMRI data and a version of the T1 data spatially normalized to MNI-152 standard space ready to go into first-level analysis. These scripts will also produce a quality assurance (QA) HTML file for initial evaluation of the fMRI data.
+
+The general flow of the preprocessing is as follows: install the necessary scripts and SPM modules, edit the template batch script to match the specifics of the data at hand, run one subject to make sure the SPM batch works, edit the template multi-subject processing script to match the specifics of the data at hand, run the multi-subject processing script.
+
+***NOTE:*** You’ll need to be able to log into and transfer files to/from the BIAC servers in order to have any access to your imaging data. If you have not set this up on your local computer, instructions for doing so can be found on the wiki here.
+
+### Basic File Manipulation Terms and Information
+1. *“Unzip”:* The zip files associated with the batch script templates all contain directories of Matlab scripts and SPM modules. To unzip each of them, right click on the .zip file to be unzipped; select `7-Zip -> Extract Here`. This will create an unzipped version of the directory in the same directory in which the .zip file is sitting.
+2. *“Add to Matlab path”:* The “Matlab path” is simply a list of directories that Matlab will search to find functions the user attempts to call. In order for a new function or script to be run, it must either be saved into a directory that is already in this list, or the directory in which it resides must be added to the list. In most cases the cleanest way to handle new modules and scripts is the second option: keep them in a new directory and add that directory to the Matlab path. In the main Matlab window, the current directory is displayed along the top, just under the grey panel, in the thin white bar. The contents of this directory are displayed along the left-hand side of the window. The current directory can be changed by either double-clicking on directories in the left-hand panel or by clicking on parts of the directory path in the white bar. To add a directory to the Matlab path, right click on it in the left-hand panel and select `Add to Path -> Selected Folders and Subfolders`. This will add the directory to the Matlab path until Matlab is closed. When re-opening Matlab the directory will need to be added to the path again. Changes to the path can be saved between Matlab sessions using the Set Path button to bring up the path editing window and pushing the Save button or typing “savepath” into the Matlab command line. Either method will require administrative access on the computer for changes to actually be saved.
+3. *“SPM8 Install Directory”:* The SPM install directory is the directory containing the actual spm.m script file that gets called when you type `spm` into the Matlab command line. It also contains sub-directories housing various SPM toolboxes and modules. Typing `which spm` into the Matlab command line should display the location of this directory (if instead it produces an error, odds are the SPM install directory has not been added to your Matlab path).
+
+### Installing Necessary Script Files
+1. All the parts necessary to use the SPM fMRI Preprocessing Batch Templates are saved on Keoki in: `…/Graner/Data/SPM_Preprocessing_Things`
+2. Copy `Graner_Batch_Modules.zip` to your local drive and unzip it. The unzipped directory contains Matlab scripts for implementing a quality-assurance module in SPM. Move the unzipped directory to a place on your hard drive in which you want such scripts to reside (if nowhere else comes to mind, this can go in the MATLAB directory). Add, with subfolders, the `Graner_Batch_Modules` directory to your Matlab path.
+3. Copy `SPM_Batch_Templates.zip` to your local drive and unzip it. This directory contains templates of SPM batch scripts for running preprocessing of fMRI data. The directory should be moved somewhere near wherever you are planning on saving the output results (this is just a “good practice” suggestion; the directory can actually go anywhere, but it is often helpful to have analysis scripts near their associated outputs to keep a clear data/analysis trail).
+4. Copy vbm8.zip to your local drive and unzip it. The unzipped directory contains the VBM8 module for SPM created by Christian Gaser ([http://www.neuro.uni-jena.de/vbm/](http://www.neuro.uni-jena.de/vbm/)). It will be used to segment the anatomical T1 image and does a better job than the built-in SPM module. This directory must go in a specific place. Move it into the \toolbox directory that resides in the SPM8 install directory. (After the unzip process make sure there is only a single `vbm8` directory rather than a pair of nested `vbm8` directories.) After moving the `vbm8` directory into `\toolbox`, you will need to either restart SPM or add, with subfolders, the `vbm8` directory to your `Matlab path`.
+
+### Checking SPM Module Installation
+1. Open Matlab, add the `Graner_Batch_Modules` directory to the `Matlab path`, and type `spm fmri` into the command line.
+2. Click the “Batch” button on the bottom of the SPM window.
+3. The drop-down menus across the top of the Batch Editor window should include one called `LocalMods` with `QA` and `ReadHdr` sub-options. If this menu is not there the `Graner_Batch_Modules` directory may not have been added to the `Matlab path`. There may also have been an error when trying to load the modules. If this were the case there should be some red error text in the main Matlab window.
+4. The VBM8 module should show up in the `SPM -> Tools` dropdown menu. If “VBM8” is not an option in this sub-menu the `vbm8` directory may not be in the correct place.
+5. If the checks above all went smoothly, select the `File -> Load Batch` option in the batch editor window. Navigate to the `SPM_batch_templates\SPM8\` directory, select `fmri_batch_job.m` and click `Done`. If everything is good-to-go the following list of modules should be listed in the left-hand portion of the window in this order:
+    + 3D to 4D File Conversion
+    + Expand image frames
+    + Slice Timing
+    + Realign: Estimate & Reslice
+    + VBM8: Estimate & Write
+    + Image Calculator
+    + Image Calculator
+    + Coregister: Estimate
+    + Deformations
+    + Deformations
+    + Smooth
+    + QArunall
+    + Move/Delete Files
+
+
+### FMRI preprocessing steps
 
 Created on 2018 Feb 13 by Gregory Stewart.
 
@@ -151,120 +199,6 @@ This is a list of descriptions of the various preprocessing steps included in th
 
 *Before the first excitation pulse the longitudinal (in line with the main magnetic field) component of the hydrogen nuclei group magnetization is at a maximum. After the first pulse the longitudinal component is decreased and begins recovering at an exponential rate based on the degree to which it was decreased (The excitation pulse knocks a portion of the hydrogen nuclei into a high-energy state in which their magnetic moments are anti-aligned to the main magnetic field. These then randomly return to the initial lower-energy state. The rate at which hydrogen nuclei are returning to the lower-energy state in the whole sample is thus dependent on the number of hydrogen nuclei in the excited state (dx = a$\times$x), leading to an exponential decay in the whole sample’s longitudinal magnetization.). In steady-state, the longitudinal magnetization is “in synch” with the excitation pulses such that it always returns to the same value before the next pulse arrives. Before this happens, the fMRI signal will be very different between volumes.*
 
-
-## FMRI Preprocessing Quality Assurance Output Descriptions
-
-**A Pictures and Metrics From the QArunall SPM Module**
-
-This documentation contains information on the various quality assurance (QA)-related output created by the “QArunall” module for SPM. The QArunall module was written locally by John Graner and provides quickly-viewable pictures, movies, and plots linked by a single html file. It does not provide a QA “result” for each data set, relying on the user to interpret the information presented.
-
-Below is a list of each element created by the module and linked to in the HTML file. Descriptions and examples are provided when relevant as well as things to look out for. Note: the word “picture” is used to refer to the visual presentation of data in the HTML file (these are just .png files); the word “image” is used to refer to the actual MRI data. An example QA HTML file is located in the documentation zip archive on `Keoki` in `…/Graner/Data/SPM_Preprocessing_Things`. After unzipping the archive, the summary file is `.../QA_Summary/QA_summary_display.html`.
-
-**Original Anatomical**
-
-*Description*. Three pictures of the original T1 anatomical image associated with the fMRI data. Each picture is the center slice of one of the three image dimensions (axial, sagittal, coronal). Note that the center image slice will most likely not correspond to the center of the brain. The brain may appear off-center and at a slight angle in each picture. However, the entire head should be contained within each of the three pictures.
-
-*QA Considerations*. Make sure the brain image looks like a brain image. If any structural abnormalities are suggested by the pictures, open the original T1 image in a full image viewer (e.g. SPM’s “Display” module) to verify.
-
-**Processed Anatomical**
-
-*Description*. Three pictures of the T1 anatomical image after it has been through preprocessing. These pictures should contain only brain tissue; the skull and other surrounding tissue should have been removed. The brain should also appear to be centered and not rotated in the three pictures, as it should now be registered to a standard image template (MNI-152).
-
-*QA Considerations*. Look for any areas around the edge of the brain where the skull-stripping failed and there is still non-brain tissue/bone in the image. The transformation into standard space involves a non-linear warp of the anatomical image. When this fails or goes awry portions of the image may get improperly warped and the brain will correspondingly look deformed. Look for any areas where the brain anatomy looks displaced, oddly shaped, or oddly sized.
-
-**Original fMRI**
-
-*Description*. Three pictures of the first volume of the original fMRI data. As with the original anatomical images, each picture should contain the brain (unless images were only acquired over a specific portion of the brain), but the brain might not be centered or aligned.
-
-*QA Considerations*. Look for any spatial artifacts in the pictures, such as large regions of signal drop-out, large “protrusions” from the brain, etc. Note that these pictures are of the first volume of the original fMRI data before ANY preprocessing has been done, so they may show a pre-steady-state volume. In this case a slice-wise banding artifact (each slice has a different average signal value and is therefore distinctly visible on the two pictures not in the slice acquisition dimension) may be present but not indicative of bad data.
-
-**Preprocessed Functional**
-
-*Description*. Three pictures of the first volume of the preprocessed fMRI data. This version of the fMRI should be centered in the pictures and not rotated.
-
-*QA Considerations*. Look for any spatial artifacts in the data (a remaining banding artifact, deformations of the brain, or places with “protrusions” from the brain). Double-check that the brain looks to be straight in each picture and that the whole brain is visible in each picture (and not cut off at an edge).
-
-**Anatomical Contours over Final fMRI**
-
-*Description*. Three pictures of the preprocessed fMRI with signal intensity contours of the preprocessed anatomical image overlayed in red. The red contours are created from the processed anatomical image and will usually (although not specifically) follow contours between CSF, grey matter, and white matter.
-
-*QA Considerations*. The overall purpose of these pictures is to make sure the processed anatomical image and processed fMRI image are spatially aligned. Look to make sure the outline of the brain in the contours matches the outline of the brain in the fMRI image. Note that there may be some extension (maybe one or two voxels) of what appears to be the edge of the brain in the fMRI image beyond the superior edge of the contour. The corpus callosum should also be distinguishable as a contour in the sagittal picture. This contour should encapsulate a region of relatively decreased signal intensity in the underlaying fMRI data as well. The left and right ventricles should be similarly matched in both the contours and the fMRI data. If no B0 inhomogeneity correction was done there will most likely be some “leak” of fMRI signal beyond the anterior portion of the outer contour. Finally, the general outline of the gray matter should be visible in the contours and match with slightly higher signal intensities in the fMRI data. It is important for both the internal structures and the outer boarder of the brain to be aligned in these pictures.
-
-**FMRI Motion Plots: Rotation Parameters**
-
-*Description*. This plot shows the three rotation parameters used by SPM when motion-correcting each volume of the fMRI data. The ordinate has units of degrees (usually small) and the abscissa has units of volume number.
-
-*QA Considerations*. This plot is rather straight-forward. Sharp, sudden increases or decreases in the plot represent TRs where the subject rotated his/her head suddenly. Gradual changes represent slower rotations over time. In many cases it is the sudden, sharp movements that may lead to issues. More information on the presence of these can be obtained from the other motion-related plots and movies, described below.
-
-**FMRI Motion Plots: Translation Parameters**
-
-*Description*. Very similar to the rotation parameter plot, this plot shows the three translation parameters used by SPM when motion-correcting each fMRI volume. The ordinate has units of millimeters.
-
-*QA Considerations*. Interpretation of this plot is very similar to that of the rotation parameter plot. Make note of any sharp changes in parameters between TRs.
-
-**FMRI Motion Plots: Time Points to Censor**
-
-*Description*. This is a single number as well as a plot showing the TRs suggested for censoring when carrying out subsequent analysis of the fMRI data. The plot has values of either 1 or 0 for each image volume. A 0 indicates the presence of significant motion around that volume, suggesting it should be excluded from analyses. The number displayed after the text “Time Points to Censor” is simply the number of volumes labeled with “0” in the plot. A volume is suggested for exclusion if the total motion between it and the previous volume is above a certain threshold.
-
-*QA Considerations*. This plot, the translation parameter plot, and the rotation parameter plot are displayed at the same size and x-scale in the HTML file to allow easy comparison between the timing of the volumes suggested for censoring and the timing of changes in the parameter plots. Make sure the volumes suggested for censoring correspond to sharp changes or peaks in the parameter plots; the three plots should sort of “tell a consistent story.”
-
-**FMRI Center Slice Movie**
-
-*Description*. This is a GIF showing the center sagittal slice of the processed fMRI data at every TR. The white bar at the bottom of the movie represents how far through the scan time-course the current picture is.
-
-*QA Considerations*. There are two main motivations for this movie. The first is to look for residual motion in the image that was not fully corrected in the motion correction step. This is often the case where there are many censored volumes or large jumps in the motion correction parameters; although some of the motion effects are removed the correction is usually not completely successful. Even if residual motion is visible in the movie (the brain appears to jump or jitter), however, it will not negatively impact analyses of the data so long as it occurs during time-points marked for censoring and censoring is in fact carried out during analysis. The second motivation behind this movie is to look for any temporal artifacts in the processed fMRI data. These can be slightly more insidious and less predictable. Possible things to watch out for include the sudden appearance of bands across the image in certain volumes, an intensity pattern that moves through the entire image as time progresses (e.g. “waves” of signal intensity moving through the brain), or the appearance of static noise inside or outside the brain in certain volumes. In general, look for any systematic or sudden change of signal that appears to be unrelated to the brain itself.
-
-**FMRI Variance Movie**
-
-*Description*. This is a gif showing the variance of each voxel time-course. The movie cycles through sagittal slices of the brain in the left-right direction (this could be left-to-right or right-to-left, depending on the data).
-
-*QA Considerations*. The goal of this movie is to look for any systematic spatial patterns in the voxel variances across the image: straight lines of increased variance, a grid pattern throughout the movie, etc. The variances of voxels on the edge of the brain should be greater than those of voxels inside the brain (the variances of voxels on the edge of the brain will be larger due to a larger degree of signal change brought about by any motion which causes a voxel to shift from being in the brain to being outside the brain). This should manifest as a visible outline of the brain in the movie.
-
-
-## SPM
-
-Created by Greg Stewart, last modified on 2018 Feb 18 by Natasha Parikh.
-
-Ported to bookdown on 2022 Aug 01 by Nathan Muncy.
-
-### Installing and Using SPM Preprocessing Batch Script Templates {-}
-
-This document contains instructions for installing and using the SPM fMRI preprocessing template batch scripts. These scripts are designed to perform initial preprocessing on an fMRI image and a matched T1 anatomical image. The two images should be roughly in alignment before putting them into this preprocessing (if they were acquired during the same scan session the initial alignment should be okay). This preprocessing will produce a version of the fMRI data and a version of the T1 data spatially normalized to MNI-152 standard space ready to go into first-level analysis. These scripts will also produce a quality assurance (QA) HTML file for initial evaluation of the fMRI data.
-
-The general flow of the preprocessing is as follows: install the necessary scripts and SPM modules, edit the template batch script to match the specifics of the data at hand, run one subject to make sure the SPM batch works, edit the template multi-subject processing script to match the specifics of the data at hand, run the multi-subject processing script.
-
-***NOTE:*** You’ll need to be able to log into and transfer files to/from the BIAC servers in order to have any access to your imaging data. If you have not set this up on your local computer, instructions for doing so can be found on the wiki here.
-
-### Basic File Manipulation Terms and Information
-1. *“Unzip”:* The zip files associated with the batch script templates all contain directories of Matlab scripts and SPM modules. To unzip each of them, right click on the .zip file to be unzipped; select `7-Zip -> Extract Here`. This will create an unzipped version of the directory in the same directory in which the .zip file is sitting.
-2. *“Add to Matlab path”:* The “Matlab path” is simply a list of directories that Matlab will search to find functions the user attempts to call. In order for a new function or script to be run, it must either be saved into a directory that is already in this list, or the directory in which it resides must be added to the list. In most cases the cleanest way to handle new modules and scripts is the second option: keep them in a new directory and add that directory to the Matlab path. In the main Matlab window, the current directory is displayed along the top, just under the grey panel, in the thin white bar. The contents of this directory are displayed along the left-hand side of the window. The current directory can be changed by either double-clicking on directories in the left-hand panel or by clicking on parts of the directory path in the white bar. To add a directory to the Matlab path, right click on it in the left-hand panel and select `Add to Path -> Selected Folders and Subfolders`. This will add the directory to the Matlab path until Matlab is closed. When re-opening Matlab the directory will need to be added to the path again. Changes to the path can be saved between Matlab sessions using the Set Path button to bring up the path editing window and pushing the Save button or typing “savepath” into the Matlab command line. Either method will require administrative access on the computer for changes to actually be saved.
-3. *“SPM8 Install Directory”:* The SPM install directory is the directory containing the actual spm.m script file that gets called when you type `spm` into the Matlab command line. It also contains sub-directories housing various SPM toolboxes and modules. Typing `which spm` into the Matlab command line should display the location of this directory (if instead it produces an error, odds are the SPM install directory has not been added to your Matlab path).
-
-### Installing Necessary Script Files
-1. All the parts necessary to use the SPM fMRI Preprocessing Batch Templates are saved on Keoki in: `…/Graner/Data/SPM_Preprocessing_Things`
-2. Copy `Graner_Batch_Modules.zip` to your local drive and unzip it. The unzipped directory contains Matlab scripts for implementing a quality-assurance module in SPM. Move the unzipped directory to a place on your hard drive in which you want such scripts to reside (if nowhere else comes to mind, this can go in the MATLAB directory). Add, with subfolders, the `Graner_Batch_Modules` directory to your Matlab path.
-3. Copy `SPM_Batch_Templates.zip` to your local drive and unzip it. This directory contains templates of SPM batch scripts for running preprocessing of fMRI data. The directory should be moved somewhere near wherever you are planning on saving the output results (this is just a “good practice” suggestion; the directory can actually go anywhere, but it is often helpful to have analysis scripts near their associated outputs to keep a clear data/analysis trail).
-4. Copy vbm8.zip to your local drive and unzip it. The unzipped directory contains the VBM8 module for SPM created by Christian Gaser ([http://www.neuro.uni-jena.de/vbm/](http://www.neuro.uni-jena.de/vbm/)). It will be used to segment the anatomical T1 image and does a better job than the built-in SPM module. This directory must go in a specific place. Move it into the \toolbox directory that resides in the SPM8 install directory. (After the unzip process make sure there is only a single `vbm8` directory rather than a pair of nested `vbm8` directories.) After moving the `vbm8` directory into `\toolbox`, you will need to either restart SPM or add, with subfolders, the `vbm8` directory to your `Matlab path`.
-
-### Checking SPM Module Installation
-1. Open Matlab, add the `Graner_Batch_Modules` directory to the `Matlab path`, and type `spm fmri` into the command line.
-2. Click the “Batch” button on the bottom of the SPM window.
-3. The drop-down menus across the top of the Batch Editor window should include one called `LocalMods` with `QA` and `ReadHdr` sub-options. If this menu is not there the `Graner_Batch_Modules` directory may not have been added to the `Matlab path`. There may also have been an error when trying to load the modules. If this were the case there should be some red error text in the main Matlab window.
-4. The VBM8 module should show up in the `SPM -> Tools` dropdown menu. If “VBM8” is not an option in this sub-menu the `vbm8` directory may not be in the correct place.
-5. If the checks above all went smoothly, select the `File -> Load Batch` option in the batch editor window. Navigate to the `SPM_batch_templates\SPM8\` directory, select `fmri_batch_job.m` and click `Done`. If everything is good-to-go the following list of modules should be listed in the left-hand portion of the window in this order:
-    + 3D to 4D File Conversion
-    + Expand image frames
-    + Slice Timing
-    + Realign: Estimate & Reslice
-    + VBM8: Estimate & Write
-    + Image Calculator
-    + Image Calculator
-    + Coregister: Estimate
-    + Deformations
-    + Deformations
-    + Smooth
-    + QArunall
-    + Move/Delete Files
 
 ### Reorganizing Image Data and Copying Them from the BIAC Servers
 
@@ -374,3 +308,263 @@ There is one important “link” between the multi-subject script file and the 
 Once the multi-subject script has been edited, it can be run by simply navigating, in Matlab, to the directory containing the script file and typing the name of the file (excluding the “.m”) into the Matlab command line. The Matlab window should then display the first subject’s ID followed by the beginning of the processing batch output.
 
 If all goes well, the script will run the processing for each subject once the previous subject is complete (thus, the entire script will take about 20-30 minutes per subject to complete; this is a good task for your computer to do overnight). If the processing fails for any subject for any reason, it will make note of it and move on to the next subject. When the script has attempted to run the script (successfully or not) for every subject in the list it will display two lists to the Matlab window: “Good Subjects” is a list of the subjects for which the processing did not encounter any programmatic errors (success here makes no comment on the quality of the data); “Bad Subjects” is a list of subjects for which the processing did not complete due to an error in attempting to run one of the processing modules.
+
+
+### Quality Assurance Output Descriptions
+
+**A Pictures and Metrics From the QArunall SPM Module**
+
+This documentation contains information on the various quality assurance (QA)-related output created by the “QArunall” module for SPM. The QArunall module was written locally by John Graner and provides quickly-viewable pictures, movies, and plots linked by a single html file. It does not provide a QA “result” for each data set, relying on the user to interpret the information presented.
+
+Below is a list of each element created by the module and linked to in the HTML file. Descriptions and examples are provided when relevant as well as things to look out for. Note: the word “picture” is used to refer to the visual presentation of data in the HTML file (these are just .png files); the word “image” is used to refer to the actual MRI data. An example QA HTML file is located in the documentation zip archive on `Keoki` in `…/Graner/Data/SPM_Preprocessing_Things`. After unzipping the archive, the summary file is `.../QA_Summary/QA_summary_display.html`.
+
+**Original Anatomical**
+
+*Description*. Three pictures of the original T1 anatomical image associated with the fMRI data. Each picture is the center slice of one of the three image dimensions (axial, sagittal, coronal). Note that the center image slice will most likely not correspond to the center of the brain. The brain may appear off-center and at a slight angle in each picture. However, the entire head should be contained within each of the three pictures.
+
+*QA Considerations*. Make sure the brain image looks like a brain image. If any structural abnormalities are suggested by the pictures, open the original T1 image in a full image viewer (e.g. SPM’s “Display” module) to verify.
+
+**Processed Anatomical**
+
+*Description*. Three pictures of the T1 anatomical image after it has been through preprocessing. These pictures should contain only brain tissue; the skull and other surrounding tissue should have been removed. The brain should also appear to be centered and not rotated in the three pictures, as it should now be registered to a standard image template (MNI-152).
+
+*QA Considerations*. Look for any areas around the edge of the brain where the skull-stripping failed and there is still non-brain tissue/bone in the image. The transformation into standard space involves a non-linear warp of the anatomical image. When this fails or goes awry portions of the image may get improperly warped and the brain will correspondingly look deformed. Look for any areas where the brain anatomy looks displaced, oddly shaped, or oddly sized.
+
+**Original fMRI**
+
+*Description*. Three pictures of the first volume of the original fMRI data. As with the original anatomical images, each picture should contain the brain (unless images were only acquired over a specific portion of the brain), but the brain might not be centered or aligned.
+
+*QA Considerations*. Look for any spatial artifacts in the pictures, such as large regions of signal drop-out, large “protrusions” from the brain, etc. Note that these pictures are of the first volume of the original fMRI data before ANY preprocessing has been done, so they may show a pre-steady-state volume. In this case a slice-wise banding artifact (each slice has a different average signal value and is therefore distinctly visible on the two pictures not in the slice acquisition dimension) may be present but not indicative of bad data.
+
+**Preprocessed Functional**
+
+*Description*. Three pictures of the first volume of the preprocessed fMRI data. This version of the fMRI should be centered in the pictures and not rotated.
+
+*QA Considerations*. Look for any spatial artifacts in the data (a remaining banding artifact, deformations of the brain, or places with “protrusions” from the brain). Double-check that the brain looks to be straight in each picture and that the whole brain is visible in each picture (and not cut off at an edge).
+
+**Anatomical Contours over Final fMRI**
+
+*Description*. Three pictures of the preprocessed fMRI with signal intensity contours of the preprocessed anatomical image overlayed in red. The red contours are created from the processed anatomical image and will usually (although not specifically) follow contours between CSF, grey matter, and white matter.
+
+*QA Considerations*. The overall purpose of these pictures is to make sure the processed anatomical image and processed fMRI image are spatially aligned. Look to make sure the outline of the brain in the contours matches the outline of the brain in the fMRI image. Note that there may be some extension (maybe one or two voxels) of what appears to be the edge of the brain in the fMRI image beyond the superior edge of the contour. The corpus callosum should also be distinguishable as a contour in the sagittal picture. This contour should encapsulate a region of relatively decreased signal intensity in the underlaying fMRI data as well. The left and right ventricles should be similarly matched in both the contours and the fMRI data. If no B0 inhomogeneity correction was done there will most likely be some “leak” of fMRI signal beyond the anterior portion of the outer contour. Finally, the general outline of the gray matter should be visible in the contours and match with slightly higher signal intensities in the fMRI data. It is important for both the internal structures and the outer boarder of the brain to be aligned in these pictures.
+
+**FMRI Motion Plots: Rotation Parameters**
+
+*Description*. This plot shows the three rotation parameters used by SPM when motion-correcting each volume of the fMRI data. The ordinate has units of degrees (usually small) and the abscissa has units of volume number.
+
+*QA Considerations*. This plot is rather straight-forward. Sharp, sudden increases or decreases in the plot represent TRs where the subject rotated his/her head suddenly. Gradual changes represent slower rotations over time. In many cases it is the sudden, sharp movements that may lead to issues. More information on the presence of these can be obtained from the other motion-related plots and movies, described below.
+
+**FMRI Motion Plots: Translation Parameters**
+
+*Description*. Very similar to the rotation parameter plot, this plot shows the three translation parameters used by SPM when motion-correcting each fMRI volume. The ordinate has units of millimeters.
+
+*QA Considerations*. Interpretation of this plot is very similar to that of the rotation parameter plot. Make note of any sharp changes in parameters between TRs.
+
+**FMRI Motion Plots: Time Points to Censor**
+
+*Description*. This is a single number as well as a plot showing the TRs suggested for censoring when carrying out subsequent analysis of the fMRI data. The plot has values of either 1 or 0 for each image volume. A 0 indicates the presence of significant motion around that volume, suggesting it should be excluded from analyses. The number displayed after the text “Time Points to Censor” is simply the number of volumes labeled with “0” in the plot. A volume is suggested for exclusion if the total motion between it and the previous volume is above a certain threshold.
+
+*QA Considerations*. This plot, the translation parameter plot, and the rotation parameter plot are displayed at the same size and x-scale in the HTML file to allow easy comparison between the timing of the volumes suggested for censoring and the timing of changes in the parameter plots. Make sure the volumes suggested for censoring correspond to sharp changes or peaks in the parameter plots; the three plots should sort of “tell a consistent story.”
+
+**FMRI Center Slice Movie**
+
+*Description*. This is a GIF showing the center sagittal slice of the processed fMRI data at every TR. The white bar at the bottom of the movie represents how far through the scan time-course the current picture is.
+
+*QA Considerations*. There are two main motivations for this movie. The first is to look for residual motion in the image that was not fully corrected in the motion correction step. This is often the case where there are many censored volumes or large jumps in the motion correction parameters; although some of the motion effects are removed the correction is usually not completely successful. Even if residual motion is visible in the movie (the brain appears to jump or jitter), however, it will not negatively impact analyses of the data so long as it occurs during time-points marked for censoring and censoring is in fact carried out during analysis. The second motivation behind this movie is to look for any temporal artifacts in the processed fMRI data. These can be slightly more insidious and less predictable. Possible things to watch out for include the sudden appearance of bands across the image in certain volumes, an intensity pattern that moves through the entire image as time progresses (e.g. “waves” of signal intensity moving through the brain), or the appearance of static noise inside or outside the brain in certain volumes. In general, look for any systematic or sudden change of signal that appears to be unrelated to the brain itself.
+
+**FMRI Variance Movie**
+
+*Description*. This is a gif showing the variance of each voxel time-course. The movie cycles through sagittal slices of the brain in the left-right direction (this could be left-to-right or right-to-left, depending on the data).
+
+*QA Considerations*. The goal of this movie is to look for any systematic spatial patterns in the voxel variances across the image: straight lines of increased variance, a grid pattern throughout the movie, etc. The variances of voxels on the edge of the brain should be greater than those of voxels inside the brain (the variances of voxels on the edge of the brain will be larger due to a larger degree of signal change brought about by any motion which causes a voxel to shift from being in the brain to being outside the brain). This should manifest as a visible outline of the brain in the movie.
+
+
+## QA - FMRIPrep
+
+Created on 2022 Sep 14 by John Graner.
+
+Ported to bookdown on 2022 Sep 15 by Nathan Muncy.
+
+### General Information
+
+**QA Result Options**
+
+Each analyzable portion of data gets its own result from the following options: 
+
+* <span style='color: green;'>Green</span> – Data look good and are usable 
+* <span style='color: orange;'>Yellow</span> – Data may be usable and can continue to analysis, but results should be checked for a specific artifact or concerning feature 
+* <span style='color: red;'>Red</span> – Data are not usable 
+
+**QA Evaluation Guide**
+
+The QA information provided by fMRIPrep serves two purposes. The first is to determine if the preprocessing steps worked successfully and as expected. The second is to determine if the input data contain signal variance, due to noise sources, that will interfere with the accuracy of subsequent analyses. Each section of the QA output provides a piece of information relevant to one or both of these determinations. 
+
+Note that evaluation of the quality of the input data is somewhat dependent on the planned analyses. For example, an artifact in the orbital frontal cortex might not matter if the analysis plan calls for investigating only the parietal lobe. Thus, while this guide can provide help for interpreting QA output, it cannot offer advice on how to evaluate the importance of what the output reveals. 
+
+**Summary**
+
+This is an overview of what was processed and the output spaces to which it was normalized. Make sure the files listed match what is expected. If anything is missing or if there are extra files listed, follow up by checking the BIDS directory, original data directory, and any scan-day notes. 
+
+### Checking Anatomical Images
+
+**Anatomical Conformation**
+
+This is an overview of the anatomical images and their output grids. Check to make sure these are as expected. 
+
+**Brain mask and brain tissue segmentation of the T1w**
+
+This figure shows the grey matter/white matter/cerebral-spinal-fluid segmentation of the T1-weighted anatomical image. Ideally, the various color contours should follow the tissue changes through the brain.
+
+* Dots are ok. 
+* The red line should trace the edge of the brain. It won't be perfect (e.g., the brain often edges out just past the line), but look for missing chunks. 
+* Inferior insula and temporal lobe tend to be problem areas 
+* The magenta lines trace ventricles and sulci. Like the red line, the magenta lines may be slightly imperfect, but they should generally follow the shape of all the ventricles and sulci. 
+* The blue line should tightly trace the white matter. The mid-sagittal slice often appears strange, but you should see in other slices that the "fingers" of the white matter are well-traced. The blue lines are generally more precise than the red and magenta. 
+
+If there are significant errors in the contour lines, visually check the T1w image in the BIDS directory to look for any artifacts or other quality issues. If there aren’t any visible problems with original data, rerunning fMRIPrep might solve the issue.
+
+**Spatial normalization of the anatomical T1w reference**
+
+When the mouse cursor is hovered over this figure, it switches between the standard space anatomical template and the result of attempting to spatially register the input T1 anatomical image to it. Ideally, they should align very closely. 
+
+1. Check for global alignment of the two images: Is the subject's brain the same size as the template brain, and are the brains laid directly on top of one another (no relative rotation or translation)?  
+2. Then, look for alignment of local features:
+    + Check to see if any region of the subject's brain is inflated or deflated relative to the template 
+    + Check that specific structures are roughly aligned: Select an anatomical landmark (a sulcus or gyrus is a good choice), and see whether the landmark is in the same place, and is of roughly the same size, in the subject and template brains. The landmarks will often look a little different in the subject and template brains; subject brains will usually have slightly different cortical folding than the template, and the template will always be blurrier and brighter than the subject brain. However, you should see that the same general landmark is in roughly the same place in the two brains. 
+
+Similar to the previous section, if there are significant errors in the alignment, visually check the T1w image in the BIDS directory. If there are no visible concerns with the original image, try rerunning fMRIPrep.
+
+**B$_0$ field mapping**
+
+This section displays information on inhomogeneities in the scanner magnetic field due to the presence of the participant’s head. When the mouse cursor is hovered over the figures, they will switch on and off a display highlighting the degree of inhomogeneity in each voxel.
+
+* Inhomogeneity is most common in the following areas: in and below the orbitofrontal cortex, medially below the center of the brain, bilaterally outside the brain below the ears, some regions outside the skull anterior and posterior. 
+* Most of the space within the brain itself should be free of highlighting. Portions of the orbitofrontal cortex (the mid-line front bottom of the brain) will probably have some highlighting. 
+* Check the figures to make sure there isn’t much inhomogeneity reported inside the brain itself. The regions of inhomogeneity should appear as cloudy blobs in the figures, without any slice-wise patterns. 
+
+If the inhomogeneity looks odd, visually check the image used to do the field mapping. This may be a reverse-phase-encode EPI acquisition or a direct field map. 
+
+### Checking Functional Images
+
+**Summary**
+
+Make sure the values of the following parameters are as expected: Repetition time (TR), Phase-encoding (PE) direction, sequence description, Slice timing correction, Susceptibility distortion correction, Registration. 
+
+Non-steady-state volumes: The number of automatically detected non-steady-state volumes should be 2-4. If this number is larger, visually inspect the first 10 or so volumes of the functional data in the BIDS directory and the ICA output (see below) to check for artifacts. 
+
+Confounds Collected: There will be a long list here (initially collapsed out of view; click the arrow next to the label to open it). Check the highest number of the “motion_outlierYY” confounds. If this number is greater than the total number of volumes in the image times 0.2 (or whatever motion-censor limit the current study is using), the run should be marked as poor and not used in analysis. 
+
+**Susceptibility distortion correction**
+
+The goal is to determine whether the quality of the image has improved after distortion correction. Hovering the mouse cursor over the image slices will cause the figure to shift between the “before” image and the “after” image. The “before” image is the EPI data before distortion correction, and the “after” image is the post-distortion-correction version. The blue contours in the figure are white-matter boundaries derived from the T1-weighted anatomical image. Ideally, the white matter boundaries of the EPI should more closely match the blue contours after distortion correction. 
+
+The two main signs of improvement are:
+
+* The white matter boundaries in the EPI better align with the blue contours
+* Obvious distortions/deformations are attenuated (e.g. the cerebellum goes from being obviously misshapen to looking about right; the posterior and anterior portions of the brain get “pushed in” or “stretched out” to better match the blue contours).
+
+If the image has generally improved, even by a little, it’s fine; if it has not improved, or has gotten worse, make note of it (fMRIPrep can be rerun excluding the distortion correction step).  
+
+_One possible strategy for this section:_ Zoom in on the image pane, and try to find slices where one image appears better than the other. Then, zoom out and see whether the improved image is the "before" or "after". After doing this for several slices, you'll get a feel for whether things have generally improved. As you get practice with this, you'll figure out what slices commonly show signs of correction. Here are some signs that often stand out: 
+
+* Distortions around the frontal pole are common. Corrections for these often results in better white matter alignment in the central axial slice, the axial slice to its immediate right, and sagittal slices that display large swaths of white matter. Additionally, you may notice that the anterior portion of the central axial slice looks strangely "pushed out" or in one image, but more naturally rounded in the other; that's also a sign of improvement. 
+* In the midsagittal slice, or nearby slices, the orbital frontal region may be “stretched out” before correction but is brought in after correction. The same may be true for the superior and inferior of the posterior portion of the brain. 
+
+**Alignment of functional and anatomical MRI data**
+
+Red lines represent tissue contours of the structural image and should match the “fixed” image almost perfectly. The “moving” image (the functional) is the one to evaluate. Ideally, tissue type boundaries in the moving image also line up with the blue contours. Portions along the outside of the brain may not align with the blue contours as well as central portions. 
+
+**Brain mask and (temporal/anatomical) CompCor ROIs**
+
+This figure shows voxels algorithmically identified as containing noisy time-courses, either because they are located in the white matter or CSF or because their time-courses have characteristics that make them look mostly unrelated to neural activation.
+
+* Check that the red line roughly traces the edge of the brain (will not be exact)  
+* The voxels inside the magenta lines should be in the white matter and CSF. They will not trace the full boundaries of white matter or ventricles, but the areas they trace shouldn't include much grey matter. It can be hard to tell what's grey matter in these images; just check that the boundaries look plausible. 
+* The blue regions correspond to the noisiest voxels in the brain; they're mostly likely to be near CSF and the brain stem. These are only notable if they're drawn somewhere you rarely see them (e.g. there shouldn't be a big chunk in prefrontal cortex). 
+
+**Variance explained by t/aCompCor components**
+
+_Note:_ If the study analysis plan does not include any CompCor regressors, ignore this section completely. 
+
+These plots show the number of CompCor components necessary to explain given amounts of variance in the ROI time-courses. The curves on the plots should generally start vertical-ish and become more horizontal as you travel along the x-axis. 
+
+If the curves do not look as expected, double-check the CompCor ROIs from the previous section. Rerunning fMRIPrep may help. If it does not, make note of it, as these regressors may need to be excluded from further analysis. 
+
+**BOLD summary**
+
+Compare the DVARS and FD graphs. FD is a measure of head motion, and DVARS is a measure of signal intensity change across the brain. Signal intensity change will spike when head motion spikes. Check for any spikes in signal intensity change that are not correlated with head motion. If there's a spike in DVARS without any spike in FD, that's notable - it could indicate the presence of an unknown artifact. 
+
+The “carpet plot” below the FD curve shows columns of time and rows of voxels. The greyscale in the figure maps to voxel signal intensity. Inspect the carpet plot for any patterns that your eye/brain notices. Examples include vertical stripes, horizontal stripes, and grid or checkerboard patterns. Vertical lines indicate a change in intensity at the same time point in many voxels. If there is a spike in the FD plot that corresponds in time with a vertical line, the line is most likely due to head motion. Horizontal lines standing out in the carpet plot may indicate several voxels with time-courses that are unlike other voxels around them.
+
+```{r img-5-qa-fmriprep-1, fig.align='center', fig.cap="Example of head motion showing up as vertical patterns in the carpet plot.", out.width='90%', echo=F}
+knitr::include_graphics("imgs/05-QA-fmriprep_fig01.png")
+```
+
+**Correlations among nuisance regressors**
+
+Strong correlation between 5 or more regressors may indicate some sort of artifact in the data. Check the ICA components (see below) to try to get a sense of where the correlation may be coming from. 
+
+**ICA Components classified by AROMA**
+
+This is probably the least concrete portion of the QA. Each component has a spatial map, a time-course, and a representation of the time-course in the frequency domain. 
+
+```{r img-5-qa-fmriprep-2, fig.show='hold', fig.align='center', fig.cap="Example ICA-AROMA component, including spatial map (left), time-series (right, top) and frequency power spectrum (right, bottom). ", out.extra='style="background-color: #000000; padding:1px; display: inline-block;"', out.width='45%', echo=F}
+knitr::include_graphics(c("imgs/05-QA-fmriprep_fig02_left.png","imgs/05-QA-fmriprep_fig02_right.png"))
+```
+
+Components labeled with green letters and with green time-courses are judged by the AROMA algorithm to be non-noise. That is, they are judged to be possibly associated with neural activity. Conversely, components labeled with red letters and with red time-courses are judged to be noise. 
+
+These components can reveal artifacts present in the data that are not easily detectable through volume-by-volume visual inspection. The primary QA goal for this section is to see if there are any signal components mislabeled as red that might negatively influence the results of subsequent analyses. However, the components in this section can also provide additional insight into patterns in the data that might be creating notable results in other sections of the QA output. 
+
+_**Spatial Characteristics of Components:**_ 
+_Note:_ The characteristics and examples below are not exhaustive.
+
+1. **Artifact components** _may_ have the following general spatial characteristics:
+    * Well-defined regions with sharp cut-offs 
+    * Span entire slabs of the image (in any of the 3 dimensions) and either seem to be present only in those slabs or repeat in different slabs, leading to a striped appearance 
+    * Follow closely along the edge of the brain 
+    * Speckled throughout the brain 
+    * Strong patterns that don’t appear to follow the brain anatomy (e.g. circles, large “slashes”, “ripples”) 
+
+```{r img-5-qa-fmriprep-3, fig.show='hold', fig.align='center', fig.cap="Example spatial maps of artifact/noise components.", out.extra='style="background-color: #000000; padding:1px; display: inline-block;"', out.width='45%', echo=F}
+knitr::include_graphics(c("imgs/05-QA-fmriprep_fig03_upperleft.png","imgs/05-QA-fmriprep_fig03_upperright.png","imgs/05-QA-fmriprep_fig03_lowerleft.png","imgs/05-QA-fmriprep_fig03_lowerright.png"))
+```
+
+2. **Neural components** _may_ have the following general spatial characteristics:
+    * “Blobs” with softer edges 
+    * Seem to follow or match with the gray matter structural or functional anatomy of the brain 
+    * Bilateral (mirrored left-right across the center of the brain) 
+    * Look like known functional networks 
+
+```{r img-5-qa-fmriprep-4, fig.show='hold', fig.align='center', fig.cap="Example spatial maps of activation-related components.", out.extra='style="background-color: #000000; padding:1px; display: inline-block;"', out.width='45%', echo=F}
+knitr::include_graphics(c("imgs/05-QA-fmriprep_fig04_upperleft.png","imgs/05-QA-fmriprep_fig04_upperright.png","imgs/05-QA-fmriprep_fig04_lowerleft.png","imgs/05-QA-fmriprep_fig04_lowerright.png"))
+```
+
+_**Temporal Characteristics of Components:**_ 
+
+1. **Artifact components** _may_ have the following general temporal characteristics:
+    * High-frequency, “squiggle-y” look throughout 
+    * Noticeable upward or downward slope across the whole time-series
+    * Peaks at specific frequencies and little power in other frequencies 
+
+```{r img-5-qa-fmriprep-5, fig.show='hold', fig.align='center', fig.cap="Example time-courses of artifact/noise components.", out.extra='style="background-color: #000000; padding:1px; display: inline-block;"', out.width='45%', echo=F}
+knitr::include_graphics(c("imgs/05-QA-fmriprep_fig05_upperleft.png","imgs/05-QA-fmriprep_fig05_upperright.png","imgs/05-QA-fmriprep_fig05_lowerleft.png","imgs/05-QA-fmriprep_fig05_lowerright.png"))
+```
+
+2. **Neural components** _may_ have the following general temporal characteristics:
+    * Periods of increased signal and decreased signal that last for several time-points each 
+    * Smoother rises and falls in the intensity time-course 
+
+```{r img-5-qa-fmriprep-6, fig.show='hold', fig.align='center', fig.cap="Example time-courses of neural activation-related components.", out.extra='style="background-color: #000000; padding:1px; display: inline-block;"', out.width='45%', echo=F}
+knitr::include_graphics(c("imgs/05-QA-fmriprep_fig06_upperleft.png","imgs/05-QA-fmriprep_fig06_upperright.png","imgs/05-QA-fmriprep_fig06_lowerleft.png","imgs/05-QA-fmriprep_fig06_lowerright.png"))
+```
+
+
+
+
+
+
+
+
+
+
