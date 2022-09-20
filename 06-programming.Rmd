@@ -1,20 +1,21 @@
 # Programming {#programming}
 
-## Introduction
-
 Written on 2022 Sep 04 by Nathan Muncy
 
 This chapter is under construction.
 
+## Introduction
+
 The goal of this chapter is to provide general guidance on a number of topics with  an aim to standardize how code is written in the LaBar Lab. Standardization  will (1) speed-up the development and trouble-shooting process and (2) support maintenance and use efforts when students and researchers have left the lab.
+
 
 ## Best Practices
 
-A programming adage says that "Code is written once but read many times". Best practices guide decisions that programmers make when writing their code, ranging from how to name variables to how to structure entire projects, so that their (brilliant) work is accessible to, and maintainable by, others. Many articles, blogs, and books have been written about best practices, so the aim here is not to exhaustively describe all recommendations but to provide some basic principles.
+A programming adage says that "Code is written once but read many times". Best practices guide decisions that programmers make when writing their code, ranging from how to name variables to the structure of entire projects, so that their (brilliant) work is accessible to, and maintainable by, others. Many articles, blogs, and books have been written about best practices, so the aim here is not to exhaustively describe all recommendations but to provide some basic principles.
 
-In addition to more language-specific recommendations below, a few guidelines are applicable in any language.
+In addition to more language-specific recommendations below, a few guidelines are applicable in any language:
 
-1. Avoid deep nests of logic. Keeping nested logic to around 3 levels will help the next person follow your code (including your future self). Such nests show up in for-loops, conditionals, and method calls. If you are finding yourself exceeding 3-or-so levels of logic, save your future self the headache and restructure your code. Relatedly, have each line of code do only one or two things. A complicated "one-liner" is only cool for 15 seconds, and after that will convolute the code for everyone (including you).
+1. Avoid deep nests of logic. Keeping nested logic to around 3 levels will help the next person follow your code (including your future self). Such nests show up in for-loops, conditionals, and method calls. If you are finding yourself exceeding 3-or-so levels of logic save your future self the headache and restructure your code. Relatedly, have each line of code do only one or two things. A complicated "one-liner" is only cool for 15 seconds, and after that will convolute the code for everyone (including you).
 
 2. Have meaningful names. Names for variables, functions, methods, modules etc. should be simple and descriptive. We do not want to remember what `i` means in this current loop, nor having to re-read documentation about what `function_a` and `pls_work` do. A good name will be unique in the project's [namespace](https://en.wikipedia.org/wiki/Namespace), human readable, and informative.
 
@@ -23,7 +24,18 @@ In addition to more language-specific recommendations below, a few guidelines ar
 
 ### Python
 
-Python has an established history of best practices since [PEP8](https://peps.python.org/pep-0008/).
+Python has an established history of best practices since [PEP8](https://peps.python.org/pep-0008/). Modern IDEs are configurable to help conform to these (and more modern) recommendations. I recommend using a [linter](https://realpython.com/python-code-quality/) (and it is very easy in [VS Code](https://code.visualstudio.com/docs/python/linting)): linters serve to check for syntax and/or style issues by referencing a predetermined guide. The guide [Flake8](https://flake8.pycqa.org/en/latest/) is a preferred style that detects both syntax and style issues. Additionally, auto-formatters such as [Black](https://www.geeksforgeeks.org/python-code-formatting-using-black/) can save you the effort of formatting your code according to Flake8 or other recommendations (and can be triggered for each save in [VS Code](https://code.visualstudio.com/docs/python/editing)).
+
+As [PEP8](https://peps.python.org/pep-0008/) is well established and conforming somewhat automated, here I reiterate and make a few suggestions:
+
+* Variable, function, method, module, and package names should be named in `snake_case`
+* Class names should use `PascalCase`
+* Every python file (except maybe `__init__.py`) should have a `__doc__` [attribute](https://www.programiz.com/python-programming/docstrings), preferably at the top of the file
+* Functions, classes, and methods should also contain a [docstring](https://www.programiz.com/python-programming/docstrings)
+* Docstrings should be formatted to the [Numpy style](https://numpydoc.readthedocs.io/en/latest/format.html)
+* Format comments in sentence case, and use comments to explain the functionality (not syntax)
+* Decide whether procedural, functional, or object-oriented programming best suite your task (Section \@ref(prog-style))
+* Supply a command-line interface (Section \@ref(cli)) if argument parameters are needed (avoid editing code for each use)
 
 ### Shell
 
@@ -33,7 +45,7 @@ Python has an established history of best practices since [PEP8](https://peps.py
 
 
 
-## Command Line Interface
+## Command Line Interface {#cli}
 
 ### Python
 
@@ -53,7 +65,7 @@ Python has an established history of best practices since [PEP8](https://peps.py
 
 
 
-## Procedural, Functional, and Object-oriented Programming
+## Procedural, Functional, and Object-oriented Programming {#prog-style}
 
 ### Python
 

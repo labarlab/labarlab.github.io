@@ -97,7 +97,7 @@ python
 shell
 r
 matlab
-command-line-interface
+cli
 python-1
 shell-1
 r-1
@@ -105,7 +105,7 @@ documentation
 python-2
 shell-2
 r-2
-procedural-functional-and-object-oriented-programming
+prog-style
 python-3
 shell-3
 r-3

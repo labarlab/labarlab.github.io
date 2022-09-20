@@ -198,7 +198,7 @@
 <li class="chapter" data-level="6.2.3" data-path="programming.html"><a href="programming.html#r"><i class="fa fa-check"></i><b>6.2.3</b> R</a></li>
 <li class="chapter" data-level="6.2.4" data-path="programming.html"><a href="programming.html#matlab"><i class="fa fa-check"></i><b>6.2.4</b> Matlab</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="programming.html"><a href="programming.html#command-line-interface"><i class="fa fa-check"></i><b>6.3</b> Command Line Interface</a>
+<li class="chapter" data-level="6.3" data-path="programming.html"><a href="programming.html#cli"><i class="fa fa-check"></i><b>6.3</b> Command Line Interface</a>
 <ul>
 <li class="chapter" data-level="6.3.1" data-path="programming.html"><a href="programming.html#python-1"><i class="fa fa-check"></i><b>6.3.1</b> Python</a></li>
 <li class="chapter" data-level="6.3.2" data-path="programming.html"><a href="programming.html#shell-1"><i class="fa fa-check"></i><b>6.3.2</b> Shell</a></li>
@@ -210,7 +210,7 @@
 <li class="chapter" data-level="6.4.2" data-path="programming.html"><a href="programming.html#shell-2"><i class="fa fa-check"></i><b>6.4.2</b> Shell</a></li>
 <li class="chapter" data-level="6.4.3" data-path="programming.html"><a href="programming.html#r-2"><i class="fa fa-check"></i><b>6.4.3</b> R</a></li>
 </ul></li>
-<li class="chapter" data-level="6.5" data-path="programming.html"><a href="programming.html#procedural-functional-and-object-oriented-programming"><i class="fa fa-check"></i><b>6.5</b> Procedural, Functional, and Object-oriented Programming</a>
+<li class="chapter" data-level="6.5" data-path="programming.html"><a href="programming.html#prog-style"><i class="fa fa-check"></i><b>6.5</b> Procedural, Functional, and Object-oriented Programming</a>
 <ul>
 <li class="chapter" data-level="6.5.1" data-path="programming.html"><a href="programming.html#python-3"><i class="fa fa-check"></i><b>6.5.1</b> Python</a></li>
 <li class="chapter" data-level="6.5.2" data-path="programming.html"><a href="programming.html#shell-3"><i class="fa fa-check"></i><b>6.5.2</b> Shell</a></li>
@@ -248,24 +248,35 @@
             <section class="normal" id="section-">
 <div id="programming" class="section level1 hasAnchor" number="6">
 <h1><span class="header-section-number">Chapter 6</span> Programming<a href="programming.html#programming" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="introduction-6" class="section level2 hasAnchor" number="6.1">
-<h2><span class="header-section-number">6.1</span> Introduction<a href="programming.html#introduction-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Written on 2022 Sep 04 by Nathan Muncy</p>
 <p>This chapter is under construction.</p>
+<div id="introduction-6" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Introduction<a href="programming.html#introduction-6" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The goal of this chapter is to provide general guidance on a number of topics with an aim to standardize how code is written in the LaBar Lab. Standardization will (1) speed-up the development and trouble-shooting process and (2) support maintenance and use efforts when students and researchers have left the lab.</p>
 </div>
 <div id="best-practices" class="section level2 hasAnchor" number="6.2">
 <h2><span class="header-section-number">6.2</span> Best Practices<a href="programming.html#best-practices" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A programming adage says that “Code is written once but read many times”. Best practices guide decisions that programmers make when writing their code, ranging from how to name variables to how to structure entire projects, so that their (brilliant) work is accessible to, and maintainable by, others. Many articles, blogs, and books have been written about best practices, so the aim here is not to exhaustively describe all recommendations but to provide some basic principles.</p>
-<p>In addition to more language-specific recommendations below, a few guidelines are applicable in any language.</p>
+<p>A programming adage says that “Code is written once but read many times”. Best practices guide decisions that programmers make when writing their code, ranging from how to name variables to the structure of entire projects, so that their (brilliant) work is accessible to, and maintainable by, others. Many articles, blogs, and books have been written about best practices, so the aim here is not to exhaustively describe all recommendations but to provide some basic principles.</p>
+<p>In addition to more language-specific recommendations below, a few guidelines are applicable in any language:</p>
 <ol style="list-style-type: decimal">
-<li><p>Avoid deep nests of logic. Keeping nested logic to around 3 levels will help the next person follow your code (including your future self). Such nests show up in for-loops, conditionals, and method calls. If you are finding yourself exceeding 3-or-so levels of logic, save your future self the headache and restructure your code. Relatedly, have each line of code do only one or two things. A complicated “one-liner” is only cool for 15 seconds, and after that will convolute the code for everyone (including you).</p></li>
+<li><p>Avoid deep nests of logic. Keeping nested logic to around 3 levels will help the next person follow your code (including your future self). Such nests show up in for-loops, conditionals, and method calls. If you are finding yourself exceeding 3-or-so levels of logic save your future self the headache and restructure your code. Relatedly, have each line of code do only one or two things. A complicated “one-liner” is only cool for 15 seconds, and after that will convolute the code for everyone (including you).</p></li>
 <li><p>Have meaningful names. Names for variables, functions, methods, modules etc. should be simple and descriptive. We do not want to remember what <code>i</code> means in this current loop, nor having to re-read documentation about what <code>function_a</code> and <code>pls_work</code> do. A good name will be unique in the project’s <a href="https://en.wikipedia.org/wiki/Namespace">namespace</a>, human readable, and informative.</p></li>
 <li><p>Minimize <a href="https://en.wikipedia.org/wiki/Technical_debt">technical debt</a>. Time spent up-front is time saved on the life of the project. Take the time to structure your code well and write documentation.</p></li>
 </ol>
 <div id="python" class="section level3 hasAnchor" number="6.2.1">
 <h3><span class="header-section-number">6.2.1</span> Python<a href="programming.html#python" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Python has an established history of best practices since <a href="https://peps.python.org/pep-0008/">PEP8</a>.</p>
+<p>Python has an established history of best practices since <a href="https://peps.python.org/pep-0008/">PEP8</a>. Modern IDEs are configurable to help conform to these (and more modern) recommendations. I recommend using a <a href="https://realpython.com/python-code-quality/">linter</a> (and it is very easy in <a href="https://code.visualstudio.com/docs/python/linting">VS Code</a>): linters serve to check for syntax and/or style issues by referencing a predetermined guide. The guide <a href="https://flake8.pycqa.org/en/latest/">Flake8</a> is a preferred style that detects both syntax and style issues. Additionally, auto-formatters such as <a href="https://www.geeksforgeeks.org/python-code-formatting-using-black/">Black</a> can save you the effort of formatting your code according to Flake8 or other recommendations (and can be triggered for each save in <a href="https://code.visualstudio.com/docs/python/editing">VS Code</a>).</p>
+<p>As <a href="https://peps.python.org/pep-0008/">PEP8</a> is well established and conforming somewhat automated, here I reiterate a few points:</p>
+<ul>
+<li>Variable, function, method, module, and package names should be named in <code>snake_case</code></li>
+<li>Class names should use <code>PascalCase</code></li>
+<li>Every python file (except maybe <code>__init__.py</code>) should have a <code>__doc__</code> <a href="https://www.programiz.com/python-programming/docstrings">attribute</a>, preferably at the top of the file</li>
+<li>Functions, classes, and methods should also contain a <a href="https://www.programiz.com/python-programming/docstrings">docstring</a></li>
+<li>Docstrings should be formatted to the <a href="https://numpydoc.readthedocs.io/en/latest/format.html">Numpy style</a></li>
+<li>Format comments in sentence case, and use comments to explain the functionality (not syntax)</li>
+<li>Decide whether procedural, functional, or object-oriented programming best suite your task (Section <a href="programming.html#prog-style">6.5</a>)</li>
+<li>Supply a command-line interface (Section <a href="programming.html#cli">6.3</a>) if argument parameters are needed</li>
+</ul>
 </div>
 <div id="shell" class="section level3 hasAnchor" number="6.2.2">
 <h3><span class="header-section-number">6.2.2</span> Shell<a href="programming.html#shell" class="anchor-section" aria-label="Anchor link to header"></a></h3>
@@ -277,8 +288,8 @@
 <h3><span class="header-section-number">6.2.4</span> Matlab<a href="programming.html#matlab" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 </div>
 </div>
-<div id="command-line-interface" class="section level2 hasAnchor" number="6.3">
-<h2><span class="header-section-number">6.3</span> Command Line Interface<a href="programming.html#command-line-interface" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="cli" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> Command Line Interface<a href="programming.html#cli" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="python-1" class="section level3 hasAnchor" number="6.3.1">
 <h3><span class="header-section-number">6.3.1</span> Python<a href="programming.html#python-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 </div>
@@ -301,8 +312,8 @@
 <h3><span class="header-section-number">6.4.3</span> R<a href="programming.html#r-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 </div>
 </div>
-<div id="procedural-functional-and-object-oriented-programming" class="section level2 hasAnchor" number="6.5">
-<h2><span class="header-section-number">6.5</span> Procedural, Functional, and Object-oriented Programming<a href="programming.html#procedural-functional-and-object-oriented-programming" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="prog-style" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Procedural, Functional, and Object-oriented Programming<a href="programming.html#prog-style" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div id="python-3" class="section level3 hasAnchor" number="6.5.1">
 <h3><span class="header-section-number">6.5.1</span> Python<a href="programming.html#python-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 </div>
