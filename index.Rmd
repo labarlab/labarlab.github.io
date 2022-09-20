@@ -27,6 +27,7 @@ This digital book contains resources and learning materials compiled for Kevin L
 * Chapter \@ref(psychophys), Psychophysics
 * Chapter \@ref(psychtoolbox), Psychtoolbox
 * Chapter \@ref(fmri), Functional MRI
+* Chapter \@ref(programming), Programming
 
 ## Planned content additions {-}
 

@@ -1,0 +1,76 @@
+# Programming {#programming}
+
+## Introduction
+
+Written on 2022 Sep 04 by Nathan Muncy
+
+This chapter is under construction.
+
+The goal of this chapter is to provide general guidance on a number of topics with  an aim to standardize how code is written in the LaBar Lab. Standardization  will (1) speed-up the development and trouble-shooting process and (2) support maintenance and use efforts when students and researchers have left the lab.
+
+## Best Practices
+
+A programming adage says that "Code is written once but read many times". Best practices guide decisions that programmers make when writing their code, ranging from how to name variables to how to structure entire projects, so that their (brilliant) work is accessible to, and maintainable by, others. Many articles, blogs, and books have been written about best practices, so the aim here is not to exhaustively describe all recommendations but to provide some basic principles.
+
+In addition to more language-specific recommendations below, a few guidelines are applicable in any language.
+
+1. Avoid deep nests of logic. Keeping nested logic to around 3 levels will help the next person follow your code (including your future self). Such nests show up in for-loops, conditionals, and method calls. If you are finding yourself exceeding 3-or-so levels of logic, save your future self the headache and restructure your code. Relatedly, have each line of code do only one or two things. A complicated "one-liner" is only cool for 15 seconds, and after that will convolute the code for everyone (including you).
+
+2. Have meaningful names. Names for variables, functions, methods, modules etc. should be simple and descriptive. We do not want to remember what `i` means in this current loop, nor having to re-read documentation about what `function_a` and `pls_work` do. A good name will be unique in the project's [namespace](https://en.wikipedia.org/wiki/Namespace), human readable, and informative.
+
+3. Minimize [technical debt](https://en.wikipedia.org/wiki/Technical_debt). Time spent up-front is time saved on the life of the project. Take the time to structure your code well and write documentation.
+
+
+### Python
+
+Python has an established history of best practices since [PEP8](https://peps.python.org/pep-0008/).
+
+### Shell
+
+### R
+
+### Matlab
+
+
+
+## Command Line Interface
+
+### Python
+
+### Shell
+
+### R
+
+
+
+## Documentation
+
+### Python
+
+### Shell
+
+### R
+
+
+
+## Procedural, Functional, and Object-oriented Programming
+
+### Python
+
+### Shell
+
+### R
+
+
+
+## Package Construction
+
+### Python
+
+### R
+
+
+
+## Unit Testing
+
+### Python
