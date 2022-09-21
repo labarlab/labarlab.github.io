@@ -4,6 +4,12 @@ fig:img-5-qa-fmriprep-3
 fig:img-5-qa-fmriprep-4
 fig:img-5-qa-fmriprep-5
 fig:img-5-qa-fmriprep-6
+fig:img-6-cli-python-1
+fig:img-6-cli-python-2
+fig:img-6-cli-python-3
+fig:img-6-cli-python-4
+fig:img-6-cli-python-5
+fig:img-6-cli-python-6
 getting-started
 location
 duke-card
