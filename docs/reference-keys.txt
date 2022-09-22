@@ -10,6 +10,8 @@ fig:img-6-cli-python-3
 fig:img-6-cli-python-4
 fig:img-6-cli-python-5
 fig:img-6-cli-python-6
+fig:img-6-doc-python-1-bad
+fig:img-6-doc-python-1-good
 getting-started
 location
 duke-card
