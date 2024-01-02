@@ -1,14 +1,14 @@
 # Databases {#databases}
 
+Written by Nathan Muncy.
+
 This chapter is under construction
 
 Last update: 2024-01-02 (NM).
 
-## MySQL
-
 A [MySQL](https://dev.mysql.com/doc/) server is installed on labarserv2 which allows for project data to be stored within a relational database management system ([RDBMS](https://en.wikipedia.org/wiki/Relational_database)). Utilizing a RDBMS allows the researcher to centralize, better manage, and flexibly access their data, and the dedicated structures will help maintain data consistency across users and projects.
 
-### Create an Account
+## Create an Account
 
 Admins of labarserv2 create accounts and grant access to the mysql server and databases. Start by logging into the server as admin `$sudo mysql`.
 
@@ -19,7 +19,7 @@ use mysql;
 select user, host from user;
 ```
 
-To [create](https://dev.mysql.com/doc/refman/8.0/en/create-user.html) a user ('test') identified by a password ('foobar'), specify the new user name, host or IP, and password:
+To [create a user](https://dev.mysql.com/doc/refman/8.0/en/create-user.html) ('test') identified by a password ('foobar'), specify the new user name, host or IP, and password:
 
 ```
 create user 'test'@'localhost' identified by 'foobar';
@@ -32,6 +32,7 @@ Next, permissions to a specific database ('db_test'), and also tables if desired
 grant insert, update, select, references
   on db_test.*
   to 'test'@'localhost';
+grant all on db_test.* to 'test'@'localhost'; -- give all permissions
 ```
 
 Finally, check that appropriate permissions have been added to the user account and then apply the changes to the server:
@@ -42,3 +43,149 @@ flush privileges;
 ```
 
 The user should then be able to login to the server via `$mysql -u test -p`, enter their password (foobar), and access the database (`use db_test; show tables;`).
+
+
+## Login
+
+Users that have an account can login to the mysql server via
+
+`$mysql -u user_name -p`
+
+and then supply their password when prompted. Databases to which the user has access can be listed via `show databases;`. After selecting a database for use (`use db_some_name;`), available tables can be listed via `show tables;`.
+
+A database can also be specified at login:
+
+`$mysql -u user_name -p db_some_name`
+
+
+
+## Create a Database
+
+Admin (i.e. all) privileges are needed by the user to create an database. Accordingly, it is most likely best for labarserv2 admins to create databases and then grant specific (or all) permissions to the user for the specific database.
+
+[Database creation](https://dev.mysql.com/doc/refman/8.0/en/creating-database.html) is accomplished simply via:
+
+`create database db_some_name;`
+
+For the LaBar Lab, the following conventions are implemented:
+
+* Database names start with `db`, e.g. `db_project1` and `db_project2`. This allows for project databases to be identified separately from one another and also distinct from admin and schema databases
+* Separate databases are made for separate projects, that is, one project should not span multiple databases
+* Database names are succinct, being both descriptive and as short as is reasonable
+* Databases are named in snake case (`db_emotion_regulation` and not `db-emotion-regulation`)
+
+
+## Create a Table
+
+[Tables](https://dev.mysql.com/doc/refman/8.0/en/creating-tables.html) are 2-dimensional matrices containing rows and columns of data. Each row must contain unique information, and each column contains only one [data type](https://dev.mysql.com/doc/refman/8.0/en/data-types.html). Whether to use long- or wide-formatted tables depends on the user and nature of the data, but long-formatted tables (or at least [tidy](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)) is preferable.
+
+The `create table` syntax is used within a database to both create the table and specify the number and types of columns. Three types of tables (reference, data, and definition) are used in the LaBar Lab, which are prepended with `ref_`, `tbl_`, and `def_` identifiers, respectively.
+
+
+### Reference Tables
+
+When a certain value, such as a participant ID or emotion name, show up across multiple data tables, the value can be stored in a reference table rather than be used repeatedly across multiple tables. These reference tables, and the fact that values from multiple databases can be queried at once, are the point of RDBMSs. As an added perk, the size of the database is also decreased as redundant values are minimized.
+
+Say a project intends to gather information across multiple subjects, each of whom will participate in three sessions, and some measures will occur during all sessions. We can then set up reference tables for the subject IDs, session IDs, and emotion IDs.
+
+To start a reference table for subject IDs, then:
+
+```
+use db_test;
+create table ref_subj (
+  subj_id int not null,
+  subj_name char(4) not null,
+  primary key(subj_id)
+);
+```
+Here we create a table titled 'ref_subj' in the database 'db_test'. This table contains two columns: the first column is titled 'subj_id', is integer type, and does not allow null values. The second column is titled 'subj_name', the value uses exactly 4 characters, and also null values are not allowed. Finally, the [primary key](https://www.mysqltutorial.org/mysql-basics/mysql-primary-key/) is set to reference the 'subj_id' column. This key is used to uniquely identify each row in the table, and will serve as the reference value across database tables.
+
+A description of the table is available via the `describe table_name` command:
+
+```
+mysql> describe ref_subj;
++-----------+---------+------+-----+---------+-------+
+| Field     | Type    | Null | Key | Default | Extra |
++-----------+---------+------+-----+---------+-------+
+| subj_id   | int     | NO   | PRI | NULL    |       |
+| subj_name | char(4) | NO   |     | NULL    |       |
++-----------+---------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+```
+
+The LaBar Lab uses the following conventions with respect to reference tables:
+
+* The name for columns involved in the primary key ends in '_id'
+* The value which corresponds to the primary key ends in '_name'
+* The table name is reflected in column names when possible (e.g. 'subj')
+
+Following these conventions will increase the ease of joining tables and allow other researchers to more readily understand the data structure.
+
+Data can then be added to the table via `insert` by specifying the desired columns and input values:
+
+```
+insert into ref_subj
+  (subj_id, subj_name)
+  values
+  (1, "SUB1"),
+  (2, "SUB2"),
+  (3, "SUB3"),
+  (4, "SUB4");
+```
+
+Check that the reference table is properly specified via `select`:
+
+```
+mysql> select * from ref_subj;
++---------+-----------+
+| subj_id | subj_name |
++---------+-----------+
+|       1 | SUB1      |
+|       2 | SUB2      |
+|       3 | SUB3      |
+|       4 | SUB4      |
++---------+-----------+
+4 rows in set (0.00 sec)
+```
+
+The other reference tables, for session and emotion, can likewise be built (note the variable emotion name length):
+
+```
+-- Session reference
+create table ref_sess (
+    sess_id int not null,
+    sess_name char(4) not null,
+    primary key(sess_id)
+);
+insert into ref_sess
+    (sess_id, sess_name)
+    values
+    (1, "day1"),
+    (2, "day2"),
+    (3, "day3");
+
+-- Emotion reference
+create table ref_emo (
+    emo_id int not null,
+    emo_name varchar(10) not null,
+    primary key(emo_id)
+);
+insert into ref_emo
+    (emo_id, emo_name)
+    values
+    (1, "amusement"),
+    (2, "anger"),
+    (3, "anxiety"),
+    (4, "awe"),
+    (5, "calmness"),
+    (6, "craving"),
+    (7, "disgust"),
+    (8, "excitement"),
+    (9, "fear"),
+    (10, "horror"),
+    (11, "joy"),
+    (12, "neutral"),
+    (13, "romance"),
+    (14, "sadness"),
+    (15, "surprise");
+```

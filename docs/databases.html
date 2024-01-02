@@ -210,9 +210,12 @@
 </ul></li>
 <li class="chapter" data-level="7" data-path="databases.html"><a href="databases.html"><i class="fa fa-check"></i><b>7</b> Databases</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="databases.html"><a href="databases.html#mysql"><i class="fa fa-check"></i><b>7.1</b> MySQL</a>
+<li class="chapter" data-level="7.1" data-path="databases.html"><a href="databases.html#create-an-account"><i class="fa fa-check"></i><b>7.1</b> Create an Account</a></li>
+<li class="chapter" data-level="7.2" data-path="databases.html"><a href="databases.html#login"><i class="fa fa-check"></i><b>7.2</b> Login</a></li>
+<li class="chapter" data-level="7.3" data-path="databases.html"><a href="databases.html#create-a-database"><i class="fa fa-check"></i><b>7.3</b> Create a Database</a></li>
+<li class="chapter" data-level="7.4" data-path="databases.html"><a href="databases.html#create-a-table"><i class="fa fa-check"></i><b>7.4</b> Create a Table</a>
 <ul>
-<li class="chapter" data-level="7.1.1" data-path="databases.html"><a href="databases.html#create-an-account"><i class="fa fa-check"></i><b>7.1.1</b> Create an Account</a></li>
+<li class="chapter" data-level="7.4.1" data-path="databases.html"><a href="databases.html#reference-tables"><i class="fa fa-check"></i><b>7.4.1</b> Reference Tables</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -237,28 +240,139 @@
             <section class="normal" id="section-">
 <div id="databases" class="section level1 hasAnchor" number="7">
 <h1><span class="header-section-number">Chapter 7</span> Databases<a href="databases.html#databases" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Written by Nathan Muncy.</p>
 <p>This chapter is under construction</p>
 <p>Last update: 2024-01-02 (NM).</p>
-<div id="mysql" class="section level2 hasAnchor" number="7.1">
-<h2><span class="header-section-number">7.1</span> MySQL<a href="databases.html#mysql" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>A <a href="https://dev.mysql.com/doc/">MySQL</a> server is installed on labarserv2 which allows for project data to be stored within a relational database management system (<a href="https://en.wikipedia.org/wiki/Relational_database">RDBMS</a>). Utilizing a RDBMS allows the researcher to centralize, better manage, and flexibly access their data, and the dedicated structures will help maintain data consistency across users and projects.</p>
-<div id="create-an-account" class="section level3 hasAnchor" number="7.1.1">
-<h3><span class="header-section-number">7.1.1</span> Create an Account<a href="databases.html#create-an-account" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="create-an-account" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Create an Account<a href="databases.html#create-an-account" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Admins of labarserv2 create accounts and grant access to the mysql server and databases. Start by logging into the server as admin <code>$sudo mysql</code>.</p>
 <p>Current users and hosts information are available at mysql.user</p>
 <pre><code>use mysql;
 select user, host from user;</code></pre>
-<p>To <a href="https://dev.mysql.com/doc/refman/8.0/en/create-user.html">create</a> a user (‘test’) identified by a password (‘foobar’), specify the new user name, host or IP, and password:</p>
+<p>To <a href="https://dev.mysql.com/doc/refman/8.0/en/create-user.html">create a user</a> (‘test’) identified by a password (‘foobar’), specify the new user name, host or IP, and password:</p>
 <pre><code>create user &#39;test&#39;@&#39;localhost&#39; identified by &#39;foobar&#39;;
 create user &#39;test&#39;@&#39;127.0.0.1&#39; identified by &#39;foobar&#39;;</code></pre>
 <p>Next, permissions to a specific database (‘db_test’), and also tables if desired, can be <a href="https://dev.mysql.com/doc/refman/8.0/en/grant.html">granted</a>:</p>
 <pre><code>grant insert, update, select, references
   on db_test.*
-  to &#39;test&#39;@&#39;localhost&#39;;</code></pre>
+  to &#39;test&#39;@&#39;localhost&#39;;
+grant all on db_test.* to &#39;test&#39;@&#39;localhost&#39;; -- give all permissions</code></pre>
 <p>Finally, check that appropriate permissions have been added to the user account and then apply the changes to the server:</p>
 <pre><code>show grants for &#39;test&#39;@&#39;localhost&#39;;
 flush privileges;</code></pre>
 <p>The user should then be able to login to the server via <code>$mysql -u test -p</code>, enter their password (foobar), and access the database (<code>use db_test; show tables;</code>).</p>
+</div>
+<div id="login" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Login<a href="databases.html#login" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Users that have an account can login to the mysql server via</p>
+<p><code>$mysql -u user_name -p</code></p>
+<p>and then supply their password when prompted. Databases to which the user has access can be listed via <code>show databases;</code>. After selecting a database for use (<code>use db_some_name;</code>), available tables can be listed via <code>show tables;</code>.</p>
+<p>A database can also be specified at login:</p>
+<p><code>$mysql -u user_name -p db_some_name</code></p>
+</div>
+<div id="create-a-database" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> Create a Database<a href="databases.html#create-a-database" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Admin (i.e. all) privileges are needed by the user to create an database. Accordingly, it is most likely best for labarserv2 admins to create databases and then grant specific (or all) permissions to the user for the specific database.</p>
+<p><a href="https://dev.mysql.com/doc/refman/8.0/en/creating-database.html">Database creation</a> is accomplished simply via:</p>
+<p><code>create database db_some_name;</code></p>
+<p>For the LaBar Lab, the following conventions are implemented:</p>
+<ul>
+<li>Database names start with <code>db</code>, e.g. <code>db_project1</code> and <code>db_project2</code>. This allows for project databases to be identified separately from one another and also distinct from admin and schema databases</li>
+<li>Separate databases are made for separate projects, that is, one project should not span multiple databases</li>
+<li>Database names are succinct, being both descriptive and as short as is reasonable</li>
+<li>Databases are named in snake case (<code>db_emotion_regulation</code> and not <code>db-emotion-regulation</code>)</li>
+</ul>
+</div>
+<div id="create-a-table" class="section level2 hasAnchor" number="7.4">
+<h2><span class="header-section-number">7.4</span> Create a Table<a href="databases.html#create-a-table" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><a href="https://dev.mysql.com/doc/refman/8.0/en/creating-tables.html">Tables</a> are 2-dimensional matrices containing rows and columns of data. Each row must contain unique information, and each column contains only one <a href="https://dev.mysql.com/doc/refman/8.0/en/data-types.html">data type</a>. Whether to use long- or wide-formatted tables depends on the user and nature of the data, but long-formatted tables (or at least <a href="https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html">tidy</a>) is preferable.</p>
+<p>The <code>create table</code> syntax is used within a database to both create the table and specify the number and types of columns. Three types of tables (reference, data, and definition) are used in the LaBar Lab, which are prepended with <code>ref_</code>, <code>tbl_</code>, and <code>def_</code> identifiers, respectively.</p>
+<div id="reference-tables" class="section level3 hasAnchor" number="7.4.1">
+<h3><span class="header-section-number">7.4.1</span> Reference Tables<a href="databases.html#reference-tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When a certain value, such as a participant ID or emotion name, show up across multiple data tables, the value can be stored in a reference table rather than be used repeatedly across multiple tables. These reference tables, and the fact that values from multiple databases can be queried at once, are the point of RDBMSs. As an added perk, the size of the database is also decreased as redundant values are minimized.</p>
+<p>Say a project intends to gather information across multiple subjects, each of whom will participate in three sessions, and some measures will occur during all sessions. We can then set up reference tables for the subject IDs, session IDs, and emotion IDs.</p>
+<p>To start a reference table for subject IDs, then:</p>
+<pre><code>use db_test;
+create table ref_subj (
+  subj_id int not null,
+  subj_name char(4) not null,
+  primary key(subj_id)
+);</code></pre>
+<p>Here we create a table titled ‘ref_subj’ in the database ‘db_test’. This table contains two columns: the first column is titled ‘subj_id’, is integer type, and does not allow null values. The second column is titled ‘subj_name’, the value uses exactly 4 characters, and also null values are not allowed. Finally, the <a href="https://www.mysqltutorial.org/mysql-basics/mysql-primary-key/">primary key</a> is set to reference the ‘subj_id’ column. This key is used to uniquely identify each row in the table, and will serve as the reference value across database tables.</p>
+<p>A description of the table is available via the <code>describe table_name</code> command:</p>
+<pre><code>mysql&gt; describe ref_subj;
++-----------+---------+------+-----+---------+-------+
+| Field     | Type    | Null | Key | Default | Extra |
++-----------+---------+------+-----+---------+-------+
+| subj_id   | int     | NO   | PRI | NULL    |       |
+| subj_name | char(4) | NO   |     | NULL    |       |
++-----------+---------+------+-----+---------+-------+
+2 rows in set (0.01 sec)</code></pre>
+<p>The LaBar Lab uses the following conventions with respect to reference tables:</p>
+<ul>
+<li>The name for columns involved in the primary key ends in ’_id’</li>
+<li>The value which corresponds to the primary key ends in ’_name’</li>
+<li>The table name is reflected in column names when possible (e.g. ‘subj’)</li>
+</ul>
+<p>Following these conventions will increase the ease of joining tables and allow other researchers to more readily understand the data structure.</p>
+<p>Data can then be added to the table via <code>insert</code> by specifying the desired columns and input values:</p>
+<pre><code>insert into ref_subj
+  (subj_id, subj_name)
+  values
+  (1, &quot;SUB1&quot;),
+  (2, &quot;SUB2&quot;),
+  (3, &quot;SUB3&quot;),
+  (4, &quot;SUB4&quot;);</code></pre>
+<p>Check that the reference table is properly specified via <code>select</code>:</p>
+<pre><code>mysql&gt; select * from ref_subj;
++---------+-----------+
+| subj_id | subj_name |
++---------+-----------+
+|       1 | SUB1      |
+|       2 | SUB2      |
+|       3 | SUB3      |
+|       4 | SUB4      |
++---------+-----------+
+4 rows in set (0.00 sec)</code></pre>
+<p>The other reference tables, for session and emotion, can likewise be built (note the variable emotion name length):</p>
+<pre><code>-- Session reference
+create table ref_sess (
+    sess_id int not null,
+    sess_name char(4) not null,
+    primary key(sess_id)
+);
+insert into ref_sess
+    (sess_id, sess_name)
+    values
+    (1, &quot;day1&quot;),
+    (2, &quot;day2&quot;),
+    (3, &quot;day3&quot;);
+
+-- Emotion reference
+create table ref_emo (
+    emo_id int not null,
+    emo_name varchar(10) not null,
+    primary key(emo_id)
+);
+insert into ref_emo
+    (emo_id, emo_name)
+    values
+    (1, &quot;amusement&quot;),
+    (2, &quot;anger&quot;),
+    (3, &quot;anxiety&quot;),
+    (4, &quot;awe&quot;),
+    (5, &quot;calmness&quot;),
+    (6, &quot;craving&quot;),
+    (7, &quot;disgust&quot;),
+    (8, &quot;excitement&quot;),
+    (9, &quot;fear&quot;),
+    (10, &quot;horror&quot;),
+    (11, &quot;joy&quot;),
+    (12, &quot;neutral&quot;),
+    (13, &quot;romance&quot;),
+    (14, &quot;sadness&quot;),
+    (15, &quot;surprise&quot;);</code></pre>
 
 </div>
 </div>
