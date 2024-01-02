@@ -4,8 +4,6 @@ Written by Nathan Muncy.
 
 This chapter is under construction
 
-Last update: 2024-01-02 (NM).
-
 A [MySQL](https://dev.mysql.com/doc/) server is installed on labarserv2 which allows for project data to be stored within a relational database management system ([RDBMS](https://en.wikipedia.org/wiki/Relational_database)). Utilizing a RDBMS allows the researcher to centralize, better manage, and flexibly access their data, and the dedicated structures will help maintain data consistency across users and projects.
 
 ## Create an Account
@@ -57,6 +55,7 @@ A database can also be specified at login:
 
 `$mysql -u user_name -p db_some_name`
 
+Exit the server via `exit;` or `quit;`.
 
 
 ## Create a Database
@@ -115,6 +114,7 @@ mysql> describe ref_subj;
 
 The LaBar Lab uses the following conventions with respect to reference tables:
 
+* The table name starts with 'ref_'
 * The name for columns involved in the primary key ends in '_id'
 * The value which corresponds to the primary key ends in '_name'
 * The table name is reflected in column names when possible (e.g. 'subj')
@@ -189,3 +189,105 @@ insert into ref_emo
     (14, "sadness"),
     (15, "surprise");
 ```
+
+
+### Data Tables
+
+Data from each measure collected is stored in data tables, with repeated values linked to reference tables. Building data tables uses the same methodology described above, with the addition of specifying [foreign keys](https://www.cockroachlabs.com/blog/what-is-a-foreign-key/) and thus begin to make our database relational.
+
+Let us suppose that for each session our participants supply PANAS and ERQ ratings as well as an in-house measure (EmoFreq) where participants are prompted to respond how frequently, intensely, and saliently they felt a given emotion (`ref_emo`) over the previous week.
+
+Using the `create table` syntax, again, we first build a data table for the PANAS questionnaire:
+
+```
+create table tbl_panas (
+    subj_id int not null,
+    sess_id int not null,
+    item_panas int not null,
+    resp_panas int,
+    primary key(subj_id, sess_id, item_panas),
+    foreign key(subj_id) references ref_subj(subj_id) on delete cascade,
+    foreign key(sess_id) references ref_sess(sess_id)
+);
+```
+
+Here we created a long-formatted table containing four columns -- one for the subject identifier ('subj_id'), session identifier ('sess_id'), PANAS item/prompt ('item_panas'), and participant reponse to PANAS item/prompt ('resp_panas'). Participant responses are recorded as integer type, and only the PANAS item number (integer) is used -- if it was desired to keep the question syntax rather than item number then a reference table could be set up ('ref_panas') and this column would be named 'panas_id', following LaBar Lab conventions. Also note that 'item_panas' is specified as 'not null' as participants will see every PANAS item, but as participants may not respond to each item and accordingly 'resp_panas' allows for null values. 
+
+The primary key is specified here as a composition of subject, session, and PANAS item (sometimes termed a 'composite key' or 'natural key'). This serves as as the unique identifier for each participant response. It is recommended to always explicitly specify your primary key as failure to do so will result in mysql silently generating a primary key. Additionally, explicitly controlling keys helps in setting up proper [relationship mappings](https://www.tutorialsteacher.com/sqlserver/tables-relations). If a natural key ought not to be used for a primary key, or data naturally increment, then a column could be set to [auto increment](https://dev.mysql.com/doc/refman/8.0/en/example-auto-increment.html) and serve as the primary key.
+
+Foreign keys are used to reflect that the value of the column is linked to (relational with) another table. Here, the columns 'subj_id' and 'sess_id' will not be populated with the actual subject and session IDs, as that would involve a lot of repetitive information, but instead their respective database ID. Specifically, we set the 'subj_id' column (`tbl_panas.subj_id`) to reference the 'subj_id' column of 'ref_subj' (`ref_subj.subj_id`). Similarly `tbl_panas.sess_id` references `ref_sess.sess_id`. Finally, [`on delete cascade`](https://www.mysqltutorial.org/mysql-basics/mysql-on-delete-cascade/) allows records from this current table to be removed if the referenced value in `ref_subj` is deleted (perhaps due to participant withdrawal).
+
+The LaBar Lab uses a number of conventions in creating data tables:
+
+* The table name starts with 'tbl_'
+* The measure name is reflected in the table name and relevant columns when possible
+* The name for columns that become a foreign key end in '_id' when possible
+* Column names for measure identifiers start with 'item_'
+* Participant responses start with 'resp_'
+
+Likewise, data tables for the ERQ and in-house EmoFreq surveys can be made:
+
+```
+-- ERQ table
+create table tbl_erq (
+    subj_id int not null,
+    sess_id int not null,
+    item_erq int not null,
+    resp_erq int,
+    primary key(subj_id, item_erq),
+    foreign key(subj_id) references ref_subj(subj_id) on delete cascade,
+    foreign key(sess_id) references ref_sess(sess_id)
+);
+
+-- EmoFreq table
+create table tbl_emofreq (
+    subj_id int not null,
+    sess_id int not null,
+    emo_id int not null,
+    resp_frq int,
+    resp_int int,
+    resp_sal int,
+    primary key(subj_id, sess_id, emo_id),
+    foreign key(subj_id) references ref_subj(subj_id) on delete cascade,
+    foreign key(sess_id) references ref_sess(sess_id),
+    foreign key(emo_id) references ref_emo(emo_id)
+);
+```
+
+For the in-house EmoFreq survey, where participants are prompted with an emotion and they respond how frequently, intensely, and saliently they experienced the emotion over the previous week, the 'item_' column was omitted and replaced with the foreign key `emo_id`. Additionally, better names for the response columns could have been `resp_emofreq_frequency` etc., particularly if other measures elicit similar responses. This was omitted to illustrate the utility of definition tables.
+
+Finally, following foreign keys to their source is available in the `information_schema` database:
+
+```
+SELECT
+  `TABLE_SCHEMA`,
+  `TABLE_NAME`,
+  `COLUMN_NAME`,
+  `REFERENCED_TABLE_SCHEMA`,
+  `REFERENCED_TABLE_NAME`,
+  `REFERENCED_COLUMN_NAME`
+FROM
+  `INFORMATION_SCHEMA`.`KEY_COLUMN_USAGE`
+WHERE
+  `TABLE_SCHEMA` = SCHEMA()
+  AND `REFERENCED_TABLE_NAME` IS NOT NULL;
+```
+
+which yields:
+
+```
++--------------+-------------+-------------+-------------------------+-----------------------+------------------------+
+| TABLE_SCHEMA | TABLE_NAME  | COLUMN_NAME | REFERENCED_TABLE_SCHEMA | REFERENCED_TABLE_NAME | REFERENCED_COLUMN_NAME |
++--------------+-------------+-------------+-------------------------+-----------------------+------------------------+
+| db_test      | tbl_emofreq | subj_id     | db_test                 | ref_subj              | subj_id                |
+| db_test      | tbl_emofreq | sess_id     | db_test                 | ref_sess              | sess_id                |
+| db_test      | tbl_emofreq | emo_id      | db_test                 | ref_emo               | emo_id                 |
+| db_test      | tbl_erq     | subj_id     | db_test                 | ref_subj              | subj_id                |
+| db_test      | tbl_erq     | sess_id     | db_test                 | ref_sess              | sess_id                |
+| db_test      | tbl_panas   | subj_id     | db_test                 | ref_subj              | subj_id                |
+| db_test      | tbl_panas   | sess_id     | db_test                 | ref_sess              | sess_id                |
++--------------+-------------+-------------+-------------------------+-----------------------+------------------------+
+7 rows in set (0.00 sec)
+```
+
+This is useful when tracking the relationship mappings (such as when working with a new database or when table/column names are less-than-helpful), and requires the `references` grant for the user.
