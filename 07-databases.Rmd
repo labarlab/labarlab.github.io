@@ -1,0 +1,44 @@
+# Databases {#databases}
+
+This chapter is under construction
+
+Last update: 2024-01-02 (NM).
+
+## MySQL
+
+A [MySQL](https://dev.mysql.com/doc/) server is installed on labarserv2 which allows for project data to be stored within a relational database management system ([RDBMS](https://en.wikipedia.org/wiki/Relational_database)). Utilizing a RDBMS allows the researcher to centralize, better manage, and flexibly access their data, and the dedicated structures will help maintain data consistency across users and projects.
+
+### Create an Account
+
+Admins of labarserv2 create accounts and grant access to the mysql server and databases. Start by logging into the server as admin `$sudo mysql`.
+
+Current users and hosts information are available at mysql.user
+
+```
+use mysql;
+select user, host from user;
+```
+
+To [create](https://dev.mysql.com/doc/refman/8.0/en/create-user.html) a user ('test') identified by a password ('foobar'), specify the new user name, host or IP, and password:
+
+```
+create user 'test'@'localhost' identified by 'foobar';
+create user 'test'@'127.0.0.1' identified by 'foobar';
+```
+
+Next, permissions to a specific database ('db_test'), and also tables if desired, can be [granted](https://dev.mysql.com/doc/refman/8.0/en/grant.html):
+
+```
+grant insert, update, select, references
+  on db_test.*
+  to 'test'@'localhost';
+```
+
+Finally, check that appropriate permissions have been added to the user account and then apply the changes to the server:
+
+```
+show grants for 'test'@'localhost';
+flush privileges;
+```
+
+The user should then be able to login to the server via `$mysql -u test -p`, enter their password (foobar), and access the database (`use db_test; show tables;`).

@@ -106,3 +106,6 @@ cli
 python-1
 documentation
 python-2
+databases
+mysql
+create-an-account

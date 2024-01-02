@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>LaBaratory Manual</title>
+  <title>Chapter 7 Databases | LaBaratory Manual</title>
   <meta name="description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
   <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="LaBaratory Manual" />
+  <meta property="og:title" content="Chapter 7 Databases | LaBaratory Manual" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="LaBaratory Manual" />
+  <meta name="twitter:title" content="Chapter 7 Databases | LaBaratory Manual" />
   
   <meta name="twitter:description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
+<link rel="prev" href="programming.html"/>
 
-<link rel="next" href="getting-started.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -235,49 +235,47 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">LaBaratory Manual</h1>
-<p class="author"><em>Nathan Muncy<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></em></p>
-<p class="date"><em>2024-01-02</em></p>
-</div>
-<div id="overview" class="section level1 unnumbered hasAnchor">
-<h1>Overview<a href="index.html#overview" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p><img src="imgs/00-masks.png" width="50%" style="display: block; margin: auto;" /></p>
-<p>This digital book contains resources and learning materials compiled for Kevin Labar’s <a href="http://www.labarlab.com/">Laboratory</a> of Emotion and Cognition. Content is organized in the following chapters:</p>
-<ul>
-<li>Chapter <a href="getting-started.html#getting-started">1</a>, Getting Started</li>
-<li>Chapter <a href="access-server.html#access-server">2</a>, Accessing Servers</li>
-<li>Chapter <a href="psychophys.html#psychophys">3</a>, Psychophysics</li>
-<li>Chapter <a href="psychtoolbox.html#psychtoolbox">4</a>, Psychtoolbox</li>
-<li>Chapter <a href="fmri.html#fmri">5</a>, Functional MRI</li>
-<li>Chapter <a href="programming.html#programming">6</a>, Programming</li>
-<li>Chapter <a href="databases.html#databases">7</a>, Databases</li>
-</ul>
-<div id="planned-content-additions" class="section level2 unnumbered hasAnchor">
-<h2>Planned content additions<a href="index.html#planned-content-additions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<ul>
-<li>Git tutorial</li>
-<li>Programming in python, R, shell, Matlab</li>
-<li>Databases</li>
-<li>NeuroImaging and the Duke Compute Cluster</li>
-<li>FMRI processing and analyses guide</li>
-</ul>
+<div id="databases" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Chapter 7</span> Databases<a href="databases.html#databases" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>This chapter is under construction</p>
+<p>Last update: 2024-01-02 (NM).</p>
+<div id="mysql" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> MySQL<a href="databases.html#mysql" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A <a href="https://dev.mysql.com/doc/">MySQL</a> server is installed on labarserv2 which allows for project data to be stored within a relational database management system (<a href="https://en.wikipedia.org/wiki/Relational_database">RDBMS</a>). Utilizing a RDBMS allows the researcher to centralize, better manage, and flexibly access their data, and the dedicated structures will help maintain data consistency across users and projects.</p>
+<div id="create-an-account" class="section level3 hasAnchor" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> Create an Account<a href="databases.html#create-an-account" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Admins of labarserv2 create accounts and grant access to the mysql server and databases. Start by logging into the server as admin <code>$sudo mysql</code>.</p>
+<p>Current users and hosts information are available at mysql.user</p>
+<pre><code>use mysql;
+select user, host from user;</code></pre>
+<p>To <a href="https://dev.mysql.com/doc/refman/8.0/en/create-user.html">create</a> a user (‘test’) identified by a password (‘foobar’), specify the new user name, host or IP, and password:</p>
+<pre><code>create user &#39;test&#39;@&#39;localhost&#39; identified by &#39;foobar&#39;;
+create user &#39;test&#39;@&#39;127.0.0.1&#39; identified by &#39;foobar&#39;;</code></pre>
+<p>Next, permissions to a specific database (‘db_test’), and also tables if desired, can be <a href="https://dev.mysql.com/doc/refman/8.0/en/grant.html">granted</a>:</p>
+<pre><code>grant insert, update, select, references
+  on db_test.*
+  to &#39;test&#39;@&#39;localhost&#39;;</code></pre>
+<p>Finally, check that appropriate permissions have been added to the user account and then apply the changes to the server:</p>
+<pre><code>show grants for &#39;test&#39;@&#39;localhost&#39;;
+flush privileges;</code></pre>
+<p>The user should then be able to login to the server via <code>$mysql -u test -p</code>, enter their password (foobar), and access the database (<code>use db_test; show tables;</code>).</p>
 
 </div>
 </div>
-<div class="footnotes">
-<hr />
-<ol start="1">
-<li id="fn1"><p>Duke University, <a href="mailto:nathan.muncy@duke.edu" class="email">nathan.muncy@duke.edu</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-</ol>
 </div>
+
+
+
+
+
+
             </section>
 
           </div>
         </div>
       </div>
+<a href="programming.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
-<a href="getting-started.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -308,7 +306,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/USERNAME/REPO/edit/BRANCH/index.Rmd",
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/07-databases.Rmd",
 "text": "Edit"
 },
 "history": {
