@@ -39,11 +39,11 @@ As [PEP8](https://peps.python.org/pep-0008/) is well established and conforming 
 * Encapsulate work within functions, and even simple scripts should put work within a `main()` function.
 
 
-### Shell
+<!-- ### Shell -->
 
-### R
+<!-- ### R -->
 
-### Matlab
+<!-- ### Matlab -->
 
 
 
@@ -185,9 +185,9 @@ knitr::include_graphics("imgs/06-cli_python_run3.png")
 ```
 
 
-### Shell
+<!-- ### Shell -->
 
-### R
+<!-- ### R -->
 
 
 
@@ -222,30 +222,30 @@ knitr::include_graphics(c("imgs/06-doc_python_1_good.png"))
 
 While the examples here are rather simple, and so the comments still somewhat describe the code, as the functionality becomes more complex it will be important to remember to describe the point of a section of code, not the syntax itself. And if the syntax is very dense and confusing, a comment is definitely warranted to guide the programmer but restructuring is also likely warranted.
 
-### Shell
+<!-- ### Shell -->
 
-### R
-
-
-
-## Procedural, Functional, and Object-oriented Programming {#prog-style}
-
-### Python
-
-### Shell
-
-### R
+<!-- ### R -->
 
 
 
-## Package Construction
+<!-- ## Procedural, Functional, and Object-oriented Programming {#prog-style} -->
 
-### Python
+<!-- ### Python -->
 
-### R
+<!-- ### Shell -->
+
+<!-- ### R -->
 
 
 
-## Unit Testing
+<!-- ## Package Construction -->
 
-### Python
+<!-- ### Python -->
+
+<!-- ### R -->
+
+
+
+<!-- ## Unit Testing -->
+
+<!-- ### Python -->
