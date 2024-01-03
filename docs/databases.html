@@ -460,6 +460,30 @@ WHERE
 </div>
 <div id="definition_tables" class="section level3 hasAnchor" number="7.4.3">
 <h3><span class="header-section-number">7.4.3</span> Definition Tables<a href="databases.html#definition_tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Few things are more frustrating when working within RDBMSs than not understanding column names nor knowing what data they contain. This is compounded by less-than-intuitive column names that are sometimes required for the sake of brevity, as is commonly the case when working on larger projects. Definition tables help assuage these frustrations by supplying definitions or explanations of column names and purpose.</p>
+<p>As the data table <code>tbl_emofreq</code> (above) has some column names that may be unintuitive, we will specify a definition table to aid in interpreting the table:</p>
+<pre><code>create table def_emofreq (
+    col_name enum(&#39;resp_frq&#39;, &#39;resp_int&#39;, &#39;resp_sal&#39;),
+    col_desc text
+);</code></pre>
+<p>This definition table contains two columns, <code>col_name</code> and <code>col_desc</code>. Column <code>col_name</code> is specified to only accept certain values via <a href="https://dev.mysql.com/doc/refman/8.0/en/enum.html">enum</a>, which values correspond to the confusing column names in <code>tbl_emofreq</code>. Column <code>col_desc</code> is set to use the <a href="https://dev.mysql.com/doc/refman/8.0/en/string-type-syntax.html">text type</a>, which will allow for more verbose strings. A primary key has not been set as this table is not meant to be integrated with other tables but instead to be read by the researcher.</p>
+<p><strong>Conventions</strong> - The following definition table conventions are implemented in the LaBar Lab:</p>
+<ul>
+<li>A definition table should exist for every data table that does not hold standardized items (e.g. PANAS, ERQ) that could be looked up in a resource (but a definition table is still recommended).</li>
+<li>Definition tables should not be used to hold item interpretations, e.g. storing what is meant when <code>tbl_panas.item_panas = 1</code> (the text of the PANAS’s first item). These belong in a reference table.</li>
+<li>The table uses the same name as the data table, but replacing ‘tbl_’ with ‘def_’.</li>
+<li>The table contains the column <code>col_name</code>, which itself only contains the names of columns from the data table.</li>
+<li>All columns not involved in ID from the data table are specified in <code>col_name</code>.</li>
+<li>The table contains the column <code>col_desc</code>, which holds a human-readable description of the column.</li>
+<li>Additional columns can be add using the <code>col_</code> format, when required.</li>
+</ul>
+<p>The definition table <code>def_emofreq</code> can now be populated with text:</p>
+<pre><code>insert into def_emofreq
+    (col_name, col_desc)
+    values
+    (&#39;resp_frq&#39;, &#39;Participant response to frequency prompt&#39;),
+    (&#39;resp_int&#39;, &#39;Participant response to intensity prompt&#39;),
+    (&#39;resp_sal&#39;, &#39;Participant response to salience prompt&#39;);</code></pre>
 
 </div>
 </div>

@@ -298,3 +298,37 @@ This is useful when tracking the relationship mappings (such as when working wit
 
 
 ### Definition Tables {#definition_tables}
+
+Few things are more frustrating when working within RDBMSs than not understanding column names nor knowing what data they contain. This is compounded by less-than-intuitive column names that are sometimes required for the sake of brevity, as is commonly the case when working on larger projects. Definition tables help assuage these frustrations by supplying definitions or explanations of column names and purpose.
+
+As the data table `tbl_emofreq` (above) has some column names that may be unintuitive, we will specify a definition table to aid in interpreting the table: 
+
+```
+create table def_emofreq (
+    col_name enum('resp_frq', 'resp_int', 'resp_sal'),
+    col_desc text
+);
+```
+
+This definition table contains two columns, `col_name` and `col_desc`. Column `col_name` is specified to only accept certain values via [enum](https://dev.mysql.com/doc/refman/8.0/en/enum.html), which values correspond to the confusing column names in `tbl_emofreq`. Column `col_desc` is set to use the [text type](https://dev.mysql.com/doc/refman/8.0/en/string-type-syntax.html), which will allow for more verbose strings. A primary key has not been set as this table is not meant to be integrated with other tables but instead to be read by the researcher.
+
+**Conventions** - The following definition table conventions are implemented in the LaBar Lab:
+
+* A definition table should exist for every data table that does not hold standardized items (e.g. PANAS, ERQ) that could be looked up in a resource (but a definition table is still recommended).
+* Definition tables should not be used to hold item interpretations, e.g. storing what is meant when `tbl_panas.item_panas = 1` (the text of the PANAS's first item). These belong in a reference table.
+* The table uses the same name as the data table, but replacing 'tbl_' with 'def_'.
+* The table contains the column `col_name`, which itself only contains the names of columns from the data table.
+* All columns not involved in ID from the data table are specified in `col_name`.
+* The table contains the column `col_desc`, which holds a human-readable description of the column.
+* Additional columns can be add using the `col_` format, when required.
+
+The definition table `def_emofreq` can now be populated with text:
+
+```
+insert into def_emofreq
+    (col_name, col_desc)
+    values
+    ('resp_frq', 'Participant response to frequency prompt'),
+    ('resp_int', 'Participant response to intensity prompt'),
+    ('resp_sal', 'Participant response to salience prompt');
+```
