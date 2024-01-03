@@ -212,13 +212,14 @@
 <ul>
 <li class="chapter" data-level="7.1" data-path="databases.html"><a href="databases.html#create-an-account"><i class="fa fa-check"></i><b>7.1</b> Create an Account</a></li>
 <li class="chapter" data-level="7.2" data-path="databases.html"><a href="databases.html#login"><i class="fa fa-check"></i><b>7.2</b> Login</a></li>
-<li class="chapter" data-level="7.3" data-path="databases.html"><a href="databases.html#create-a-database"><i class="fa fa-check"></i><b>7.3</b> Create a Database</a></li>
-<li class="chapter" data-level="7.4" data-path="databases.html"><a href="databases.html#create-a-table"><i class="fa fa-check"></i><b>7.4</b> Create a Table</a>
+<li class="chapter" data-level="7.3" data-path="databases.html"><a href="databases.html#create_database"><i class="fa fa-check"></i><b>7.3</b> Create a Database</a></li>
+<li class="chapter" data-level="7.4" data-path="databases.html"><a href="databases.html#create_table"><i class="fa fa-check"></i><b>7.4</b> Create a Table</a>
 <ul>
 <li class="chapter" data-level="7.4.1" data-path="databases.html"><a href="databases.html#reference_tables"><i class="fa fa-check"></i><b>7.4.1</b> Reference Tables</a></li>
 <li class="chapter" data-level="7.4.2" data-path="databases.html"><a href="databases.html#data_tables"><i class="fa fa-check"></i><b>7.4.2</b> Data Tables</a></li>
 <li class="chapter" data-level="7.4.3" data-path="databases.html"><a href="databases.html#definition_tables"><i class="fa fa-check"></i><b>7.4.3</b> Definition Tables</a></li>
 </ul></li>
+<li class="chapter" data-level="7.5" data-path="databases.html"><a href="databases.html#insert-data"><i class="fa fa-check"></i><b>7.5</b> Insert Data</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -275,8 +276,8 @@ flush privileges;</code></pre>
 <p><code>$mysql -u user_name -p db_some_name</code></p>
 <p>Exit the server via <code>exit;</code> or <code>quit;</code>.</p>
 </div>
-<div id="create-a-database" class="section level2 hasAnchor" number="7.3">
-<h2><span class="header-section-number">7.3</span> Create a Database<a href="databases.html#create-a-database" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="create_database" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> Create a Database<a href="databases.html#create_database" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Admin (i.e. all) privileges are needed by the user to create an database. Accordingly, it is most likely best for labarserv2 admins to create databases and then grant specific (or all) permissions to the user for the specific database.</p>
 <p><a href="https://dev.mysql.com/doc/refman/8.0/en/creating-database.html">Database creation</a> is accomplished simply via:</p>
 <p><code>create database db_some_name;</code></p>
@@ -288,8 +289,8 @@ flush privileges;</code></pre>
 <li>Databases are named in snake case (<code>db_emotion_regulation</code> and not <code>db-emotion-regulation</code>)</li>
 </ul>
 </div>
-<div id="create-a-table" class="section level2 hasAnchor" number="7.4">
-<h2><span class="header-section-number">7.4</span> Create a Table<a href="databases.html#create-a-table" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="create_table" class="section level2 hasAnchor" number="7.4">
+<h2><span class="header-section-number">7.4</span> Create a Table<a href="databases.html#create_table" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><a href="https://dev.mysql.com/doc/refman/8.0/en/creating-tables.html">Tables</a> are 2-dimensional matrices containing rows and columns of data. Each row must contain unique information and each column contains only one <a href="https://dev.mysql.com/doc/refman/8.0/en/data-types.html">data type</a>. Whether to use long- or wide-formatted tables depends on the user and nature of the data, but long-formatted tables (or at least <a href="https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html">tidy</a>) is preferable and generally more flexible.</p>
 <p>The <code>create table</code> syntax is used within a database to both create the table and specify the number and types of columns. Three types of tables (<a href="databases.html#reference_tables">reference</a>, <a href="databases.html#data_tables">data</a>, and <a href="databases.html#definition_tables">definition</a>) are used in the LaBar Lab, which are prepended with <code>ref_</code>, <code>tbl_</code>, and <code>def_</code> identifiers, respectively.</p>
 <div id="reference_tables" class="section level3 hasAnchor" number="7.4.1">
@@ -411,7 +412,7 @@ create table tbl_erq (
     sess_id int not null,
     item_erq int not null,
     resp_erq int,
-    primary key(subj_id, item_erq),
+    primary key(subj_id, sess_id, item_erq),
     foreign key(subj_id) references ref_subj(subj_id) on delete cascade,
     foreign key(sess_id) references ref_sess(sess_id)
 );
@@ -484,8 +485,73 @@ WHERE
     (&#39;resp_frq&#39;, &#39;Participant response to frequency prompt&#39;),
     (&#39;resp_int&#39;, &#39;Participant response to intensity prompt&#39;),
     (&#39;resp_sal&#39;, &#39;Participant response to salience prompt&#39;);</code></pre>
-
 </div>
+</div>
+<div id="insert-data" class="section level2 hasAnchor" number="7.5">
+<h2><span class="header-section-number">7.5</span> Insert Data<a href="databases.html#insert-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Adding data to a table is</p>
+<p>Building on our example for building <a href="databases.html#create_database">databases</a> and <a href="databases.html#create_table">tables</a>, now that a database and tables are properly specified we can begin adding data to the tables. Add data is easily accomplished via the <a href="https://dev.mysql.com/doc/refman/8.0/en/insert.html"><code>insert into</code></a> command, and we have seen a few examples already when building the <a href="databases.html#reference_tables">reference</a> and <a href="databases.html#definition_tables">definition</a> tables.</p>
+<p>To add a single row (or several) of data into a table, we specify the table, columns, and values:</p>
+<pre><code>use db_test;
+insert ignore into tbl_erq
+  (subj_id, sess_id, item_erq, resp_erq)
+  values
+  (1, 1, 1, 6),
+  (1, 2, 1, 4),
+  (1, 3, 1, 2);</code></pre>
+<p>Working within our example database <code>db_test</code> we have add three new rows of data to <code>tbl_erq</code>. The <code>insert ignore into</code> skips the insertion if the same values already exist, avoiding overwriting existing data in <code>tbl_erq</code>. The relevant columns were referenced, and then participant 1 (ref <code>ref_subj.subj_name</code>) responses to the first ERQ item were added for each session. We can check that the insertion was successful by selecting our data:</p>
+<pre><code>mysql&gt; select * from tbl_erq;
++---------+---------+----------+----------+
+| subj_id | sess_id | item_erq | resp_erq |
++---------+---------+----------+----------+
+|       1 |       1 |        1 |        6 |
+|       1 |       2 |        1 |        4 |
+|       1 |       3 |        1 |        2 |
++---------+---------+----------+----------+
+3 rows in set (0.01 sec)</code></pre>
+<p>Obviously, manually entering every row is untenable and error prone. The insert command of single rows was shown for practice and also to be leveraged algorithmically in a workflow.</p>
+<p>Additionally, if CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data: and note that a row will be skipped during <code>load data</code> if the <code>subj_id</code> does not appear in <code>ref_subj</code>:</p>
+<pre><code>#!/bin/bash
+
+echo &quot;subj_id,sess_id,item_erq,resp_erq&quot; &gt;${HOME}/Desktop/erq_data.csv
+for subj in {1..9}; do
+    for sess in {1..3}; do
+        for item in {1..10}; do
+            resp=$(((RANDOM % 10) + 1))
+            echo &quot;${subj},${sess},${item},${resp}&quot; &gt;&gt;${HOME}/Desktop/erq_data.csv
+        done
+    done
+done</code></pre>
+<p>Having built appropriate files for <code>tbl_panas</code>, <code>tbl_erq</code>, and <code>tbl_emofreq</code>, and assuming that <a href="https://stackoverflow.com/questions/59993844/error-loading-local-data-is-disabled-this-must-be-enabled-on-both-the-client">local infiles are allowed</a>, I can then <a href="databases.html#login">login</a> to the server using the local-infile option that allows the server to read a file on my local machine.</p>
+<pre><code>$mysql --local-infile=1 -u nate -p db_test</code></pre>
+<p>Entire CSVs from the Desktop can now be loaded via the <a href="https://dev.mysql.com/doc/refman/8.0/en/load-data.html"><code>load data</code></a> command (and note that rows will be skipped for <code>subj_id</code> values not found in <code>ref_subj</code>):</p>
+<pre><code>delete from tbl_erq; --clear example inputs
+
+load data local infile &#39;/home/Nathan/Desktop/erq_data.csv&#39;
+into table tbl_erq
+fields terminated by &#39;,&#39;
+enclosed by &#39;&quot;&#39;
+lines terminated by &#39;\n&#39;
+ignore 1 rows;</code></pre>
+<p>As specified, <code>local infile</code> supplies the path to the CSV file, and then extra options are specified help parse the file such as specifying that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV.</p>
+<p>This method is faster then repeated insertions and is the preferred method if manually porting data. We can again verify that the table was updated, but limit the return to 10 rows:</p>
+<pre><code>mysql&gt; select * from tbl_erq limit 10;
++---------+---------+----------+----------+
+| subj_id | sess_id | item_erq | resp_erq |
++---------+---------+----------+----------+
+|       1 |       1 |        1 |        6 |
+|       1 |       1 |        2 |        3 |
+|       1 |       1 |        3 |        6 |
+|       1 |       1 |        4 |        1 |
+|       1 |       1 |        5 |        3 |
+|       1 |       1 |        6 |        1 |
+|       1 |       1 |        7 |        5 |
+|       1 |       1 |        8 |        5 |
+|       1 |       1 |        9 |        3 |
+|       1 |       1 |       10 |        5 |
++---------+---------+----------+----------+
+10 rows in set (0.00 sec)</code></pre>
+
 </div>
 </div>
 

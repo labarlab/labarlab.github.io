@@ -47,7 +47,7 @@ flush privileges;
 The user should then be able to login to the server via `$mysql -u test -p`, enter their password (foobar), and access the database (`use db_test; show tables;`).
 
 
-## Login
+## Login {#login}
 
 Users that have an account can login to the mysql server via
 
@@ -62,7 +62,7 @@ A database can also be specified at login:
 Exit the server via `exit;` or `quit;`.
 
 
-## Create a Database
+## Create a Database {#create_database}
 
 Admin (i.e. all) privileges are needed by the user to create an database. Accordingly, it is most likely best for labarserv2 admins to create databases and then grant specific (or all) permissions to the user for the specific database.
 
@@ -78,7 +78,7 @@ Admin (i.e. all) privileges are needed by the user to create an database. Accord
 * Databases are named in snake case (`db_emotion_regulation` and not `db-emotion-regulation`)
 
 
-## Create a Table
+## Create a Table {#create_table}
 
 [Tables](https://dev.mysql.com/doc/refman/8.0/en/creating-tables.html) are 2-dimensional matrices containing rows and columns of data. Each row must contain unique information and each column contains only one [data type](https://dev.mysql.com/doc/refman/8.0/en/data-types.html). Whether to use long- or wide-formatted tables depends on the user and nature of the data, but long-formatted tables (or at least [tidy](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)) is preferable and generally more flexible.
 
@@ -238,7 +238,7 @@ create table tbl_erq (
     sess_id int not null,
     item_erq int not null,
     resp_erq int,
-    primary key(subj_id, item_erq),
+    primary key(subj_id, sess_id, item_erq),
     foreign key(subj_id) references ref_subj(subj_id) on delete cascade,
     foreign key(sess_id) references ref_sess(sess_id)
 );
@@ -332,3 +332,97 @@ insert into def_emofreq
     ('resp_int', 'Participant response to intensity prompt'),
     ('resp_sal', 'Participant response to salience prompt');
 ```
+
+
+## Insert Data
+
+Adding data to a table is 
+
+Building on our example for building [databases](#create_database) and [tables](#create_table), now that a database and tables are properly specified we can begin adding data to the tables. Add data is easily accomplished via the [`insert into`](https://dev.mysql.com/doc/refman/8.0/en/insert.html) command, and we have seen a few examples already when building the [reference](#reference_tables) and [definition](#definition_tables) tables.
+
+To add a single row (or several) of data into a table, we specify the table, columns, and values:
+
+```
+use db_test;
+insert ignore into tbl_erq
+  (subj_id, sess_id, item_erq, resp_erq)
+  values
+  (1, 1, 1, 6),
+  (1, 2, 1, 4),
+  (1, 3, 1, 2);
+```
+
+Working within our example database `db_test` we have add three new rows of data to `tbl_erq`. The `insert ignore into` skips the insertion if the same values already exist, avoiding overwriting existing data in `tbl_erq`. The relevant columns were referenced, and then participant 1 (ref `ref_subj.subj_name`) responses to the first ERQ item were added for each session. We can check that the insertion was successful by selecting our data:
+
+```
+mysql> select * from tbl_erq;
++---------+---------+----------+----------+
+| subj_id | sess_id | item_erq | resp_erq |
++---------+---------+----------+----------+
+|       1 |       1 |        1 |        6 |
+|       1 |       2 |        1 |        4 |
+|       1 |       3 |        1 |        2 |
++---------+---------+----------+----------+
+3 rows in set (0.01 sec)
+```
+
+Obviously, manually entering every row is untenable and error prone. The insert command of single rows was shown for practice and also to be leveraged algorithmically in a workflow.
+
+Additionally, if CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data: and note that a row will be skipped during `load data` if the `subj_id` does not appear in `ref_subj`:
+
+```
+#!/bin/bash
+
+echo "subj_id,sess_id,item_erq,resp_erq" >${HOME}/Desktop/erq_data.csv
+for subj in {1..9}; do
+    for sess in {1..3}; do
+        for item in {1..10}; do
+            resp=$(((RANDOM % 10) + 1))
+            echo "${subj},${sess},${item},${resp}" >>${HOME}/Desktop/erq_data.csv
+        done
+    done
+done
+```
+
+Having built appropriate files for `tbl_panas`, `tbl_erq`, and `tbl_emofreq`, and assuming that [local infiles are allowed](https://stackoverflow.com/questions/59993844/error-loading-local-data-is-disabled-this-must-be-enabled-on-both-the-client), I can then [login](#login) to the server using the local-infile option that allows the server to read a file on my local machine.
+
+```
+$mysql --local-infile=1 -u nate -p db_test
+```
+
+Entire CSVs from the Desktop can now be loaded via the [`load data`](https://dev.mysql.com/doc/refman/8.0/en/load-data.html) command (and note that rows will be skipped for `subj_id` values not found in `ref_subj`):
+
+```
+delete from tbl_erq; --clear example inputs
+
+load data local infile '/home/Nathan/Desktop/erq_data.csv'
+into table tbl_erq
+fields terminated by ','
+enclosed by '"'
+lines terminated by '\n'
+ignore 1 rows;
+```
+
+As specified, `local infile` supplies the path to the CSV file, and then extra options are specified help parse the file such as specifying that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV. 
+
+This method is faster then repeated insertions and is the preferred method if manually porting data. We can again verify that the table was updated, but limit the return to 10 rows:
+
+```
+mysql> select * from tbl_erq limit 10;
++---------+---------+----------+----------+
+| subj_id | sess_id | item_erq | resp_erq |
++---------+---------+----------+----------+
+|       1 |       1 |        1 |        6 |
+|       1 |       1 |        2 |        3 |
+|       1 |       1 |        3 |        6 |
+|       1 |       1 |        4 |        1 |
+|       1 |       1 |        5 |        3 |
+|       1 |       1 |        6 |        1 |
+|       1 |       1 |        7 |        5 |
+|       1 |       1 |        8 |        5 |
+|       1 |       1 |        9 |        3 |
+|       1 |       1 |       10 |        5 |
++---------+---------+----------+----------+
+10 rows in set (0.00 sec)
+```
+
