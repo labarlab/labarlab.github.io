@@ -111,5 +111,6 @@ create-an-account
 login
 create-a-database
 create-a-table
-reference-tables
-data-tables
+reference_tables
+data_tables
+definition_tables
