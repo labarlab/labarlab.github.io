@@ -219,7 +219,7 @@
 <li class="chapter" data-level="7.4.2" data-path="databases.html"><a href="databases.html#data_tables"><i class="fa fa-check"></i><b>7.4.2</b> Data Tables</a></li>
 <li class="chapter" data-level="7.4.3" data-path="databases.html"><a href="databases.html#definition_tables"><i class="fa fa-check"></i><b>7.4.3</b> Definition Tables</a></li>
 </ul></li>
-<li class="chapter" data-level="7.5" data-path="databases.html"><a href="databases.html#insert-data"><i class="fa fa-check"></i><b>7.5</b> Insert Data</a></li>
+<li class="chapter" data-level="7.5" data-path="databases.html"><a href="databases.html#insert_data"><i class="fa fa-check"></i><b>7.5</b> Insert Data</a></li>
 <li class="chapter" data-level="7.6" data-path="databases.html"><a href="databases.html#select-data"><i class="fa fa-check"></i><b>7.6</b> Select Data</a>
 <ul>
 <li class="chapter" data-level="7.6.1" data-path="databases.html"><a href="databases.html#basic-usage"><i class="fa fa-check"></i><b>7.6.1</b> Basic Usage</a></li>
@@ -492,9 +492,9 @@ WHERE
     (&#39;resp_sal&#39;, &#39;Participant response to salience prompt&#39;);</code></pre>
 </div>
 </div>
-<div id="insert-data" class="section level2 hasAnchor" number="7.5">
-<h2><span class="header-section-number">7.5</span> Insert Data<a href="databases.html#insert-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Building on our example for building <a href="databases.html#create_database">databases</a> and <a href="databases.html#create_table">tables</a>, now that a database and tables are properly specified we can begin adding data to the tables. Add data is easily accomplished via the <a href="https://dev.mysql.com/doc/refman/8.0/en/insert.html"><code>insert into</code></a> command, and we have seen a few examples already when building the <a href="databases.html#reference_tables">reference</a> and <a href="databases.html#definition_tables">definition</a> tables.</p>
+<div id="insert_data" class="section level2 hasAnchor" number="7.5">
+<h2><span class="header-section-number">7.5</span> Insert Data<a href="databases.html#insert_data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Building on our example for building <a href="databases.html#create_database">databases</a> and <a href="databases.html#create_table">tables</a>, now that a database and tables are properly specified we can begin adding data to the tables. Adding data is easily accomplished via the <a href="https://dev.mysql.com/doc/refman/8.0/en/insert.html"><code>insert into</code></a> command, and we have seen a few examples already when building the <a href="databases.html#reference_tables">reference</a> and <a href="databases.html#definition_tables">definition</a> tables.</p>
 <p>To add a single row (or several) of data into a table, we specify the table, columns, and values:</p>
 <pre><code>use db_test;
 insert ignore into tbl_erq
@@ -503,7 +503,7 @@ insert ignore into tbl_erq
   (1, 1, 1, 6),
   (1, 2, 1, 4),
   (1, 3, 1, 2);</code></pre>
-<p>Working within our example database <code>db_test</code> we have add three new rows of data to <code>tbl_erq</code>. The <code>insert ignore into</code> skips the insertion if the same values already exist, avoiding overwriting existing data in <code>tbl_erq</code>. The relevant columns were referenced, and then participant 1 (ref <code>ref_subj.subj_name</code>) responses to the first ERQ item were added for each session. We can check that the insertion was successful by selecting our data:</p>
+<p>Working within our example database <code>db_test</code> we have add three new rows of data to <code>tbl_erq</code>. The <code>insert ignore into</code> skips the insertion if the same values already exist, avoiding overwriting existing data in <code>tbl_erq</code>. The relevant columns were referenced in the tuple, and then participant 1 (ref <code>ref_subj.subj_name</code>) responses to the first ERQ item were added for each session. We can check that the insertion was successful by selecting our data:</p>
 <pre><code>mysql&gt; select * from tbl_erq;
 +---------+---------+----------+----------+
 | subj_id | sess_id | item_erq | resp_erq |
@@ -514,7 +514,7 @@ insert ignore into tbl_erq
 +---------+---------+----------+----------+
 3 rows in set (0.01 sec)</code></pre>
 <p>Obviously, manually entering every row is untenable and error prone. The insert command of single rows was shown for practice and also to be leveraged algorithmically in a workflow.</p>
-<p>Additionally, if CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data: and note that a row will be skipped during <code>load data</code> if the <code>subj_id</code> does not appear in <code>ref_subj</code>:</p>
+<p>If CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data for <code>tbl_erq</code> (and should be modified to build input data for <code>ref_subj</code>, <code>tbl_panas</code>, and <code>tbl_emofreq</code>), and note that a row will be skipped during <code>load data</code> if the <code>subj_id</code> does not appear in <code>ref_subj</code>:</p>
 <pre><code>#!/bin/bash
 
 echo &quot;subj_id,sess_id,item_erq,resp_erq&quot; &gt;${HOME}/Desktop/erq_data.csv
@@ -526,19 +526,19 @@ for subj in {1..9}; do
         done
     done
 done</code></pre>
-<p>Having built appropriate files for <code>tbl_panas</code>, <code>tbl_erq</code>, and <code>tbl_emofreq</code>, and assuming that <a href="https://stackoverflow.com/questions/59993844/error-loading-local-data-is-disabled-this-must-be-enabled-on-both-the-client">local infiles are allowed</a>, I can then <a href="databases.html#login">login</a> to the server using the local-infile option that allows the server to read a file on my local machine.</p>
-<pre><code>$mysql --local-infile=1 -u nate -p db_test</code></pre>
+<p>Having built properly formatted CSV files for <code>tbl_panas</code>, <code>tbl_erq</code>, and <code>tbl_emofreq</code>, and assuming that <a href="https://stackoverflow.com/questions/59993844/error-loading-local-data-is-disabled-this-must-be-enabled-on-both-the-client">local infiles are allowed</a>, <a href="databases.html#login">login</a> to the server using the local-infile option. Using this options allows the server to read a file on the local machine.</p>
+<pre><code>$mysql --local-infile=1 -u &lt;user&gt; -p db_test</code></pre>
 <p>Entire CSVs from the Desktop can now be loaded via the <a href="https://dev.mysql.com/doc/refman/8.0/en/load-data.html"><code>load data</code></a> command (and note that rows will be skipped for <code>subj_id</code> values not found in <code>ref_subj</code>):</p>
 <pre><code>delete from tbl_erq; --clear example inputs
 
-load data local infile &#39;/home/Nathan/Desktop/erq_data.csv&#39;
+load data local infile &#39;/path/Desktop/erq_data.csv&#39;
 into table tbl_erq
 fields terminated by &#39;,&#39;
 enclosed by &#39;&quot;&#39;
 lines terminated by &#39;\n&#39;
 ignore 1 rows;</code></pre>
-<p>As specified, <code>local infile</code> supplies the path to the CSV file, and then extra options are specified help parse the file such as specifying that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV.</p>
-<p>This method is faster then repeated insertions and is the preferred method if manually porting data. We can again verify that the table was updated, but limit the return to 10 rows:</p>
+<p>As specified, <code>local infile</code> supplies the path to the CSV file, and then extra options are specified help parse the file such as specifying that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV. <em>Note:</em> the infile string will require editing to point to the erq_data.csv on your local machine.</p>
+<p>This method is faster than, and preferred over, manually inserting each row. We can again verify that the table was updated, but limit the return to 10 rows:</p>
 <pre><code>mysql&gt; select * from tbl_erq limit 10;
 +---------+---------+----------+----------+
 | subj_id | sess_id | item_erq | resp_erq |
@@ -558,10 +558,10 @@ ignore 1 rows;</code></pre>
 </div>
 <div id="select-data" class="section level2 hasAnchor" number="7.6">
 <h2><span class="header-section-number">7.6</span> Select Data<a href="databases.html#select-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Data from tables is accessible with the <a href="https://dev.mysql.com/doc/refman/8.0/en/select.html">select</a> command. Simply, the anatomy of this command is to specify which columns from which tables are desired (and using an ’*’ when all columns are desired).</p>
+<p>Data from tables is accessible with the <a href="https://dev.mysql.com/doc/refman/8.0/en/select.html">select</a> command. Simply, the anatomy of this command is to specify which columns from which tables are desired (and using an ’*’ when all columns are desired). This section will provide examples of how to extract data from tables using <code>select</code> and <code>join</code>.</p>
 <div id="basic-usage" class="section level3 hasAnchor" number="7.6.1">
 <h3><span class="header-section-number">7.6.1</span> Basic Usage<a href="databases.html#basic-usage" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>After logging into our server and activating the appropriate database (<code>$mysql -u &lt;user&gt; -p db_test</code>), we can see a list of available tables as well as a description of tables via <a href="https://dev.mysql.com/doc/refman/8.0/en/show.html">show</a> and <a href="https://dev.mysql.com/doc/refman/8.0/en/describe.html">describe</a>:</p>
+<p>After logging into the server and activating the appropriate database (<code>$mysql -u &lt;user&gt; -p db_test</code>), a list of available tables is accessible via <a href="https://dev.mysql.com/doc/refman/8.0/en/show.html">show</a>, and <a href="https://dev.mysql.com/doc/refman/8.0/en/describe.html">describe</a> can be used to see the number, name, and type of columns:</p>
 <pre><code>mysql&gt; show tables;
 +-------------------+
 | Tables_in_db_test |
@@ -586,7 +586,7 @@ mysql&gt; describe tbl_erq;
 | resp_erq | int  | YES  |     | NULL    |       |
 +----------+------+------+-----+---------+-------+
 4 rows in set (0.00 sec)</code></pre>
-<p>Accordingly, we can select all columns of <code>tbl_erq</code> (and limit the selection to the first 5) with <code>select</code>:</p>
+<p>Accordingly, we can select all columns of <code>tbl_erq</code> (and limit the selection to the first 5 rows) with <code>select</code>:</p>
 <pre><code>mysql&gt; select * from tbl_erq limit 5;
 +---------+---------+----------+----------+
 | subj_id | sess_id | item_erq | resp_erq |
@@ -614,7 +614,7 @@ mysql&gt; select count(*) from tbl_erq where subj_id = 1;
 |       30 |
 +----------+
 1 row in set (0.00 sec)</code></pre>
-<p>Finally, we can select only desired columns (and also for a specific session ID):</p>
+<p>Finally, we can select only desired columns (and rows of a specific session ID):</p>
 <pre><code>mysql&gt; select subj_id, item_erq, resp_erq
     -&gt; from tbl_erq
     -&gt; where sess_id = 1
@@ -632,6 +632,8 @@ mysql&gt; select count(*) from tbl_erq where subj_id = 1;
 </div>
 <div id="join-tables" class="section level3 hasAnchor" number="7.6.2">
 <h3><span class="header-section-number">7.6.2</span> Join Tables<a href="databases.html#join-tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="accessing-reference-tables" class="section level4 hasAnchor" number="7.6.2.1">
+<h4><span class="header-section-number">7.6.2.1</span> Accessing Reference Tables<a href="databases.html#accessing-reference-tables" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Our example database has a number of tables containing different information. Specifically, the <a href="databases.html#reference_tables">reference</a> tables contain values that are expected to appear across multiple tables while the <a href="databases.html#data_tables">data</a> tables hold actual participant responses and information, which themselves are linked to the reference tables via foreign keys. Previously, we selected data from <code>tbl_erq</code> but did not interpret the <code>subj_id</code> or <code>sess_id</code> columns, whose values exist in <code>ref_subj</code> and <code>ref_sess</code>, respectively.</p>
 <p>Combining information from multiple tables is accomplished with the <a href="https://dev.mysql.com/doc/refman/8.0/en/join.html">join</a> command. This <code>join</code> is appended to the <code>select</code> command to modify what is returned from the query:</p>
 <pre><code>select 
@@ -642,14 +644,14 @@ mysql&gt; select count(*) from tbl_erq where subj_id = 1;
   join ref_sess on ref_sess.sess_id = tbl_erq.sess_id
   where tbl_erq.sess_id = 2
   limit 5;</code></pre>
-<p>Here, the values of <code>tbl_erq.subj_id</code> and <code>tbl_erq.sess_id</code> are interpreted and included in the output by joining the <code>ref_subj</code> and <code>ref_sess</code> tables. First, columns from three different tables are selected: the <code>name</code> columns from the relevant reference tables as well as the <code>item</code> and <code>resp</code> columns from <code>tbl_erq</code>. Next, the table containing the relevant data is specified (<code>from tbl_erq</code>), and then <code>tbl_erq</code> is joined with the reference tables by specifying which columns will match between the data and reference tables (I’ll leave it to the reader to learn about <a href="https://www.w3schools.com/sql/sql_join.asp">left, inner, and outer joins</a>). Specifically, the query is instructed to join <code>ref_subj</code> to <code>tbl_erq</code>, and to match the column values in <code>ref_subj.subj_id</code> and <code>tbl_erq.subj_id</code> to guide the join (and the same for <code>ref_sess</code>) in order to return the specified columns. This <code>join</code> functionality is the bread-and-butter of RDBMS and the reason for which the conventions for both reference and data tables (above) have been specified.</p>
-<p>Table (and database) names can get large and unwieldy, making for overly verbose <code>select</code> commands. Below is an equivalent command which also assigns the table names to separate variables (a, b, and c) to decrease the amount of typing:</p>
-<pre><code>select 
-    b.subj_name, c.sess_name, a.item_erq, a.resp_erq
-    from tbl_erq a
-    join ref_subj b on b.subj_id = a.subj_id
-    join ref_sess c on c.sess_id = a.sess_id
-    where a.sess_id = 2
+<p>Here, the values (names) of <code>tbl_erq.subj_id</code> and <code>tbl_erq.sess_id</code> are interpreted and included in the output by joining the <code>ref_subj</code> and <code>ref_sess</code> tables. First, columns from three different tables are selected: the <code>name</code> columns from the relevant reference tables as well as the <code>item</code> and <code>resp</code> columns from <code>tbl_erq</code>. Next, the table containing the relevant data is specified (<code>from tbl_erq</code>), and then <code>tbl_erq</code> is joined with the reference tables by specifying which columns will match between the data and reference tables. Specifically, the query is instructed to join <code>ref_subj</code> to <code>tbl_erq</code>, and to match the column values in <code>ref_subj.subj_id</code> and <code>tbl_erq.subj_id</code> to guide the join (and the same for <code>ref_sess</code>) in order to return the specified columns. This <code>join</code> functionality is the bread-and-butter of RDBMS and the reason for which the conventions for both reference and data tables (above) have been specified.</p>
+<p>Table (and database) names can get large and unwieldy, making for overly verbose <code>select</code> commands. Below is an equivalent command which also assigns the table names to separate variables (a, b, and c):</p>
+<pre><code>select
+    a.subj_name, b.sess_name, b.item_erq, b.resp_erq
+    from tbl_erq c
+    join ref_subj a on a.subj_id = c.subj_id
+    join ref_sess b on b.sess_id = c.sess_id
+    where c.sess_id = 2
     limit 5;</code></pre>
 <p>Given this selection, we expect the query to return a matrix containing the subject name, session name, and ERQ item and participant responses limited to the second session (and only the first 5 rows).</p>
 <pre><code>+-----------+-----------+----------+----------+
@@ -662,7 +664,130 @@ mysql&gt; select count(*) from tbl_erq where subj_id = 1;
 | SUB1      | day2      |        5 |        7 |
 +-----------+-----------+----------+----------+
 5 rows in set (0.00 sec)</code></pre>
+<p><em>Admin Note:</em> this example assumes <a href="https://stackoverflow.com/questions/41887460/select-list-is-not-in-group-by-clause-and-contains-nonaggregated-column-inc"><code>sql_mode=only_full_group_by</code></a>.</p>
+</div>
+<div id="joining-data-tables" class="section level4 hasAnchor" number="7.6.2.2">
+<h4><span class="header-section-number">7.6.2.2</span> Joining Data Tables<a href="databases.html#joining-data-tables" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Conducting analyses usually involve combining data across multiple measures, perhaps to investigate the relationship of X and Y or to see if controlling for Z has any impact on an X-Y relationship. In our example, participant responses to different measures (e.g. ERQ, PANAS) are kept in separate data tables (<code>tbl_erq</code> and <code>tbl_panas</code>, respectively), and these data can be aggregated into a single matrix with <code>join</code>.</p>
+<p>Using simulated data (for syntax, see <a href="databases.html#insert_data">insert data</a>), the <code>tbl_erq</code> has 10 items, and <code>tbl_panas</code> 20, that were administered to 9 participants for each of 3 sessions:</p>
+<pre><code>mysql&gt; select distinct(item_erq) from tbl_erq;
++----------+
+| item_erq |
++----------+
+|        1 |
+|        2 |
+..
+|        9 |
+|       10 |
++----------+
+10 rows in set (0.00 sec)
 
+mysql&gt; select count(*) from tbl_erq;
++----------+
+| count(*) |
++----------+
+|      270 |
++----------+
+1 row in set (0.00 sec)
+
+mysql&gt; select distinct(item_panas) from tbl_panas;
++------------+
+| item_panas |
++------------+
+|          1 |
+|          2 |
+..
+|         19 |
+|         20 |
++------------+
+20 rows in set (0.00 sec)
+
+mysql&gt; select count(*) from tbl_panas;
++----------+
+| count(*) |
++----------+
+|      540 |
++----------+
+1 row in set (0.01 sec)</code></pre>
+<p>We can join our reference, ERQ, and PANAS tables, then, using an extension of the join example above:</p>
+<pre><code>-- Long format
+select
+    a.subj_name, b.sess_name, c.item_erq, c.resp_erq,
+        d.item_panas, d.resp_panas
+    from tbl_erq c
+    join ref_subj a on a.subj_id = c.subj_id
+    join ref_sess b on b.sess_id = c.sess_id
+    join tbl_panas d on d.subj_id = c.subj_id
+        and d.sess_id = c.sess_id
+    where c.subj_id = 1 and c.sess_id = 1
+    limit 15
+    ;</code></pre>
+<p>As before, values from the reference tables are incorporated into output matrix, and this time we add a <code>join</code> of <code>tbl_erq</code> with <code>tbl_panas</code> using both <code>subj_id</code> and <code>sess_id</code>. Additionally, the output is limited to rows for the first subject and session ID.</p>
+<p>This output is long formatted, and accordingly we can see that <em>each</em> ERQ response is reported for <em>every</em> PANAS item:</p>
+<pre><code>+-----------+-----------+----------+----------+------------+------------+
+| subj_name | sess_name | item_erq | resp_erq | item_panas | resp_panas |
++-----------+-----------+----------+----------+------------+------------+
+| SUB1      | day1      |       10 |        5 |          1 |          6 |
+| SUB1      | day1      |        9 |        5 |          1 |          6 |
+| SUB1      | day1      |        8 |        2 |          1 |          6 |
+| SUB1      | day1      |        7 |        5 |          1 |          6 |
+| SUB1      | day1      |        6 |        9 |          1 |          6 |
+| SUB1      | day1      |        5 |        6 |          1 |          6 |
+| SUB1      | day1      |        4 |        1 |          1 |          6 |
+| SUB1      | day1      |        3 |       10 |          1 |          6 |
+| SUB1      | day1      |        2 |        7 |          1 |          6 |
+| SUB1      | day1      |        1 |        7 |          1 |          6 |
+| SUB1      | day1      |       10 |        5 |          2 |          5 |
+| SUB1      | day1      |        9 |        5 |          2 |          5 |
+| SUB1      | day1      |        8 |        2 |          2 |          5 |
+| SUB1      | day1      |        7 |        5 |          2 |          5 |
+| SUB1      | day1      |        6 |        9 |          2 |          5 |
++-----------+-----------+----------+----------+------------+------------+
+15 rows in set (0.00 sec)</code></pre>
+<p>While perfectly acceptable, the output matrix has a lot of redundant information. One solution is to craft an output matrix in <a href="https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html">tidy</a> format. That is, rather than pulling both <code>tbl_erq.item_erq</code> and <code>tbl_panas.item_panas</code>, as they are both integer, we could instead create a column titled <code>item_num</code> that has the full range of items. This would allow us to join the response columns, <code>tbl_erq.resp_erq</code> and <code>tbl_panas.resp_panas</code> by their item values.</p>
+<p>Caution is warranted, however, given the nature of the default <code>join</code> performance (<a href="https://www.w3schools.com/sql/sql_join.asp">inner</a>) since ERQ and PANAS have a different number of items. Accordingly, we will use <code>tbl_panas.item_panas</code> to create the new <code>item_num</code> column and a <code>left</code> join:</p>
+<pre><code>-- Tidy format
+select
+    a.subj_name, b.sess_name, d.item_panas as item_num,
+        c.resp_erq, d.resp_panas
+    from tbl_panas d
+    join ref_subj a on a.subj_id = d.subj_id
+    join ref_sess b on b.sess_id = d.sess_id
+    left join tbl_erq c on c.subj_id = d.subj_id
+        and c.sess_id = d.sess_id and c.item_erq = d.item_panas
+    where d.sess_id = 1
+    limit 22
+    ;</code></pre>
+<p>The output tidy matrix, then, does not have the repeating response values found in the long format but NULL values are instead filled for <code>resp_erq</code> when a corresponding item value does not exist.</p>
+<pre><code>+-----------+-----------+----------+----------+------------+
+| subj_name | sess_name | item_num | resp_erq | resp_panas |
++-----------+-----------+----------+----------+------------+
+| SUB1      | day1      |        1 |        7 |          6 |
+| SUB1      | day1      |        2 |        7 |          5 |
+| SUB1      | day1      |        3 |       10 |          7 |
+| SUB1      | day1      |        4 |        1 |          5 |
+| SUB1      | day1      |        5 |        6 |          2 |
+| SUB1      | day1      |        6 |        9 |          7 |
+| SUB1      | day1      |        7 |        5 |          5 |
+| SUB1      | day1      |        8 |        2 |         10 |
+| SUB1      | day1      |        9 |        5 |         10 |
+| SUB1      | day1      |       10 |        5 |          3 |
+| SUB1      | day1      |       11 |     NULL |          1 |
+| SUB1      | day1      |       12 |     NULL |          3 |
+| SUB1      | day1      |       13 |     NULL |          2 |
+| SUB1      | day1      |       14 |     NULL |          2 |
+| SUB1      | day1      |       15 |     NULL |          7 |
+| SUB1      | day1      |       16 |     NULL |          9 |
+| SUB1      | day1      |       17 |     NULL |          1 |
+| SUB1      | day1      |       18 |     NULL |          1 |
+| SUB1      | day1      |       19 |     NULL |          7 |
+| SUB1      | day1      |       20 |     NULL |         10 |
+| SUB2      | day1      |        1 |        4 |          9 |
+| SUB2      | day1      |        2 |       10 |          8 |
++-----------+-----------+----------+----------+------------+
+22 rows in set (0.00 sec)</code></pre>
+
+</div>
 </div>
 </div>
 </div>
