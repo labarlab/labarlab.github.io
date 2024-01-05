@@ -350,7 +350,7 @@ insert ignore into tbl_erq
   (1, 3, 1, 2);
 ```
 
-Working within our example database `db_test` we have add three new rows of data to `tbl_erq`. The `insert ignore into` skips the insertion if the same values already exist, avoiding overwriting existing data in `tbl_erq`. The relevant columns were referenced, and then participant 1 (ref `ref_subj.subj_name`) responses to the first ERQ item were added for each session. We can check that the insertion was successful by selecting our data:
+Working within our example database `db_test` we have added three new rows of data to `tbl_erq`. The `insert ignore into` skips the insertion if the same values already exist, avoiding overwriting existing data in `tbl_erq`. The relevant columns were referenced, and then participant 1 (ref `ref_subj.subj_name`) responses to the first ERQ item were added for each session. We can check that the insertion was successful by selecting our data:
 
 ```
 mysql> select * from tbl_erq;
@@ -366,7 +366,7 @@ mysql> select * from tbl_erq;
 
 Obviously, manually entering every row is untenable and error prone. The insert command of single rows was shown for practice and also to be leveraged algorithmically in a workflow.
 
-Additionally, if CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data: and note that a row will be skipped during `load data` if the `subj_id` does not appear in `ref_subj`:
+Additionally, if CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data (note that a row will be skipped during `load data` if the `subj_id` does not appear in `ref_subj`):
 
 ```
 #!/bin/bash
@@ -401,7 +401,7 @@ lines terminated by '\n'
 ignore 1 rows;
 ```
 
-As specified, `local infile` supplies the path to the CSV file, and then extra options are specified help parse the file such as specifying that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV. 
+As specified, `local infile` supplies the path to the CSV file. Then, extra options are specified to help parse the file; such as indicating that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV. 
 
 This method is faster then repeated insertions and is the preferred method if manually porting data. We can again verify that the table was updated, but limit the return to 10 rows:
 

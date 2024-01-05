@@ -503,7 +503,7 @@ insert ignore into tbl_erq
   (1, 1, 1, 6),
   (1, 2, 1, 4),
   (1, 3, 1, 2);</code></pre>
-<p>Working within our example database <code>db_test</code> we have add three new rows of data to <code>tbl_erq</code>. The <code>insert ignore into</code> skips the insertion if the same values already exist, avoiding overwriting existing data in <code>tbl_erq</code>. The relevant columns were referenced, and then participant 1 (ref <code>ref_subj.subj_name</code>) responses to the first ERQ item were added for each session. We can check that the insertion was successful by selecting our data:</p>
+<p>Working within our example database <code>db_test</code> we have added three new rows of data to <code>tbl_erq</code>. The <code>insert ignore into</code> skips the insertion if the same values already exist, avoiding overwriting existing data in <code>tbl_erq</code>. The relevant columns were referenced, and then participant 1 (ref <code>ref_subj.subj_name</code>) responses to the first ERQ item were added for each session. We can check that the insertion was successful by selecting our data:</p>
 <pre><code>mysql&gt; select * from tbl_erq;
 +---------+---------+----------+----------+
 | subj_id | sess_id | item_erq | resp_erq |
@@ -514,7 +514,7 @@ insert ignore into tbl_erq
 +---------+---------+----------+----------+
 3 rows in set (0.01 sec)</code></pre>
 <p>Obviously, manually entering every row is untenable and error prone. The insert command of single rows was shown for practice and also to be leveraged algorithmically in a workflow.</p>
-<p>Additionally, if CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data: and note that a row will be skipped during <code>load data</code> if the <code>subj_id</code> does not appear in <code>ref_subj</code>:</p>
+<p>Additionally, if CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data (note that a row will be skipped during <code>load data</code> if the <code>subj_id</code> does not appear in <code>ref_subj</code>):</p>
 <pre><code>#!/bin/bash
 
 echo &quot;subj_id,sess_id,item_erq,resp_erq&quot; &gt;${HOME}/Desktop/erq_data.csv
@@ -537,7 +537,7 @@ fields terminated by &#39;,&#39;
 enclosed by &#39;&quot;&#39;
 lines terminated by &#39;\n&#39;
 ignore 1 rows;</code></pre>
-<p>As specified, <code>local infile</code> supplies the path to the CSV file, and then extra options are specified help parse the file such as specifying that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV.</p>
+<p>As specified, <code>local infile</code> supplies the path to the CSV file. Then, extra options are specified to help parse the file; such as indicating that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV.</p>
 <p>This method is faster then repeated insertions and is the preferred method if manually porting data. We can again verify that the table was updated, but limit the return to 10 rows:</p>
 <pre><code>mysql&gt; select * from tbl_erq limit 10;
 +---------+---------+----------+----------+
