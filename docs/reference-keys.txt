@@ -115,3 +115,6 @@ reference_tables
 data_tables
 definition_tables
 insert-data
+select-data
+basic-usage
+join-tables
