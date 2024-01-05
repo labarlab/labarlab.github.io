@@ -91,7 +91,7 @@ When a certain value, such as a participant ID or emotion name, show up across m
 
 Say a project intends to gather information across multiple subjects, each of whom will participate in three sessions, and some measures will occur during all sessions. We can then set up reference tables for the subject IDs, session IDs, and emotion IDs as these values would be common across all measures.
 
-To start a reference table for subject IDs, then:
+To start a reference table for subject IDs:
 
 ```
 use db_test;

@@ -23,7 +23,7 @@
 <meta name="author" content="Nathan Muncy" />
 
 
-<meta name="date" content="2024-01-03" />
+<meta name="date" content="2024-01-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -296,7 +296,7 @@ flush privileges;</code></pre>
 <h3><span class="header-section-number">7.4.1</span> Reference Tables<a href="databases.html#reference_tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>When a certain value, such as a participant ID or emotion name, show up across multiple data tables, the value can be stored in a reference table rather than be used repeatedly across multiple tables. These reference tables, and the fact that values from multiple databases can be queried at once, are the point of RDBMSs. As an added perk, the size of the database is also decreased as redundant values are minimized.</p>
 <p>Say a project intends to gather information across multiple subjects, each of whom will participate in three sessions, and some measures will occur during all sessions. We can then set up reference tables for the subject IDs, session IDs, and emotion IDs as these values would be common across all measures.</p>
-<p>To start a reference table for subject IDs, then:</p>
+<p>To start a reference table for subject IDs:</p>
 <pre><code>use db_test;
 create table ref_subj (
   subj_id int not null,
