@@ -109,8 +109,12 @@ python-2
 databases
 create-an-account
 login
-create-a-database
-create-a-table
+create_database
+create_table
 reference_tables
 data_tables
 definition_tables
+insert-data
+select-data
+basic-usage
+join-tables
