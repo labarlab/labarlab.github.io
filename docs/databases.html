@@ -23,7 +23,7 @@
 <meta name="author" content="Nathan Muncy" />
 
 
-<meta name="date" content="2024-01-05" />
+<meta name="date" content="2024-01-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -503,8 +503,7 @@ insert ignore into tbl_erq
   (1, 1, 1, 6),
   (1, 2, 1, 4),
   (1, 3, 1, 2);</code></pre>
-
-<p>Working within our example database <code>db_test</code> we have add three new rows of data to <code>tbl_erq</code>. The <code>insert ignore into</code> skips the insertion if the same values already exist, avoiding overwriting existing data in <code>tbl_erq</code>. The relevant columns were referenced in the tuple, and then participant 1 (ref <code>ref_subj.subj_name</code>) responses to the first ERQ item were added for each session. We can check that the insertion was successful by selecting our data:</p>
+<p>Working within our example database <code>db_test</code> we have added three new rows of data to <code>tbl_erq</code>. The <code>insert ignore into</code> skips the insertion if the same values already exist, avoiding overwriting existing data in <code>tbl_erq</code>. The relevant columns were referenced, and then participant 1 (ref <code>ref_subj.subj_name</code>) responses to the first ERQ item were added for each session. We can check that the insertion was successful by selecting our data:</p>
 <pre><code>mysql&gt; select * from tbl_erq;
 +---------+---------+----------+----------+
 | subj_id | sess_id | item_erq | resp_erq |
@@ -538,7 +537,7 @@ fields terminated by &#39;,&#39;
 enclosed by &#39;&quot;&#39;
 lines terminated by &#39;\n&#39;
 ignore 1 rows;</code></pre>
-<p>As specified, <code>local infile</code> supplies the path to the CSV file, and then extra options are specified help parse the file such as specifying that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV. <em>Note:</em> the infile string will require editing to point to the erq_data.csv on your local machine.</p>
+<p>As specified, <code>local infile</code> supplies the path to the CSV file. Then, extra options are specified to help parse the file; such as specifying that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV. <em>Note:</em> the infile string will require editing to point to the erq_data.csv on your local machine.</p>
 <p>This method is faster than, and preferred over, manually inserting each row. We can again verify that the table was updated, but limit the return to 10 rows:</p>
 <pre><code>mysql&gt; select * from tbl_erq limit 10;
 +---------+---------+----------+----------+
