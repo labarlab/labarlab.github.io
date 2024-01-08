@@ -223,7 +223,7 @@
 <li class="chapter" data-level="7.6" data-path="databases.html"><a href="databases.html#select-data"><i class="fa fa-check"></i><b>7.6</b> Select Data</a>
 <ul>
 <li class="chapter" data-level="7.6.1" data-path="databases.html"><a href="databases.html#basic-usage"><i class="fa fa-check"></i><b>7.6.1</b> Basic Usage</a></li>
-<li class="chapter" data-level="7.6.2" data-path="databases.html"><a href="databases.html#join-tables"><i class="fa fa-check"></i><b>7.6.2</b> Join Tables</a></li>
+<li class="chapter" data-level="7.6.2" data-path="databases.html"><a href="databases.html#join_tables"><i class="fa fa-check"></i><b>7.6.2</b> Join Tables</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -261,9 +261,9 @@ select user, host from user;</code></pre>
 <p>To <a href="https://dev.mysql.com/doc/refman/8.0/en/create-user.html">create a user</a> (‘test’) identified by a password (‘foobar’), specify the new user name, host or IP, and password:</p>
 <pre><code>create user &#39;test&#39;@&#39;localhost&#39; identified by &#39;foobar&#39;;
 create user &#39;test&#39;@&#39;127.0.0.1&#39; identified by &#39;foobar&#39;;</code></pre>
-<p>Next, permissions to a specific database (‘db_test’), and also tables if desired, can be <a href="https://dev.mysql.com/doc/refman/8.0/en/grant.html">granted</a>:</p>
+<p>Next, permissions to a specific database (‘db_test’), and also tables if desired, can be <a href="https://dev.mysql.com/doc/refman/8.0/en/grant.html">granted</a> (and note that comments are specified in SQL via <code>--</code>):</p>
 <pre><code>grant insert, update, select, references,
-  create temporary tables,
+  create temporary tables
   on db_test.*
   to &#39;test&#39;@&#39;localhost&#39;; -- give select permissions
 grant all on db_test.* to &#39;test&#39;@&#39;localhost&#39;; -- give all permissions</code></pre>
@@ -283,7 +283,7 @@ flush privileges;</code></pre>
 </div>
 <div id="create_database" class="section level2 hasAnchor" number="7.3">
 <h2><span class="header-section-number">7.3</span> Create a Database<a href="databases.html#create_database" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Admin (i.e. all) privileges are needed by the user to create an database. Accordingly, it is most likely best for labarserv2 admins to create databases and then grant specific (or all) permissions to the user for the specific database.</p>
+<p>Admin (i.e. all) privileges are needed by the user to create a database. Accordingly, it is most likely best for labarserv2 admins to create databases and then grant specific (or all) permissions to the user for the specific database.</p>
 <p><a href="https://dev.mysql.com/doc/refman/8.0/en/creating-database.html">Database creation</a> is accomplished simply via:</p>
 <p><code>create database db_some_name;</code></p>
 <p><strong>Conventions</strong> - The following database conventions are implemented in the LaBar Lab:</p>
@@ -300,7 +300,7 @@ flush privileges;</code></pre>
 <p>The <code>create table</code> syntax is used within a database to both create the table and specify the number and types of columns. Three types of tables (<a href="databases.html#reference_tables">reference</a>, <a href="databases.html#data_tables">data</a>, and <a href="databases.html#definition_tables">definition</a>) are used in the LaBar Lab, which are prepended with <code>ref_</code>, <code>tbl_</code>, and <code>def_</code> identifiers, respectively.</p>
 <div id="reference_tables" class="section level3 hasAnchor" number="7.4.1">
 <h3><span class="header-section-number">7.4.1</span> Reference Tables<a href="databases.html#reference_tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>When a certain value, such as a participant ID or emotion name, show up across multiple data tables, the value can be stored in a reference table rather than be used repeatedly across multiple tables. These reference tables, and the fact that values from multiple databases can be queried at once, are the point of RDBMSs. As an added perk, the size of the database is also decreased as redundant values are minimized.</p>
+<p>When a certain value, such as a participant ID or emotion name, shows up across multiple data tables, the value can be stored in a reference table rather than be used repeatedly across multiple tables. These reference tables, and the fact that values from multiple databases can be queried at once, are the point of RDBMSs. As an added perk, the size of the database is also decreased as redundant values are minimized.</p>
 <p>Say a project intends to gather information across multiple subjects, each of whom will participate in three sessions, and some measures will occur during all sessions. We can then set up reference tables for the subject IDs, session IDs, and emotion IDs as these values would be common across all measures.</p>
 <p>To start a reference table for subject IDs:</p>
 <pre><code>use db_test;
@@ -384,10 +384,11 @@ insert into ref_emo
     (13, &quot;romance&quot;),
     (14, &quot;sadness&quot;),
     (15, &quot;surprise&quot;);</code></pre>
+<p>Once completed, we have three reference tables that can be used to interpret repeated values in <a href="databases.html#data_tables">data</a> tables via join (see <a href="databases.html#join_tables">below</a>). Such a modular structure, using one table per data type and/or source while accounting for repetitive data, allows for better maintenance and greater efficiency of the database.</p>
 </div>
 <div id="data_tables" class="section level3 hasAnchor" number="7.4.2">
 <h3><span class="header-section-number">7.4.2</span> Data Tables<a href="databases.html#data_tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Continuing with the example started above, data from each measure collected is stored in data tables, with repeated values linked to reference tables. Building data tables uses the same methodology described above, with the addition of specifying <a href="https://www.cockroachlabs.com/blog/what-is-a-foreign-key/">foreign keys</a> and thus begin to make our database relational.</p>
+<p>Continuing with the example started above, data from each measure collected is stored in data tables, with repeated values linked to reference tables. Building data tables uses the same methodology described above, with the addition of specifying <a href="https://www.cockroachlabs.com/blog/what-is-a-foreign-key/">foreign keys</a> and thus beginning to make our database relational.</p>
 <p>Let us suppose that for each session our participants supply PANAS and ERQ ratings as well as a hypothetical in-house measure (EmoFreq) during which participants are prompted to respond how frequently, intensely, and saliently they felt a given emotion (<code>ref_emo</code>) over the previous week.</p>
 <p>Using the <code>create table</code> syntax, again, we first build a data table for the PANAS questionnaire:</p>
 <pre><code>create table tbl_panas (
@@ -399,7 +400,7 @@ insert into ref_emo
     foreign key(subj_id) references ref_subj(subj_id) on delete cascade,
     foreign key(sess_id) references ref_sess(sess_id)
 );</code></pre>
-<p>Here we created a long-formatted table containing four columns – one for the subject identifier (<code>subj_id</code>), session identifier (<code>sess_id</code>), PANAS item/prompt (<code>item_panas</code>), and participant response to PANAS item/prompt (<code>resp_panas</code>). Participant responses are recorded as integer type, and only the PANAS item number (integer) is used – if it was desired to keep the question syntax rather than item number then a reference table could be set up (e.g. <code>ref_panas</code>, see conventions <a href="databases.html#reference_tables">above</a>) and this column would then be named <code>panas_id</code>. Also note that <code>item_panas</code> is specified as <code>not null</code> as participants will see every PANAS item (and this column is used in the primary key). Finally, as participants may not respond to each item <code>resp_panas</code> allows for null values.</p>
+<p>Here we created a long-formatted table containing four columns – one each for the subject identifier (<code>subj_id</code>), session identifier (<code>sess_id</code>), PANAS item/prompt (<code>item_panas</code>), and participant response to PANAS item/prompt (<code>resp_panas</code>). Participant responses are recorded as integer type, and only the PANAS item number (integer) is used – if it were desired to keep the question language/prompt, rather than question number, then a reference table could be set up (e.g. <code>ref_panas</code>, see conventions <a href="databases.html#reference_tables">above</a>) and the column here would then be named <code>panas_id</code>. Also note that <code>item_panas</code> is specified as <code>not null</code> since participants will see every PANAS item (and this column is used in the primary key). Finally, given that participants may not respond to each item, <code>resp_panas</code> allows for null values.</p>
 <p>The <a href="https://www.mysqltutorial.org/mysql-basics/mysql-primary-key/">primary key</a> is specified here as the composition of subject, session, and PANAS item (sometimes termed a ‘composite key’ or ‘natural key’) and serves as as the unique identifier for each participant response. It is <a href="https://dev.mysql.com/doc/refman/8.0/en/primary-key-optimization.html">recommended</a> to always explicitly specify your primary key. Additionally, explicitly controlling keys helps in setting up proper <a href="https://www.tutorialsteacher.com/sqlserver/tables-relations">relationship mappings</a>. If a natural key ought not to be used for a primary key, or data naturally increment, then a column could be set to <a href="https://dev.mysql.com/doc/refman/8.0/en/example-auto-increment.html">auto increment</a> and serve as the primary key.</p>
 <p><a href="https://dev.mysql.com/doc/refman/8.0/en/create-table-foreign-keys.html">Foreign keys</a> are used to reflect that a column is linked to another table, and can also be used to constrain column values (not demonstrated). Here, the columns <code>subj_id</code> and <code>sess_id</code> will not be populated with the actual subject and session names/values, as that would involve a lot of repetitive information, but instead their respective reference table ID. Specifically, we set the <code>subj_id</code> column (<code>tbl_panas.subj_id</code>) to reference the <code>subj_id</code> column of <code>ref_subj</code> (<code>ref_subj.subj_id</code>). Similarly <code>tbl_panas.sess_id</code> references <code>ref_sess.sess_id</code>. Finally, <a href="https://www.mysqltutorial.org/mysql-basics/mysql-on-delete-cascade/"><code>on delete cascade</code></a> allows records from this current table to be removed if the referenced value in <code>ref_subj</code> is deleted (perhaps due to participant withdrawal).</p>
 <p><strong>Conventions</strong> - The following data tables conventions are implemented in the LaBar Lab:</p>
@@ -427,15 +428,15 @@ create table tbl_emofreq (
     subj_id int not null,
     sess_id int not null,
     emo_id int not null,
-    resp_frq int,
-    resp_int int,
-    resp_sal int,
+    resp_emofreq_frq int,
+    resp_emofreq_int int,
+    resp_emofreq_sal int,
     primary key(subj_id, sess_id, emo_id),
     foreign key(subj_id) references ref_subj(subj_id) on delete cascade,
     foreign key(sess_id) references ref_sess(sess_id),
     foreign key(emo_id) references ref_emo(emo_id)
 );</code></pre>
-<p>For the in-house EmoFreq measure, where participants are prompted with an emotion and they respond how frequently, intensely, and saliently they experienced the emotion over the previous week, the ‘item_’ column was omitted and replaced with the foreign key <code>emo_id</code> as the prompt is simply the emotion name. Additionally, better names for the response columns could have been <code>resp_emofreq_frequency</code> etc., particularly if other measures elicit similar responses. This was omitted to illustrate the utility of definition tables.</p>
+<p>For the in-house EmoFreq measure, where participants are prompted with an emotion and they respond how frequently, intensely, and saliently they experienced the emotion over the previous week, the <code>item_</code> column was omitted and replaced with the foreign key <code>emo_id</code> as the prompt is simply the emotion name (and to incorporate our <code>ref_emo</code> table). Additionally, one column per response prompt (frequency, intensity, and salience) is specified. The definition tables section (<a href="databases.html#definition_tables">below</a>), will illustrate a method of making tables more intelligible for the person using them by supplying column definitions and other information needed to interpret the data.</p>
 <p>Finally, following foreign keys to their source is available in the <code>information_schema</code> database:</p>
 <pre><code>SELECT
   `TABLE_SCHEMA`,
@@ -466,10 +467,14 @@ WHERE
 </div>
 <div id="definition_tables" class="section level3 hasAnchor" number="7.4.3">
 <h3><span class="header-section-number">7.4.3</span> Definition Tables<a href="databases.html#definition_tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>Few things are more frustrating when working within RDBMSs than not understanding column names nor knowing what data they contain. This is compounded by less-than-intuitive column names that are sometimes required for the sake of brevity, as is commonly the case when working on larger projects. Definition tables help assuage these frustrations by supplying definitions or explanations of column names and purpose.</p>
+<p>Few things are more frustrating when working within RDBMSs than not understanding column names or not knowing what data they contain. This is compounded by less-than-intuitive column names that are sometimes necessary due to <a href="https://dev.mysql.com/doc/refman/8.0/en/identifier-length.html">maximum lengths</a>, as is commonly the case when working on larger projects. Definition tables help assuage these frustrations by supplying definitions or explanations of column names and purpose.</p>
 <p>As the data table <code>tbl_emofreq</code> (above) has some column names that may be unintuitive, we will specify a definition table to aid in interpreting the table:</p>
 <pre><code>create table def_emofreq (
-    col_name enum(&#39;resp_frq&#39;, &#39;resp_int&#39;, &#39;resp_sal&#39;),
+    col_name enum(
+      &#39;resp_emofreq_frq&#39;,
+      &#39;resp_emofreq_int&#39;,
+      &#39;resp_emofreq_sal&#39;
+    ),
     col_desc text
 );</code></pre>
 <p>This definition table contains two columns, <code>col_name</code> and <code>col_desc</code>. Column <code>col_name</code> is specified to only accept certain values via <a href="https://dev.mysql.com/doc/refman/8.0/en/enum.html">enum</a>, which values correspond to the confusing column names in <code>tbl_emofreq</code>. Column <code>col_desc</code> is set to use the <a href="https://dev.mysql.com/doc/refman/8.0/en/string-type-syntax.html">text type</a>, which will allow for more verbose strings. A primary key has not been set as this table is not meant to be integrated with other tables but instead to be read by the researcher.</p>
@@ -481,15 +486,15 @@ WHERE
 <li>The table contains the column <code>col_name</code>, which itself only contains the names of columns from the data table.</li>
 <li>All columns not involved in ID from the data table are specified in <code>col_name</code>.</li>
 <li>The table contains the column <code>col_desc</code>, which holds a human-readable description of the column.</li>
-<li>Additional columns can be add using the <code>col_</code> format, when required.</li>
+<li>Additional columns can be added using the <code>col_</code> format, when required.</li>
 </ul>
 <p>The definition table <code>def_emofreq</code> can now be populated with text:</p>
 <pre><code>insert into def_emofreq
     (col_name, col_desc)
     values
-    (&#39;resp_frq&#39;, &#39;Participant response to frequency prompt&#39;),
-    (&#39;resp_int&#39;, &#39;Participant response to intensity prompt&#39;),
-    (&#39;resp_sal&#39;, &#39;Participant response to salience prompt&#39;);</code></pre>
+    (&#39;resp_emofreq_frq&#39;, &#39;Participant response to frequency prompt&#39;),
+    (&#39;resp_emofreq_int&#39;, &#39;Participant response to intensity prompt&#39;),
+    (&#39;resp_emofreq_sal&#39;, &#39;Participant response to salience prompt&#39;);</code></pre>
 </div>
 </div>
 <div id="insert_data" class="section level2 hasAnchor" number="7.5">
@@ -514,24 +519,24 @@ insert ignore into tbl_erq
 +---------+---------+----------+----------+
 3 rows in set (0.01 sec)</code></pre>
 <p>Obviously, manually entering every row is untenable and error prone. The insert command of single rows was shown for practice and also to be leveraged algorithmically in a workflow.</p>
-<p>If CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data for <code>tbl_erq</code> (and should be modified to build input data for <code>ref_subj</code>, <code>tbl_panas</code>, and <code>tbl_emofreq</code>), and note that a row will be skipped during <code>load data</code> if the <code>subj_id</code> does not appear in <code>ref_subj</code>:</p>
+<p>If CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data for <code>tbl_erq</code> (and should be modified to build input data for <code>ref_subj</code>, <code>tbl_panas</code>, and <code>tbl_emofreq</code>):</p>
 <pre><code>#!/bin/bash
 
-echo &quot;subj_id,sess_id,item_erq,resp_erq&quot; &gt;${HOME}/Desktop/erq_data.csv
+echo &quot;subj_id,sess_id,item_erq,resp_erq&quot; &gt;${HOME}/erq_data.csv
 for subj in {1..9}; do
     for sess in {1..3}; do
         for item in {1..10}; do
             resp=$(((RANDOM % 10) + 1))
-            echo &quot;${subj},${sess},${item},${resp}&quot; &gt;&gt;${HOME}/Desktop/erq_data.csv
+            echo &quot;${subj},${sess},${item},${resp}&quot; &gt;&gt;${HOME}/erq_data.csv
         done
     done
 done</code></pre>
-<p>Having built properly formatted CSV files for <code>tbl_panas</code>, <code>tbl_erq</code>, and <code>tbl_emofreq</code>, and assuming that <a href="https://stackoverflow.com/questions/59993844/error-loading-local-data-is-disabled-this-must-be-enabled-on-both-the-client">local infiles are allowed</a>, <a href="databases.html#login">login</a> to the server using the local-infile option. Using this options allows the server to read a file on the local machine.</p>
+<p>Having built properly formatted CSV files for <code>tbl_panas</code>, <code>tbl_erq</code>, and <code>tbl_emofreq</code>, and assuming that <a href="https://stackoverflow.com/questions/59993844/error-loading-local-data-is-disabled-this-must-be-enabled-on-both-the-client">local infiles</a> are allowed, <a href="databases.html#login">login</a> to the server using the local-infile option. Using this options allows the server to read a file on the local machine.</p>
 <pre><code>$mysql --local-infile=1 -u &lt;user&gt; -p db_test</code></pre>
 <p>Entire CSVs from the Desktop can now be loaded via the <a href="https://dev.mysql.com/doc/refman/8.0/en/load-data.html"><code>load data</code></a> command (and note that rows will be skipped for <code>subj_id</code> values not found in <code>ref_subj</code>):</p>
 <pre><code>delete from tbl_erq; --clear example inputs
 
-load data local infile &#39;/path/Desktop/erq_data.csv&#39;
+load data local infile &#39;/path/erq_data.csv&#39;
 into table tbl_erq
 fields terminated by &#39;,&#39;
 enclosed by &#39;&quot;&#39;
@@ -630,8 +635,8 @@ mysql&gt; select count(*) from tbl_erq where subj_id = 1;
 +---------+----------+----------+
 5 rows in set (0.00 sec)</code></pre>
 </div>
-<div id="join-tables" class="section level3 hasAnchor" number="7.6.2">
-<h3><span class="header-section-number">7.6.2</span> Join Tables<a href="databases.html#join-tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="join_tables" class="section level3 hasAnchor" number="7.6.2">
+<h3><span class="header-section-number">7.6.2</span> Join Tables<a href="databases.html#join_tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="accessing-reference-tables" class="section level4 hasAnchor" number="7.6.2.1">
 <h4><span class="header-section-number">7.6.2.1</span> Accessing Reference Tables<a href="databases.html#accessing-reference-tables" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Our example database has a number of tables containing different information. Specifically, the <a href="databases.html#reference_tables">reference</a> tables contain values that are expected to appear across multiple tables while the <a href="databases.html#data_tables">data</a> tables hold actual participant responses and information, which themselves are linked to the reference tables via foreign keys. Previously, we selected data from <code>tbl_erq</code> but did not interpret the <code>subj_id</code> or <code>sess_id</code> columns, whose values exist in <code>ref_subj</code> and <code>ref_sess</code>, respectively.</p>
