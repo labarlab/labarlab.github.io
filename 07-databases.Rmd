@@ -27,11 +27,11 @@ create user 'test'@'localhost' identified by 'foobar';
 create user 'test'@'127.0.0.1' identified by 'foobar';
 ```
 
-Next, permissions to a specific database ('db_test'), and also tables if desired, can be [granted](https://dev.mysql.com/doc/refman/8.0/en/grant.html):
+Next, permissions to a specific database ('db_test'), and also tables if desired, can be [granted](https://dev.mysql.com/doc/refman/8.0/en/grant.html) (and note that comments are specified in SQL via `--`):
 
 ```
 grant insert, update, select, references,
-  create temporary tables,
+  create temporary tables
   on db_test.*
   to 'test'@'localhost'; -- give select permissions
 grant all on db_test.* to 'test'@'localhost'; -- give all permissions
@@ -64,7 +64,7 @@ Exit the server via `exit;` or `quit;`.
 
 ## Create a Database {#create_database}
 
-Admin (i.e. all) privileges are needed by the user to create an database. Accordingly, it is most likely best for labarserv2 admins to create databases and then grant specific (or all) permissions to the user for the specific database.
+Admin (i.e. all) privileges are needed by the user to create a database. Accordingly, it is most likely best for labarserv2 admins to create databases and then grant specific (or all) permissions to the user for the specific database.
 
 [Database creation](https://dev.mysql.com/doc/refman/8.0/en/creating-database.html) is accomplished simply via:
 
@@ -87,7 +87,7 @@ The `create table` syntax is used within a database to both create the table and
 
 ### Reference Tables {#reference_tables}
 
-When a certain value, such as a participant ID or emotion name, show up across multiple data tables, the value can be stored in a reference table rather than be used repeatedly across multiple tables. These reference tables, and the fact that values from multiple databases can be queried at once, are the point of RDBMSs. As an added perk, the size of the database is also decreased as redundant values are minimized.
+When a certain value, such as a participant ID or emotion name, shows up across multiple data tables, the value can be stored in a reference table rather than be used repeatedly across multiple tables. These reference tables, and the fact that values from multiple databases can be queried at once, are the point of RDBMSs. As an added perk, the size of the database is also decreased as redundant values are minimized.
 
 Say a project intends to gather information across multiple subjects, each of whom will participate in three sessions, and some measures will occur during all sessions. We can then set up reference tables for the subject IDs, session IDs, and emotion IDs as these values would be common across all measures.
 
@@ -194,10 +194,12 @@ insert into ref_emo
     (15, "surprise");
 ```
 
+Once completed, we have three reference tables that can be used to interpret repeated values in [data](#data_tables) tables via join (see [below](#join_tables)). Such a modular structure, using one table per data type and/or source while accounting for repetitive data, allows for better maintenance and greater efficiency of the database.
+
 
 ### Data Tables {#data_tables}
 
-Continuing with the example started above, data from each measure collected is stored in data tables, with repeated values linked to reference tables. Building data tables uses the same methodology described above, with the addition of specifying [foreign keys](https://www.cockroachlabs.com/blog/what-is-a-foreign-key/) and thus begin to make our database relational.
+Continuing with the example started above, data from each measure collected is stored in data tables, with repeated values linked to reference tables. Building data tables uses the same methodology described above, with the addition of specifying [foreign keys](https://www.cockroachlabs.com/blog/what-is-a-foreign-key/) and thus beginning to make our database relational.
 
 Let us suppose that for each session our participants supply PANAS and ERQ ratings as well as a hypothetical in-house measure (EmoFreq) during which participants are prompted to respond how frequently, intensely, and saliently they felt a given emotion (`ref_emo`) over the previous week.
 
@@ -215,7 +217,7 @@ create table tbl_panas (
 );
 ```
 
-Here we created a long-formatted table containing four columns -- one for the subject identifier (`subj_id`), session identifier (`sess_id`), PANAS item/prompt (`item_panas`), and participant response to PANAS item/prompt (`resp_panas`). Participant responses are recorded as integer type, and only the PANAS item number (integer) is used -- if it was desired to keep the question syntax rather than item number then a reference table could be set up (e.g. `ref_panas`, see conventions [above](#reference_tables)) and this column would then be named `panas_id`. Also note that `item_panas` is specified as `not null` as participants will see every PANAS item (and this column is used in the primary key). Finally, as participants may not respond to each item `resp_panas` allows for null values. 
+Here we created a long-formatted table containing four columns -- one each for the subject identifier (`subj_id`), session identifier (`sess_id`), PANAS item/prompt (`item_panas`), and participant response to PANAS item/prompt (`resp_panas`). Participant responses are recorded as integer type, and only the PANAS item number (integer) is used -- if it were desired to keep the question language/prompt, rather than question number, then a reference table could be set up (e.g. `ref_panas`, see conventions [above](#reference_tables)) and the column here would then be named `panas_id`. Also note that `item_panas` is specified as `not null` since participants will see every PANAS item (and this column is used in the primary key). Finally, given that participants may not respond to each item, `resp_panas` allows for null values. 
 
 The [primary key](https://www.mysqltutorial.org/mysql-basics/mysql-primary-key/) is specified here as the composition of subject, session, and PANAS item (sometimes termed a 'composite key' or 'natural key') and serves as as the unique identifier for each participant response. It is [recommended](https://dev.mysql.com/doc/refman/8.0/en/primary-key-optimization.html) to always explicitly specify your primary key. Additionally, explicitly controlling keys helps in setting up proper [relationship mappings](https://www.tutorialsteacher.com/sqlserver/tables-relations). If a natural key ought not to be used for a primary key, or data naturally increment, then a column could be set to [auto increment](https://dev.mysql.com/doc/refman/8.0/en/example-auto-increment.html) and serve as the primary key.
 
@@ -248,9 +250,9 @@ create table tbl_emofreq (
     subj_id int not null,
     sess_id int not null,
     emo_id int not null,
-    resp_frq int,
-    resp_int int,
-    resp_sal int,
+    resp_emofreq_frq int,
+    resp_emofreq_int int,
+    resp_emofreq_sal int,
     primary key(subj_id, sess_id, emo_id),
     foreign key(subj_id) references ref_subj(subj_id) on delete cascade,
     foreign key(sess_id) references ref_sess(sess_id),
@@ -258,7 +260,7 @@ create table tbl_emofreq (
 );
 ```
 
-For the in-house EmoFreq measure, where participants are prompted with an emotion and they respond how frequently, intensely, and saliently they experienced the emotion over the previous week, the 'item_' column was omitted and replaced with the foreign key `emo_id` as the prompt is simply the emotion name. Additionally, better names for the response columns could have been `resp_emofreq_frequency` etc., particularly if other measures elicit similar responses. This was omitted to illustrate the utility of definition tables.
+For the in-house EmoFreq measure, where participants are prompted with an emotion and they respond how frequently, intensely, and saliently they experienced the emotion over the previous week, the `item_` column was omitted and replaced with the foreign key `emo_id` as the prompt is simply the emotion name (and to incorporate our `ref_emo` table). Additionally, one column per response prompt (frequency, intensity, and salience) is specified. The definition tables section ([below](#definition_tables)), will illustrate a method of making tables more intelligible for the person using them by supplying column definitions and other information needed to interpret the data.
 
 Finally, following foreign keys to their source is available in the `information_schema` database:
 
@@ -299,13 +301,17 @@ This is useful when tracking the relationship mappings (such as when working wit
 
 ### Definition Tables {#definition_tables}
 
-Few things are more frustrating when working within RDBMSs than not understanding column names nor knowing what data they contain. This is compounded by less-than-intuitive column names that are sometimes required for the sake of brevity, as is commonly the case when working on larger projects. Definition tables help assuage these frustrations by supplying definitions or explanations of column names and purpose.
+Few things are more frustrating when working within RDBMSs than not understanding column names or not knowing what data they contain. This is compounded by less-than-intuitive column names that are sometimes necessary due to [maximum lengths](https://dev.mysql.com/doc/refman/8.0/en/identifier-length.html), as is commonly the case when working on larger projects. Definition tables help assuage these frustrations by supplying definitions or explanations of column names and purpose.
 
 As the data table `tbl_emofreq` (above) has some column names that may be unintuitive, we will specify a definition table to aid in interpreting the table: 
 
 ```
 create table def_emofreq (
-    col_name enum('resp_frq', 'resp_int', 'resp_sal'),
+    col_name enum(
+      'resp_emofreq_frq',
+      'resp_emofreq_int',
+      'resp_emofreq_sal'
+    ),
     col_desc text
 );
 ```
@@ -320,7 +326,7 @@ This definition table contains two columns, `col_name` and `col_desc`. Column `c
 * The table contains the column `col_name`, which itself only contains the names of columns from the data table.
 * All columns not involved in ID from the data table are specified in `col_name`.
 * The table contains the column `col_desc`, which holds a human-readable description of the column.
-* Additional columns can be add using the `col_` format, when required.
+* Additional columns can be added using the `col_` format, when required.
 
 The definition table `def_emofreq` can now be populated with text:
 
@@ -328,9 +334,9 @@ The definition table `def_emofreq` can now be populated with text:
 insert into def_emofreq
     (col_name, col_desc)
     values
-    ('resp_frq', 'Participant response to frequency prompt'),
-    ('resp_int', 'Participant response to intensity prompt'),
-    ('resp_sal', 'Participant response to salience prompt');
+    ('resp_emofreq_frq', 'Participant response to frequency prompt'),
+    ('resp_emofreq_int', 'Participant response to intensity prompt'),
+    ('resp_emofreq_sal', 'Participant response to salience prompt');
 ```
 
 
@@ -366,23 +372,23 @@ mysql> select * from tbl_erq;
 
 Obviously, manually entering every row is untenable and error prone. The insert command of single rows was shown for practice and also to be leveraged algorithmically in a workflow.
 
-If CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data for `tbl_erq` (and should be modified to build input data for `ref_subj`, `tbl_panas`, and `tbl_emofreq`), and note that a row will be skipped during `load data` if the `subj_id` does not appear in `ref_subj`:
+If CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data for `tbl_erq` (and should be modified to build input data for `ref_subj`, `tbl_panas`, and `tbl_emofreq`):
 
 ```
 #!/bin/bash
 
-echo "subj_id,sess_id,item_erq,resp_erq" >${HOME}/Desktop/erq_data.csv
+echo "subj_id,sess_id,item_erq,resp_erq" >${HOME}/erq_data.csv
 for subj in {1..9}; do
     for sess in {1..3}; do
         for item in {1..10}; do
             resp=$(((RANDOM % 10) + 1))
-            echo "${subj},${sess},${item},${resp}" >>${HOME}/Desktop/erq_data.csv
+            echo "${subj},${sess},${item},${resp}" >>${HOME}/erq_data.csv
         done
     done
 done
 ```
 
-Having built properly formatted CSV files for `tbl_panas`, `tbl_erq`, and `tbl_emofreq`, and assuming that [local infiles are allowed](https://stackoverflow.com/questions/59993844/error-loading-local-data-is-disabled-this-must-be-enabled-on-both-the-client), [login](#login) to the server using the local-infile option. Using this options allows the server to read a file on the local machine.
+Having built properly formatted CSV files for `tbl_panas`, `tbl_erq`, and `tbl_emofreq`, and assuming that [local infiles](https://stackoverflow.com/questions/59993844/error-loading-local-data-is-disabled-this-must-be-enabled-on-both-the-client) are allowed, [login](#login) to the server using the local-infile option. Using this options allows the server to read a file on the local machine.
 
 ```
 $mysql --local-infile=1 -u <user> -p db_test
@@ -393,7 +399,7 @@ Entire CSVs from the Desktop can now be loaded via the [`load data`](https://dev
 ```
 delete from tbl_erq; --clear example inputs
 
-load data local infile '/path/Desktop/erq_data.csv'
+load data local infile '/path/erq_data.csv'
 into table tbl_erq
 fields terminated by ','
 enclosed by '"'
@@ -516,7 +522,7 @@ mysql> select subj_id, item_erq, resp_erq
 ```
 
 
-### Join Tables
+### Join Tables {#join_tables}
 
 #### Accessing Reference Tables
 
