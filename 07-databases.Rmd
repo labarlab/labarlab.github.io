@@ -334,9 +334,9 @@ insert into def_emofreq
 ```
 
 
-## Insert Data
+## Insert Data {#insert_data}
 
-Building on our example for building [databases](#create_database) and [tables](#create_table), now that a database and tables are properly specified we can begin adding data to the tables. Add data is easily accomplished via the [`insert into`](https://dev.mysql.com/doc/refman/8.0/en/insert.html) command, and we have seen a few examples already when building the [reference](#reference_tables) and [definition](#definition_tables) tables.
+Building on our example for building [databases](#create_database) and [tables](#create_table), now that a database and tables are properly specified we can begin adding data to the tables. Adding data is easily accomplished via the [`insert into`](https://dev.mysql.com/doc/refman/8.0/en/insert.html) command, and we have seen a few examples already when building the [reference](#reference_tables) and [definition](#definition_tables) tables.
 
 To add a single row (or several) of data into a table, we specify the table, columns, and values:
 
@@ -366,7 +366,7 @@ mysql> select * from tbl_erq;
 
 Obviously, manually entering every row is untenable and error prone. The insert command of single rows was shown for practice and also to be leveraged algorithmically in a workflow.
 
-Additionally, if CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data (note that a row will be skipped during `load data` if the `subj_id` does not appear in `ref_subj`):
+If CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data for `tbl_erq` (and should be modified to build input data for `ref_subj`, `tbl_panas`, and `tbl_emofreq`), and note that a row will be skipped during `load data` if the `subj_id` does not appear in `ref_subj`:
 
 ```
 #!/bin/bash
@@ -382,10 +382,10 @@ for subj in {1..9}; do
 done
 ```
 
-Having built appropriate files for `tbl_panas`, `tbl_erq`, and `tbl_emofreq`, and assuming that [local infiles are allowed](https://stackoverflow.com/questions/59993844/error-loading-local-data-is-disabled-this-must-be-enabled-on-both-the-client), I can then [login](#login) to the server using the local-infile option that allows the server to read a file on my local machine.
+Having built properly formatted CSV files for `tbl_panas`, `tbl_erq`, and `tbl_emofreq`, and assuming that [local infiles are allowed](https://stackoverflow.com/questions/59993844/error-loading-local-data-is-disabled-this-must-be-enabled-on-both-the-client), [login](#login) to the server using the local-infile option. Using this options allows the server to read a file on the local machine.
 
 ```
-$mysql --local-infile=1 -u nate -p db_test
+$mysql --local-infile=1 -u <user> -p db_test
 ```
 
 Entire CSVs from the Desktop can now be loaded via the [`load data`](https://dev.mysql.com/doc/refman/8.0/en/load-data.html) command (and note that rows will be skipped for `subj_id` values not found in `ref_subj`):
@@ -393,7 +393,7 @@ Entire CSVs from the Desktop can now be loaded via the [`load data`](https://dev
 ```
 delete from tbl_erq; --clear example inputs
 
-load data local infile '/home/Nathan/Desktop/erq_data.csv'
+load data local infile '/path/Desktop/erq_data.csv'
 into table tbl_erq
 fields terminated by ','
 enclosed by '"'
@@ -401,9 +401,9 @@ lines terminated by '\n'
 ignore 1 rows;
 ```
 
-As specified, `local infile` supplies the path to the CSV file. Then, extra options are specified to help parse the file; such as indicating that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV. 
+As specified, `local infile` supplies the path to the CSV file. Then, extra options are specified to help parse the file; such as specifying that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV. _Note:_ the infile string will require editing to point to the erq_data.csv on your local machine.
 
-This method is faster then repeated insertions and is the preferred method if manually porting data. We can again verify that the table was updated, but limit the return to 10 rows:
+This method is faster than, and preferred over, manually inserting each row. We can again verify that the table was updated, but limit the return to 10 rows:
 
 ```
 mysql> select * from tbl_erq limit 10;
@@ -427,11 +427,11 @@ mysql> select * from tbl_erq limit 10;
 
 ## Select Data
 
-Data from tables is accessible with the [select](https://dev.mysql.com/doc/refman/8.0/en/select.html) command. Simply, the anatomy of this command is to specify which columns from which tables are desired (and using an '*' when all columns are desired).
+Data from tables is accessible with the [select](https://dev.mysql.com/doc/refman/8.0/en/select.html) command. Simply, the anatomy of this command is to specify which columns from which tables are desired (and using an '*' when all columns are desired). This section will provide examples of how to extract data from tables using `select` and `join`.
 
 ### Basic Usage
 
-After logging into our server and activating the appropriate database (`$mysql -u <user> -p db_test`), we can see a list of available tables as well as a description of tables via [show](https://dev.mysql.com/doc/refman/8.0/en/show.html) and [describe](https://dev.mysql.com/doc/refman/8.0/en/describe.html):
+After logging into the server and activating the appropriate database (`$mysql -u <user> -p db_test`), a list of available tables is accessible via [show](https://dev.mysql.com/doc/refman/8.0/en/show.html), and [describe](https://dev.mysql.com/doc/refman/8.0/en/describe.html) can be used to see the number, name, and type of columns:
 
 ```
 mysql> show tables;
@@ -460,7 +460,7 @@ mysql> describe tbl_erq;
 4 rows in set (0.00 sec)
 ```
 
-Accordingly, we can select all columns of `tbl_erq` (and limit the selection to the first 5) with `select`:
+Accordingly, we can select all columns of `tbl_erq` (and limit the selection to the first 5 rows) with `select`:
 
 ```
 mysql> select * from tbl_erq limit 5;
@@ -496,7 +496,7 @@ mysql> select count(*) from tbl_erq where subj_id = 1;
 1 row in set (0.00 sec)
 ```
 
-Finally, we can select only desired columns (and also for a specific session ID):
+Finally, we can select only desired columns (and rows of a specific session ID):
 
 ```
 mysql> select subj_id, item_erq, resp_erq
@@ -518,6 +518,8 @@ mysql> select subj_id, item_erq, resp_erq
 
 ### Join Tables
 
+#### Accessing Reference Tables
+
 Our example database has a number of tables containing different information. Specifically, the [reference](#reference_tables) tables contain values that are expected to appear across multiple tables while the [data](#data_tables) tables hold actual participant responses and information, which themselves are linked to the reference tables via foreign keys. Previously, we selected data from `tbl_erq` but did not interpret the `subj_id` or `sess_id` columns, whose values exist in `ref_subj` and `ref_sess`, respectively. 
 
 Combining information from multiple tables is accomplished with the [join](https://dev.mysql.com/doc/refman/8.0/en/join.html) command. This `join` is appended to the `select` command to modify what is returned from the query:
@@ -533,17 +535,17 @@ select
   limit 5;
 ```
 
-Here, the values of `tbl_erq.subj_id` and `tbl_erq.sess_id` are interpreted and included in the output by joining the `ref_subj` and `ref_sess` tables. First, columns from three different tables are selected: the `name` columns from the relevant reference tables as well as the `item` and `resp` columns from `tbl_erq`. Next, the table containing the relevant data is specified (`from tbl_erq`), and then `tbl_erq` is joined with the reference tables by specifying which columns will match between the data and reference tables (I'll leave it to the reader to learn about [left, inner, and outer joins](https://www.w3schools.com/sql/sql_join.asp)). Specifically, the query is instructed to join `ref_subj` to `tbl_erq`, and to match the column values in `ref_subj.subj_id` and `tbl_erq.subj_id` to guide the join (and the same for `ref_sess`) in order to return the specified columns. This `join` functionality is the bread-and-butter of RDBMS and the reason for which the conventions for both reference and data tables (above) have been specified.
+Here, the values (names) of `tbl_erq.subj_id` and `tbl_erq.sess_id` are interpreted and included in the output by joining the `ref_subj` and `ref_sess` tables. First, columns from three different tables are selected: the `name` columns from the relevant reference tables as well as the `item` and `resp` columns from `tbl_erq`. Next, the table containing the relevant data is specified (`from tbl_erq`), and then `tbl_erq` is joined with the reference tables by specifying which columns will match between the data and reference tables. Specifically, the query is instructed to join `ref_subj` to `tbl_erq`, and to match the column values in `ref_subj.subj_id` and `tbl_erq.subj_id` to guide the join (and the same for `ref_sess`) in order to return the specified columns. This `join` functionality is the bread-and-butter of RDBMS and the reason for which the conventions for both reference and data tables (above) have been specified.
 
-Table (and database) names can get large and unwieldy, making for overly verbose `select` commands. Below is an equivalent command which also assigns the table names to separate variables (a, b, and c) to decrease the amount of typing:
+Table (and database) names can get large and unwieldy, making for overly verbose `select` commands. Below is an equivalent command which also assigns the table names to separate variables (a, b, and c):
 
 ```
-select 
-    b.subj_name, c.sess_name, a.item_erq, a.resp_erq
-    from tbl_erq a
-    join ref_subj b on b.subj_id = a.subj_id
-    join ref_sess c on c.sess_id = a.sess_id
-    where a.sess_id = 2
+select
+    a.subj_name, b.sess_name, b.item_erq, b.resp_erq
+    from tbl_erq c
+    join ref_subj a on a.subj_id = c.subj_id
+    join ref_sess b on b.sess_id = c.sess_id
+    where c.sess_id = 2
     limit 5;
 ```
 
@@ -560,4 +562,150 @@ Given this selection, we expect the query to return a matrix containing the subj
 | SUB1      | day2      |        5 |        7 |
 +-----------+-----------+----------+----------+
 5 rows in set (0.00 sec)
+```
+
+*Admin Note:* this example assumes [`sql_mode=only_full_group_by`](https://stackoverflow.com/questions/41887460/select-list-is-not-in-group-by-clause-and-contains-nonaggregated-column-inc).
+
+
+#### Joining Data Tables
+
+Conducting analyses usually involve combining data across multiple measures, perhaps to investigate the relationship of X and Y or to see if controlling for Z has any impact on an X-Y relationship. In our example, participant responses to different measures (e.g. ERQ, PANAS) are kept in separate data tables (`tbl_erq` and `tbl_panas`, respectively), and these data can be aggregated into a single matrix with `join`.
+
+Using simulated data (for syntax, see [insert data](#insert_data)), the `tbl_erq` has 10 items, and `tbl_panas` 20, that were administered to 9 participants for each of 3 sessions:
+
+```
+mysql> select distinct(item_erq) from tbl_erq;
++----------+
+| item_erq |
++----------+
+|        1 |
+|        2 |
+..
+|        9 |
+|       10 |
++----------+
+10 rows in set (0.00 sec)
+
+mysql> select count(*) from tbl_erq;
++----------+
+| count(*) |
++----------+
+|      270 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select distinct(item_panas) from tbl_panas;
++------------+
+| item_panas |
++------------+
+|          1 |
+|          2 |
+..
+|         19 |
+|         20 |
++------------+
+20 rows in set (0.00 sec)
+
+mysql> select count(*) from tbl_panas;
++----------+
+| count(*) |
++----------+
+|      540 |
++----------+
+1 row in set (0.01 sec)
+```
+
+We can join our reference, ERQ, and PANAS tables, then, using an extension of the join example above:
+
+```
+-- Long format
+select
+    a.subj_name, b.sess_name, c.item_erq, c.resp_erq,
+        d.item_panas, d.resp_panas
+    from tbl_erq c
+    join ref_subj a on a.subj_id = c.subj_id
+    join ref_sess b on b.sess_id = c.sess_id
+    join tbl_panas d on d.subj_id = c.subj_id
+        and d.sess_id = c.sess_id
+    where c.subj_id = 1 and c.sess_id = 1
+    limit 15
+    ;
+```
+
+As before, values from the reference tables are incorporated into output matrix, and this time we add a `join` of `tbl_erq` with `tbl_panas` using both `subj_id` and `sess_id`. Additionally, the output is limited to rows for the first subject and session ID.
+
+This output is long formatted, and accordingly we can see that _each_ ERQ response is reported for _every_ PANAS item:
+
+```
++-----------+-----------+----------+----------+------------+------------+
+| subj_name | sess_name | item_erq | resp_erq | item_panas | resp_panas |
++-----------+-----------+----------+----------+------------+------------+
+| SUB1      | day1      |       10 |        5 |          1 |          6 |
+| SUB1      | day1      |        9 |        5 |          1 |          6 |
+| SUB1      | day1      |        8 |        2 |          1 |          6 |
+| SUB1      | day1      |        7 |        5 |          1 |          6 |
+| SUB1      | day1      |        6 |        9 |          1 |          6 |
+| SUB1      | day1      |        5 |        6 |          1 |          6 |
+| SUB1      | day1      |        4 |        1 |          1 |          6 |
+| SUB1      | day1      |        3 |       10 |          1 |          6 |
+| SUB1      | day1      |        2 |        7 |          1 |          6 |
+| SUB1      | day1      |        1 |        7 |          1 |          6 |
+| SUB1      | day1      |       10 |        5 |          2 |          5 |
+| SUB1      | day1      |        9 |        5 |          2 |          5 |
+| SUB1      | day1      |        8 |        2 |          2 |          5 |
+| SUB1      | day1      |        7 |        5 |          2 |          5 |
+| SUB1      | day1      |        6 |        9 |          2 |          5 |
++-----------+-----------+----------+----------+------------+------------+
+15 rows in set (0.00 sec)
+```
+
+While perfectly acceptable, the output matrix has a lot of redundant information. One solution is to craft an output matrix in [tidy](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) format. That is, rather than pulling both `tbl_erq.item_erq` and `tbl_panas.item_panas`, as they are both integer, we could instead create a column titled `item_num` that has the full range of items. This would allow us to join the response columns, `tbl_erq.resp_erq` and `tbl_panas.resp_panas` by their item values.
+
+Caution is warranted, however, given the nature of the default `join` performance ([inner](https://www.w3schools.com/sql/sql_join.asp)) since ERQ and PANAS have a different number of items. Accordingly, we will use `tbl_panas.item_panas` to create the new `item_num` column and a `left` join:
+
+```
+-- Tidy format
+select
+    a.subj_name, b.sess_name, d.item_panas as item_num,
+        c.resp_erq, d.resp_panas
+    from tbl_panas d
+    join ref_subj a on a.subj_id = d.subj_id
+    join ref_sess b on b.sess_id = d.sess_id
+    left join tbl_erq c on c.subj_id = d.subj_id
+        and c.sess_id = d.sess_id and c.item_erq = d.item_panas
+    where d.sess_id = 1
+    limit 22
+    ;
+```
+
+The output tidy matrix, then, does not have the repeating response values found in the long format but NULL values are instead filled for `resp_erq` when a corresponding item value does not exist.
+
+```
++-----------+-----------+----------+----------+------------+
+| subj_name | sess_name | item_num | resp_erq | resp_panas |
++-----------+-----------+----------+----------+------------+
+| SUB1      | day1      |        1 |        7 |          6 |
+| SUB1      | day1      |        2 |        7 |          5 |
+| SUB1      | day1      |        3 |       10 |          7 |
+| SUB1      | day1      |        4 |        1 |          5 |
+| SUB1      | day1      |        5 |        6 |          2 |
+| SUB1      | day1      |        6 |        9 |          7 |
+| SUB1      | day1      |        7 |        5 |          5 |
+| SUB1      | day1      |        8 |        2 |         10 |
+| SUB1      | day1      |        9 |        5 |         10 |
+| SUB1      | day1      |       10 |        5 |          3 |
+| SUB1      | day1      |       11 |     NULL |          1 |
+| SUB1      | day1      |       12 |     NULL |          3 |
+| SUB1      | day1      |       13 |     NULL |          2 |
+| SUB1      | day1      |       14 |     NULL |          2 |
+| SUB1      | day1      |       15 |     NULL |          7 |
+| SUB1      | day1      |       16 |     NULL |          9 |
+| SUB1      | day1      |       17 |     NULL |          1 |
+| SUB1      | day1      |       18 |     NULL |          1 |
+| SUB1      | day1      |       19 |     NULL |          7 |
+| SUB1      | day1      |       20 |     NULL |         10 |
+| SUB2      | day1      |        1 |        4 |          9 |
+| SUB2      | day1      |        2 |       10 |          8 |
++-----------+-----------+----------+----------+------------+
+22 rows in set (0.00 sec)
 ```

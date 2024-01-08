@@ -114,7 +114,9 @@ create_table
 reference_tables
 data_tables
 definition_tables
-insert-data
+insert_data
 select-data
 basic-usage
 join-tables
+accessing-reference-tables
+joining-data-tables
