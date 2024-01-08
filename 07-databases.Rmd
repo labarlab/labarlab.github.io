@@ -91,7 +91,7 @@ When a certain value, such as a participant ID or emotion name, show up across m
 
 Say a project intends to gather information across multiple subjects, each of whom will participate in three sessions, and some measures will occur during all sessions. We can then set up reference tables for the subject IDs, session IDs, and emotion IDs as these values would be common across all measures.
 
-To start a reference table for subject IDs, then:
+To start a reference table for subject IDs:
 
 ```
 use db_test;
@@ -350,7 +350,7 @@ insert ignore into tbl_erq
   (1, 3, 1, 2);
 ```
 
-Working within our example database `db_test` we have add three new rows of data to `tbl_erq`. The `insert ignore into` skips the insertion if the same values already exist, avoiding overwriting existing data in `tbl_erq`. The relevant columns were referenced in the tuple, and then participant 1 (ref `ref_subj.subj_name`) responses to the first ERQ item were added for each session. We can check that the insertion was successful by selecting our data:
+Working within our example database `db_test` we have added three new rows of data to `tbl_erq`. The `insert ignore into` skips the insertion if the same values already exist, avoiding overwriting existing data in `tbl_erq`. The relevant columns were referenced, and then participant 1 (ref `ref_subj.subj_name`) responses to the first ERQ item were added for each session. We can check that the insertion was successful by selecting our data:
 
 ```
 mysql> select * from tbl_erq;
@@ -401,7 +401,7 @@ lines terminated by '\n'
 ignore 1 rows;
 ```
 
-As specified, `local infile` supplies the path to the CSV file, and then extra options are specified help parse the file such as specifying that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV. _Note:_ the infile string will require editing to point to the erq_data.csv on your local machine.
+As specified, `local infile` supplies the path to the CSV file. Then, extra options are specified to help parse the file; such as specifying that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV. _Note:_ the infile string will require editing to point to the erq_data.csv on your local machine.
 
 This method is faster than, and preferred over, manually inserting each row. We can again verify that the table was updated, but limit the return to 10 rows:
 
