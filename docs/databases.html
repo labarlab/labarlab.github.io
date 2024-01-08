@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 Databases | LaBaratory Manual</title>
+  <meta name="description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
+  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 7 Databases | LaBaratory Manual" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 Databases | LaBaratory Manual" />
+  
+  <meta name="twitter:description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
+  
+
+<meta name="author" content="Nathan Muncy" />
+
+
+<meta name="date" content="2024-01-08" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="programming.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">LaBaratory Wiki</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#planned-content-additions"><i class="fa fa-check"></i>Planned content additions</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="getting-started.html"><a href="getting-started.html"><i class="fa fa-check"></i><b>1</b> Getting Started</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="getting-started.html"><a href="getting-started.html#location"><i class="fa fa-check"></i><b>1.1</b> Location</a></li>
+<li class="chapter" data-level="1.2" data-path="getting-started.html"><a href="getting-started.html#duke-card"><i class="fa fa-check"></i><b>1.2</b> Duke Card</a></li>
+<li class="chapter" data-level="1.3" data-path="getting-started.html"><a href="getting-started.html#computer-access"><i class="fa fa-check"></i><b>1.3</b> Computer Access</a></li>
+<li class="chapter" data-level="1.4" data-path="getting-started.html"><a href="getting-started.html#human-research-training"><i class="fa fa-check"></i><b>1.4</b> Human Research Training</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="access-server.html"><a href="access-server.html"><i class="fa fa-check"></i><b>2</b> Accessing Servers</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="access-server.html"><a href="access-server.html#labar-lab-shared-drive-keoki"><i class="fa fa-check"></i><b>2.1</b> LaBar Lab Shared Drive (keoki)</a></li>
+<li class="chapter" data-level="2.2" data-path="access-server.html"><a href="access-server.html#biac-servers"><i class="fa fa-check"></i><b>2.2</b> BIAC Servers</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="access-server.html"><a href="access-server.html#mac-osx-users"><i class="fa fa-check"></i><b>2.2.1</b> Mac OSx Users</a></li>
+<li class="chapter" data-level="2.2.2" data-path="access-server.html"><a href="access-server.html#windows-users"><i class="fa fa-check"></i><b>2.2.2</b> Windows Users</a></li>
+<li class="chapter" data-level="2.2.3" data-path="access-server.html"><a href="access-server.html#after-succesful-login"><i class="fa fa-check"></i><b>2.2.3</b> After Succesful Login</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="psychophys.html"><a href="psychophys.html"><i class="fa fa-check"></i><b>3</b> Psychophysics</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="psychophys.html"><a href="psychophys.html#psychophys-ecg"><i class="fa fa-check"></i><b>3.1</b> Psychophysics - ECG</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="psychophys.html"><a href="psychophys.html#introduction"><i class="fa fa-check"></i><b>3.1.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.1.2" data-path="psychophys.html"><a href="psychophys.html#supplies"><i class="fa fa-check"></i><b>3.1.2</b> Supplies</a></li>
+<li class="chapter" data-level="3.1.3" data-path="psychophys.html"><a href="psychophys.html#computer-preparation"><i class="fa fa-check"></i><b>3.1.3</b> Computer Preparation</a></li>
+<li class="chapter" data-level="3.1.4" data-path="psychophys.html"><a href="psychophys.html#lead-preparation"><i class="fa fa-check"></i><b>3.1.4</b> Lead Preparation</a></li>
+<li class="chapter" data-level="3.1.5" data-path="psychophys.html"><a href="psychophys.html#electrode-preparation-and-placement"><i class="fa fa-check"></i><b>3.1.5</b> Electrode Preparation and Placement</a></li>
+<li class="chapter" data-level="3.1.6" data-path="psychophys.html"><a href="psychophys.html#lead-application-and-clean-up"><i class="fa fa-check"></i><b>3.1.6</b> Lead Application and Clean Up</a></li>
+<li class="chapter" data-level="3.1.7" data-path="psychophys.html"><a href="psychophys.html#references"><i class="fa fa-check"></i><b>3.1.7</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="psychophys.html"><a href="psychophys.html#psychophys-eda"><i class="fa fa-check"></i><b>3.2</b> Psychophysics - EDA</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="psychophys.html"><a href="psychophys.html#introduction-1"><i class="fa fa-check"></i><b>3.2.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.2.2" data-path="psychophys.html"><a href="psychophys.html#procedures"><i class="fa fa-check"></i><b>3.2.2</b> Procedures</a></li>
+<li class="chapter" data-level="3.2.3" data-path="psychophys.html"><a href="psychophys.html#references-1"><i class="fa fa-check"></i><b>3.2.3</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="psychophys.html"><a href="psychophys.html#psychophys-egg"><i class="fa fa-check"></i><b>3.3</b> Psychophysics - EGG</a></li>
+<li class="chapter" data-level="3.4" data-path="psychophys.html"><a href="psychophys.html#psychophys-emg"><i class="fa fa-check"></i><b>3.4</b> Psychophysics - EMG</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="psychophys.html"><a href="psychophys.html#introduction-2"><i class="fa fa-check"></i><b>3.4.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.4.2" data-path="psychophys.html"><a href="psychophys.html#supplies-1"><i class="fa fa-check"></i><b>3.4.2</b> Supplies</a></li>
+<li class="chapter" data-level="3.4.3" data-path="psychophys.html"><a href="psychophys.html#computer-preparation-1"><i class="fa fa-check"></i><b>3.4.3</b> Computer Preparation</a></li>
+<li class="chapter" data-level="3.4.4" data-path="psychophys.html"><a href="psychophys.html#face-preparation"><i class="fa fa-check"></i><b>3.4.4</b> Face Preparation</a></li>
+<li class="chapter" data-level="3.4.5" data-path="psychophys.html"><a href="psychophys.html#electrode-preparation"><i class="fa fa-check"></i><b>3.4.5</b> Electrode Preparation</a></li>
+<li class="chapter" data-level="3.4.6" data-path="psychophys.html"><a href="psychophys.html#electrode-placement---corrugator-muscle"><i class="fa fa-check"></i><b>3.4.6</b> Electrode Placement - corrugator muscle</a></li>
+<li class="chapter" data-level="3.4.7" data-path="psychophys.html"><a href="psychophys.html#electrode-placement---zygomaticus-muscle"><i class="fa fa-check"></i><b>3.4.7</b> Electrode Placement - zygomaticus muscle</a></li>
+<li class="chapter" data-level="3.4.8" data-path="psychophys.html"><a href="psychophys.html#cleaning"><i class="fa fa-check"></i><b>3.4.8</b> Cleaning</a></li>
+<li class="chapter" data-level="3.4.9" data-path="psychophys.html"><a href="psychophys.html#references-2"><i class="fa fa-check"></i><b>3.4.9</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="psychophys.html"><a href="psychophys.html#psychophys-rsp"><i class="fa fa-check"></i><b>3.5</b> Psychophysics - RSP</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="psychophys.html"><a href="psychophys.html#introduction-3"><i class="fa fa-check"></i><b>3.5.1</b> Introduction</a></li>
+<li class="chapter" data-level="3.5.2" data-path="psychophys.html"><a href="psychophys.html#supplies-2"><i class="fa fa-check"></i><b>3.5.2</b> Supplies</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="psychophys.html"><a href="psychophys.html#psychophys-stim"><i class="fa fa-check"></i><b>3.6</b> Psychophysics - STIM</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="psychophys.html"><a href="psychophys.html#supplies-3"><i class="fa fa-check"></i><b>3.6.1</b> Supplies</a></li>
+<li class="chapter" data-level="3.6.2" data-path="psychophys.html"><a href="psychophys.html#computer-preparation-2"><i class="fa fa-check"></i><b>3.6.2</b> Computer Preparation</a></li>
+<li class="chapter" data-level="3.6.3" data-path="psychophys.html"><a href="psychophys.html#electrode-preparation-and-placement-1"><i class="fa fa-check"></i><b>3.6.3</b> Electrode Preparation and Placement</a></li>
+<li class="chapter" data-level="3.6.4" data-path="psychophys.html"><a href="psychophys.html#stim-calibration"><i class="fa fa-check"></i><b>3.6.4</b> Stim Calibration</a></li>
+<li class="chapter" data-level="3.6.5" data-path="psychophys.html"><a href="psychophys.html#clean-up"><i class="fa fa-check"></i><b>3.6.5</b> Clean Up</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="psychtoolbox.html"><a href="psychtoolbox.html"><i class="fa fa-check"></i><b>4</b> Psychtoolbox</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="psychtoolbox.html"><a href="psychtoolbox.html#introduction-4"><i class="fa fa-check"></i><b>4.1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="psychtoolbox.html"><a href="psychtoolbox.html#basics"><i class="fa fa-check"></i><b>4.1.1</b> Basics</a></li>
+<li class="chapter" data-level="4.1.2" data-path="psychtoolbox.html"><a href="psychtoolbox.html#learn-ex"><i class="fa fa-check"></i><b>4.1.2</b> Learn Through Examples</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="psychtoolbox.html"><a href="psychtoolbox.html#qa"><i class="fa fa-check"></i><b>4.2</b> Questions and Answers</a></li>
+<li class="chapter" data-level="4.3" data-path="psychtoolbox.html"><a href="psychtoolbox.html#screen-function"><i class="fa fa-check"></i><b>4.3</b> Screen Function</a></li>
+<li class="chapter" data-level="4.4" data-path="psychtoolbox.html"><a href="psychtoolbox.html#psychtoolboox-use-at-biac"><i class="fa fa-check"></i><b>4.4</b> Psychtoolboox use at BIAC</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="psychtoolbox.html"><a href="psychtoolbox.html#loading-ptb"><i class="fa fa-check"></i><b>4.4.1</b> Loading PTB</a></li>
+<li class="chapter" data-level="4.4.2" data-path="psychtoolbox.html"><a href="psychtoolbox.html#triggering-experiment-start"><i class="fa fa-check"></i><b>4.4.2</b> Triggering Experiment Start</a></li>
+<li class="chapter" data-level="4.4.3" data-path="psychtoolbox.html"><a href="psychtoolbox.html#recording-events-onset-and-duration"><i class="fa fa-check"></i><b>4.4.3</b> Recording Events Onset and Duration</a></li>
+<li class="chapter" data-level="4.4.4" data-path="psychtoolbox.html"><a href="psychtoolbox.html#using-the-button-box"><i class="fa fa-check"></i><b>4.4.4</b> Using the Button Box</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="fmri.html"><a href="fmri.html"><i class="fa fa-check"></i><b>5</b> Functional MRI</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="fmri.html"><a href="fmri.html#introduction-5"><i class="fa fa-check"></i><b>5.1</b> Introduction</a></li>
+<li class="chapter" data-level="5.2" data-path="fmri.html"><a href="fmri.html#initiating-and-running-an-mri-study-at-duke"><i class="fa fa-check"></i><b>5.2</b> Initiating and Running an MRI Study at Duke</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="fmri.html"><a href="fmri.html#irb-protocol-approval"><i class="fa fa-check"></i><b>5.2.1</b> IRB Protocol Approval</a></li>
+<li class="chapter" data-level="5.2.2" data-path="fmri.html"><a href="fmri.html#biac-safety-certification"><i class="fa fa-check"></i><b>5.2.2</b> BIAC Safety Certification</a></li>
+<li class="chapter" data-level="5.2.3" data-path="fmri.html"><a href="fmri.html#biac-protocol-approval"><i class="fa fa-check"></i><b>5.2.3</b> BIAC Protocol Approval</a></li>
+<li class="chapter" data-level="5.2.4" data-path="fmri.html"><a href="fmri.html#using-the-biac-calendar"><i class="fa fa-check"></i><b>5.2.4</b> Using the BIAC Calendar</a></li>
+<li class="chapter" data-level="5.2.5" data-path="fmri.html"><a href="fmri.html#biac-study-preparation"><i class="fa fa-check"></i><b>5.2.5</b> BIAC Study Preparation</a></li>
+<li class="chapter" data-level="5.2.6" data-path="fmri.html"><a href="fmri.html#study-running"><i class="fa fa-check"></i><b>5.2.6</b> Study Running</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="fmri.html"><a href="fmri.html#spm"><i class="fa fa-check"></i><b>5.3</b> SPM</a>
+<ul>
+<li class="chapter" data-level="" data-path="fmri.html"><a href="fmri.html#installing-and-using-spm-preprocessing-batch-script-templates"><i class="fa fa-check"></i>Installing and Using SPM Preprocessing Batch Script Templates</a></li>
+<li class="chapter" data-level="5.3.1" data-path="fmri.html"><a href="fmri.html#basic-file-manipulation-terms-and-information"><i class="fa fa-check"></i><b>5.3.1</b> Basic File Manipulation Terms and Information</a></li>
+<li class="chapter" data-level="5.3.2" data-path="fmri.html"><a href="fmri.html#installing-necessary-script-files"><i class="fa fa-check"></i><b>5.3.2</b> Installing Necessary Script Files</a></li>
+<li class="chapter" data-level="5.3.3" data-path="fmri.html"><a href="fmri.html#checking-spm-module-installation"><i class="fa fa-check"></i><b>5.3.3</b> Checking SPM Module Installation</a></li>
+<li class="chapter" data-level="5.3.4" data-path="fmri.html"><a href="fmri.html#fmri-preprocessing-steps"><i class="fa fa-check"></i><b>5.3.4</b> FMRI preprocessing steps</a></li>
+<li class="chapter" data-level="5.3.5" data-path="fmri.html"><a href="fmri.html#reorganizing-image-data-and-copying-them-from-the-biac-servers"><i class="fa fa-check"></i><b>5.3.5</b> Reorganizing Image Data and Copying Them from the BIAC Servers</a></li>
+<li class="chapter" data-level="5.3.6" data-path="fmri.html"><a href="fmri.html#image-parameters-and-image-format-necessary-for-preprocessing"><i class="fa fa-check"></i><b>5.3.6</b> Image Parameters and Image Format Necessary for Preprocessing</a></li>
+<li class="chapter" data-level="5.3.7" data-path="fmri.html"><a href="fmri.html#preparing-the-batch-template-for-use"><i class="fa fa-check"></i><b>5.3.7</b> Preparing the Batch Template for Use</a></li>
+<li class="chapter" data-level="5.3.8" data-path="fmri.html"><a href="fmri.html#running-a-single-subject-and-checking-results"><i class="fa fa-check"></i><b>5.3.8</b> Running a Single Subject and Checking Results</a></li>
+<li class="chapter" data-level="5.3.9" data-path="fmri.html"><a href="fmri.html#running-the-batch-script-on-multiple-subjects"><i class="fa fa-check"></i><b>5.3.9</b> Running the Batch Script on Multiple Subjects</a></li>
+<li class="chapter" data-level="5.3.10" data-path="fmri.html"><a href="fmri.html#quality-assurance-output-descriptions"><i class="fa fa-check"></i><b>5.3.10</b> Quality Assurance Output Descriptions</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="fmri.html"><a href="fmri.html#qa---fmriprep"><i class="fa fa-check"></i><b>5.4</b> QA - FMRIPrep</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="fmri.html"><a href="fmri.html#general-information"><i class="fa fa-check"></i><b>5.4.1</b> General Information</a></li>
+<li class="chapter" data-level="5.4.2" data-path="fmri.html"><a href="fmri.html#checking-anatomical-images"><i class="fa fa-check"></i><b>5.4.2</b> Checking Anatomical Images</a></li>
+<li class="chapter" data-level="5.4.3" data-path="fmri.html"><a href="fmri.html#checking-functional-images"><i class="fa fa-check"></i><b>5.4.3</b> Checking Functional Images</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="programming.html"><a href="programming.html"><i class="fa fa-check"></i><b>6</b> Programming</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="programming.html"><a href="programming.html#introduction-6"><i class="fa fa-check"></i><b>6.1</b> Introduction</a></li>
+<li class="chapter" data-level="6.2" data-path="programming.html"><a href="programming.html#best-practices"><i class="fa fa-check"></i><b>6.2</b> Best Practices</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="programming.html"><a href="programming.html#python"><i class="fa fa-check"></i><b>6.2.1</b> Python</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="programming.html"><a href="programming.html#cli"><i class="fa fa-check"></i><b>6.3</b> Command Line Interface</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="programming.html"><a href="programming.html#python-1"><i class="fa fa-check"></i><b>6.3.1</b> Python</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="programming.html"><a href="programming.html#documentation"><i class="fa fa-check"></i><b>6.4</b> Documentation</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="programming.html"><a href="programming.html#python-2"><i class="fa fa-check"></i><b>6.4.1</b> Python</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="databases.html"><a href="databases.html"><i class="fa fa-check"></i><b>7</b> Databases</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="databases.html"><a href="databases.html#create-an-account"><i class="fa fa-check"></i><b>7.1</b> Create an Account</a></li>
+<li class="chapter" data-level="7.2" data-path="databases.html"><a href="databases.html#login"><i class="fa fa-check"></i><b>7.2</b> Login</a></li>
+<li class="chapter" data-level="7.3" data-path="databases.html"><a href="databases.html#create_database"><i class="fa fa-check"></i><b>7.3</b> Create a Database</a></li>
+<li class="chapter" data-level="7.4" data-path="databases.html"><a href="databases.html#create_table"><i class="fa fa-check"></i><b>7.4</b> Create a Table</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="databases.html"><a href="databases.html#reference_tables"><i class="fa fa-check"></i><b>7.4.1</b> Reference Tables</a></li>
+<li class="chapter" data-level="7.4.2" data-path="databases.html"><a href="databases.html#data_tables"><i class="fa fa-check"></i><b>7.4.2</b> Data Tables</a></li>
+<li class="chapter" data-level="7.4.3" data-path="databases.html"><a href="databases.html#definition_tables"><i class="fa fa-check"></i><b>7.4.3</b> Definition Tables</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="databases.html"><a href="databases.html#insert_data"><i class="fa fa-check"></i><b>7.5</b> Insert Data</a></li>
+<li class="chapter" data-level="7.6" data-path="databases.html"><a href="databases.html#select-data"><i class="fa fa-check"></i><b>7.6</b> Select Data</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="databases.html"><a href="databases.html#basic-usage"><i class="fa fa-check"></i><b>7.6.1</b> Basic Usage</a></li>
+<li class="chapter" data-level="7.6.2" data-path="databases.html"><a href="databases.html#join-tables"><i class="fa fa-check"></i><b>7.6.2</b> Join Tables</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">LaBaratory Manual</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="databases" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Chapter 7</span> Databases<a href="databases.html#databases" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Written by Nathan Muncy.</p>
+<p>This chapter is under construction</p>
+<p>A <a href="https://dev.mysql.com/doc/">MySQL</a> server is installed on labarserv2 which allows for project data to be stored within a relational database management system (<a href="https://en.wikipedia.org/wiki/Relational_database">RDBMS</a>). Utilizing a RDBMS allows the researcher to centralize, better manage, flexibly access, and share their data. Additionally, the dedicated structures will help maintain data consistency across users and projects.</p>
+<p>This chapter will serve as a brief tutorial and reference for setting up and then using project-specific databases.</p>
+<div id="create-an-account" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Create an Account<a href="databases.html#create-an-account" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Admins of labarserv2 create accounts and grant access to the mysql server and databases. Start by logging into the server as admin <code>$sudo mysql</code>.</p>
+<p>Current user and host information are available at <code>mysql.user</code>:</p>
+<pre><code>use mysql;
+select user, host from user;</code></pre>
+<p>To <a href="https://dev.mysql.com/doc/refman/8.0/en/create-user.html">create a user</a> (‘test’) identified by a password (‘foobar’), specify the new user name, host or IP, and password:</p>
+<pre><code>create user &#39;test&#39;@&#39;localhost&#39; identified by &#39;foobar&#39;;
+create user &#39;test&#39;@&#39;127.0.0.1&#39; identified by &#39;foobar&#39;;</code></pre>
+<p>Next, permissions to a specific database (‘db_test’), and also tables if desired, can be <a href="https://dev.mysql.com/doc/refman/8.0/en/grant.html">granted</a>:</p>
+<pre><code>grant insert, update, select, references,
+  create temporary tables,
+  on db_test.*
+  to &#39;test&#39;@&#39;localhost&#39;; -- give select permissions
+grant all on db_test.* to &#39;test&#39;@&#39;localhost&#39;; -- give all permissions</code></pre>
+<p>Finally, check that appropriate permissions have been added to the user account and then apply the changes to the server:</p>
+<pre><code>show grants for &#39;test&#39;@&#39;localhost&#39;;
+flush privileges;</code></pre>
+<p>The user should then be able to login to the server via <code>$mysql -u test -p</code>, enter their password (foobar), and access the database (<code>use db_test; show tables;</code>).</p>
+</div>
+<div id="login" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Login<a href="databases.html#login" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Users that have an account can login to the mysql server via</p>
+<p><code>$mysql -u user_name -p</code></p>
+<p>and then supply their password when prompted. Databases to which the user has access can be listed via <code>show databases;</code>. After selecting a database for use (<code>use db_some_name;</code>), available tables can be listed via <code>show tables;</code>.</p>
+<p>A database can also be specified at login:</p>
+<p><code>$mysql -u user_name -p db_some_name</code></p>
+<p>Exit the server via <code>exit;</code> or <code>quit;</code>.</p>
+</div>
+<div id="create_database" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> Create a Database<a href="databases.html#create_database" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Admin (i.e. all) privileges are needed by the user to create an database. Accordingly, it is most likely best for labarserv2 admins to create databases and then grant specific (or all) permissions to the user for the specific database.</p>
+<p><a href="https://dev.mysql.com/doc/refman/8.0/en/creating-database.html">Database creation</a> is accomplished simply via:</p>
+<p><code>create database db_some_name;</code></p>
+<p><strong>Conventions</strong> - The following database conventions are implemented in the LaBar Lab:</p>
+<ul>
+<li>Database names start with <code>db</code>, e.g. <code>db_project1</code> and <code>db_project2</code>. This allows for project databases to be identified separately while also being distinct from admin and schema databases</li>
+<li>Separate databases are made for separate projects, that is, one project should not span multiple databases</li>
+<li>Database names are succinct, being both descriptive and as short as is reasonable</li>
+<li>Databases are named in snake case (<code>db_emotion_regulation</code> and not <code>db-emotion-regulation</code>)</li>
+</ul>
+</div>
+<div id="create_table" class="section level2 hasAnchor" number="7.4">
+<h2><span class="header-section-number">7.4</span> Create a Table<a href="databases.html#create_table" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><a href="https://dev.mysql.com/doc/refman/8.0/en/creating-tables.html">Tables</a> are 2-dimensional matrices containing rows and columns of data. Each row must contain unique information and each column contains only one <a href="https://dev.mysql.com/doc/refman/8.0/en/data-types.html">data type</a>. Whether to use long- or wide-formatted tables depends on the user and nature of the data, but long-formatted tables (or at least <a href="https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html">tidy</a>) is preferable and generally more flexible.</p>
+<p>The <code>create table</code> syntax is used within a database to both create the table and specify the number and types of columns. Three types of tables (<a href="databases.html#reference_tables">reference</a>, <a href="databases.html#data_tables">data</a>, and <a href="databases.html#definition_tables">definition</a>) are used in the LaBar Lab, which are prepended with <code>ref_</code>, <code>tbl_</code>, and <code>def_</code> identifiers, respectively.</p>
+<div id="reference_tables" class="section level3 hasAnchor" number="7.4.1">
+<h3><span class="header-section-number">7.4.1</span> Reference Tables<a href="databases.html#reference_tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When a certain value, such as a participant ID or emotion name, show up across multiple data tables, the value can be stored in a reference table rather than be used repeatedly across multiple tables. These reference tables, and the fact that values from multiple databases can be queried at once, are the point of RDBMSs. As an added perk, the size of the database is also decreased as redundant values are minimized.</p>
+<p>Say a project intends to gather information across multiple subjects, each of whom will participate in three sessions, and some measures will occur during all sessions. We can then set up reference tables for the subject IDs, session IDs, and emotion IDs as these values would be common across all measures.</p>
+<p>To start a reference table for subject IDs:</p>
+<pre><code>use db_test;
+create table ref_subj (
+  subj_id int not null,
+  subj_name char(4) not null,
+  primary key(subj_id)
+);</code></pre>
+<p>Here we created the table <code>ref_subj</code> in the database <code>db_test</code>. This table contains two columns: the first column is titled <code>subj_id</code>, is integer type, and does not allow null values. The second column is titled <code>subj_name</code>, the value uses exactly 4 characters, and also null values are also not allowed. Finally, the <a href="https://www.mysqltutorial.org/mysql-basics/mysql-primary-key/">primary key</a> is set to reference the ‘subj_id’ column. This key is used to uniquely identify each row in the table, and will serve as the reference value across database tables, and note that <code>not null</code> is required for primary keys.</p>
+<p>A description of the table is available via the <code>describe table_name</code> command:</p>
+<pre><code>mysql&gt; describe ref_subj;
++-----------+---------+------+-----+---------+-------+
+| Field     | Type    | Null | Key | Default | Extra |
++-----------+---------+------+-----+---------+-------+
+| subj_id   | int     | NO   | PRI | NULL    |       |
+| subj_name | char(4) | NO   |     | NULL    |       |
++-----------+---------+------+-----+---------+-------+
+2 rows in set (0.01 sec)</code></pre>
+<p><strong>Conventions</strong> - The following reference table conventions are implemented in the LaBar Lab:</p>
+<ul>
+<li>The table name starts with ‘ref_’</li>
+<li>The name for columns involved in the primary key ends in ’_id’</li>
+<li>The value which corresponds to the primary key ends in ’_name’</li>
+<li>The table name is reflected in column names when possible (e.g. ‘subj’)</li>
+</ul>
+<p>Following these conventions will increase the ease of joining tables and allow other researchers to more readily understand the data structure.</p>
+<p>Data can then be added to the table via <code>insert</code> by specifying the desired columns and input values:</p>
+<pre><code>insert into ref_subj
+  (subj_id, subj_name)
+  values
+  (1, &quot;SUB1&quot;),
+  (2, &quot;SUB2&quot;),
+  (3, &quot;SUB3&quot;),
+  (4, &quot;SUB4&quot;);</code></pre>
+<p>Check that the reference table is properly specified via <code>select</code>:</p>
+<pre><code>mysql&gt; select * from ref_subj;
++---------+-----------+
+| subj_id | subj_name |
++---------+-----------+
+|       1 | SUB1      |
+|       2 | SUB2      |
+|       3 | SUB3      |
+|       4 | SUB4      |
++---------+-----------+
+4 rows in set (0.00 sec)</code></pre>
+<p>The other reference tables, for session and emotion, can likewise be built (note the variable emotion name length):</p>
+<pre><code>-- Session reference
+create table ref_sess (
+    sess_id int not null,
+    sess_name char(4) not null,
+    primary key(sess_id)
+);
+insert into ref_sess
+    (sess_id, sess_name)
+    values
+    (1, &quot;day1&quot;),
+    (2, &quot;day2&quot;),
+    (3, &quot;day3&quot;);
+
+-- Emotion reference
+create table ref_emo (
+    emo_id int not null,
+    emo_name varchar(10) not null,
+    primary key(emo_id)
+);
+insert into ref_emo
+    (emo_id, emo_name)
+    values
+    (1, &quot;amusement&quot;),
+    (2, &quot;anger&quot;),
+    (3, &quot;anxiety&quot;),
+    (4, &quot;awe&quot;),
+    (5, &quot;calmness&quot;),
+    (6, &quot;craving&quot;),
+    (7, &quot;disgust&quot;),
+    (8, &quot;excitement&quot;),
+    (9, &quot;fear&quot;),
+    (10, &quot;horror&quot;),
+    (11, &quot;joy&quot;),
+    (12, &quot;neutral&quot;),
+    (13, &quot;romance&quot;),
+    (14, &quot;sadness&quot;),
+    (15, &quot;surprise&quot;);</code></pre>
+</div>
+<div id="data_tables" class="section level3 hasAnchor" number="7.4.2">
+<h3><span class="header-section-number">7.4.2</span> Data Tables<a href="databases.html#data_tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Continuing with the example started above, data from each measure collected is stored in data tables, with repeated values linked to reference tables. Building data tables uses the same methodology described above, with the addition of specifying <a href="https://www.cockroachlabs.com/blog/what-is-a-foreign-key/">foreign keys</a> and thus begin to make our database relational.</p>
+<p>Let us suppose that for each session our participants supply PANAS and ERQ ratings as well as a hypothetical in-house measure (EmoFreq) during which participants are prompted to respond how frequently, intensely, and saliently they felt a given emotion (<code>ref_emo</code>) over the previous week.</p>
+<p>Using the <code>create table</code> syntax, again, we first build a data table for the PANAS questionnaire:</p>
+<pre><code>create table tbl_panas (
+    subj_id int not null,
+    sess_id int not null,
+    item_panas int not null,
+    resp_panas int,
+    primary key(subj_id, sess_id, item_panas),
+    foreign key(subj_id) references ref_subj(subj_id) on delete cascade,
+    foreign key(sess_id) references ref_sess(sess_id)
+);</code></pre>
+<p>Here we created a long-formatted table containing four columns – one for the subject identifier (<code>subj_id</code>), session identifier (<code>sess_id</code>), PANAS item/prompt (<code>item_panas</code>), and participant response to PANAS item/prompt (<code>resp_panas</code>). Participant responses are recorded as integer type, and only the PANAS item number (integer) is used – if it was desired to keep the question syntax rather than item number then a reference table could be set up (e.g. <code>ref_panas</code>, see conventions <a href="databases.html#reference_tables">above</a>) and this column would then be named <code>panas_id</code>. Also note that <code>item_panas</code> is specified as <code>not null</code> as participants will see every PANAS item (and this column is used in the primary key). Finally, as participants may not respond to each item <code>resp_panas</code> allows for null values.</p>
+<p>The <a href="https://www.mysqltutorial.org/mysql-basics/mysql-primary-key/">primary key</a> is specified here as the composition of subject, session, and PANAS item (sometimes termed a ‘composite key’ or ‘natural key’) and serves as as the unique identifier for each participant response. It is <a href="https://dev.mysql.com/doc/refman/8.0/en/primary-key-optimization.html">recommended</a> to always explicitly specify your primary key. Additionally, explicitly controlling keys helps in setting up proper <a href="https://www.tutorialsteacher.com/sqlserver/tables-relations">relationship mappings</a>. If a natural key ought not to be used for a primary key, or data naturally increment, then a column could be set to <a href="https://dev.mysql.com/doc/refman/8.0/en/example-auto-increment.html">auto increment</a> and serve as the primary key.</p>
+<p><a href="https://dev.mysql.com/doc/refman/8.0/en/create-table-foreign-keys.html">Foreign keys</a> are used to reflect that a column is linked to another table, and can also be used to constrain column values (not demonstrated). Here, the columns <code>subj_id</code> and <code>sess_id</code> will not be populated with the actual subject and session names/values, as that would involve a lot of repetitive information, but instead their respective reference table ID. Specifically, we set the <code>subj_id</code> column (<code>tbl_panas.subj_id</code>) to reference the <code>subj_id</code> column of <code>ref_subj</code> (<code>ref_subj.subj_id</code>). Similarly <code>tbl_panas.sess_id</code> references <code>ref_sess.sess_id</code>. Finally, <a href="https://www.mysqltutorial.org/mysql-basics/mysql-on-delete-cascade/"><code>on delete cascade</code></a> allows records from this current table to be removed if the referenced value in <code>ref_subj</code> is deleted (perhaps due to participant withdrawal).</p>
+<p><strong>Conventions</strong> - The following data tables conventions are implemented in the LaBar Lab:</p>
+<ul>
+<li>The table name starts with ‘tbl_’</li>
+<li>The measure name is reflected in the table name and relevant columns when possible (e.g. ‘panas’)</li>
+<li>The name for columns that become a foreign key end in ’_id’ when possible</li>
+<li>Column names for measure identifiers start with ‘item_’</li>
+<li>Participant responses start with ‘resp_’</li>
+</ul>
+<p>The data tables for the ERQ and in-house EmoFreq surveys can also be made in similar fashion:</p>
+<pre><code>-- ERQ table
+create table tbl_erq (
+    subj_id int not null,
+    sess_id int not null,
+    item_erq int not null,
+    resp_erq int,
+    primary key(subj_id, sess_id, item_erq),
+    foreign key(subj_id) references ref_subj(subj_id) on delete cascade,
+    foreign key(sess_id) references ref_sess(sess_id)
+);
+
+-- EmoFreq table
+create table tbl_emofreq (
+    subj_id int not null,
+    sess_id int not null,
+    emo_id int not null,
+    resp_frq int,
+    resp_int int,
+    resp_sal int,
+    primary key(subj_id, sess_id, emo_id),
+    foreign key(subj_id) references ref_subj(subj_id) on delete cascade,
+    foreign key(sess_id) references ref_sess(sess_id),
+    foreign key(emo_id) references ref_emo(emo_id)
+);</code></pre>
+<p>For the in-house EmoFreq measure, where participants are prompted with an emotion and they respond how frequently, intensely, and saliently they experienced the emotion over the previous week, the ‘item_’ column was omitted and replaced with the foreign key <code>emo_id</code> as the prompt is simply the emotion name. Additionally, better names for the response columns could have been <code>resp_emofreq_frequency</code> etc., particularly if other measures elicit similar responses. This was omitted to illustrate the utility of definition tables.</p>
+<p>Finally, following foreign keys to their source is available in the <code>information_schema</code> database:</p>
+<pre><code>SELECT
+  `TABLE_SCHEMA`,
+  `TABLE_NAME`,
+  `COLUMN_NAME`,
+  `REFERENCED_TABLE_SCHEMA`,
+  `REFERENCED_TABLE_NAME`,
+  `REFERENCED_COLUMN_NAME`
+FROM
+  `INFORMATION_SCHEMA`.`KEY_COLUMN_USAGE`
+WHERE
+  `TABLE_SCHEMA` = SCHEMA()
+  AND `REFERENCED_TABLE_NAME` IS NOT NULL;</code></pre>
+<p>which yields:</p>
+<pre><code>+--------------+-------------+-------------+-------------------------+-----------------------+------------------------+
+| TABLE_SCHEMA | TABLE_NAME  | COLUMN_NAME | REFERENCED_TABLE_SCHEMA | REFERENCED_TABLE_NAME | REFERENCED_COLUMN_NAME |
++--------------+-------------+-------------+-------------------------+-----------------------+------------------------+
+| db_test      | tbl_emofreq | subj_id     | db_test                 | ref_subj              | subj_id                |
+| db_test      | tbl_emofreq | sess_id     | db_test                 | ref_sess              | sess_id                |
+| db_test      | tbl_emofreq | emo_id      | db_test                 | ref_emo               | emo_id                 |
+| db_test      | tbl_erq     | subj_id     | db_test                 | ref_subj              | subj_id                |
+| db_test      | tbl_erq     | sess_id     | db_test                 | ref_sess              | sess_id                |
+| db_test      | tbl_panas   | subj_id     | db_test                 | ref_subj              | subj_id                |
+| db_test      | tbl_panas   | sess_id     | db_test                 | ref_sess              | sess_id                |
++--------------+-------------+-------------+-------------------------+-----------------------+------------------------+
+7 rows in set (0.00 sec)</code></pre>
+<p>This is useful when tracking the relationship mappings (such as when working with a new database or when table/column names are less-than-helpful), and requires the <code>references</code> grant for the user.</p>
+</div>
+<div id="definition_tables" class="section level3 hasAnchor" number="7.4.3">
+<h3><span class="header-section-number">7.4.3</span> Definition Tables<a href="databases.html#definition_tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Few things are more frustrating when working within RDBMSs than not understanding column names nor knowing what data they contain. This is compounded by less-than-intuitive column names that are sometimes required for the sake of brevity, as is commonly the case when working on larger projects. Definition tables help assuage these frustrations by supplying definitions or explanations of column names and purpose.</p>
+<p>As the data table <code>tbl_emofreq</code> (above) has some column names that may be unintuitive, we will specify a definition table to aid in interpreting the table:</p>
+<pre><code>create table def_emofreq (
+    col_name enum(&#39;resp_frq&#39;, &#39;resp_int&#39;, &#39;resp_sal&#39;),
+    col_desc text
+);</code></pre>
+<p>This definition table contains two columns, <code>col_name</code> and <code>col_desc</code>. Column <code>col_name</code> is specified to only accept certain values via <a href="https://dev.mysql.com/doc/refman/8.0/en/enum.html">enum</a>, which values correspond to the confusing column names in <code>tbl_emofreq</code>. Column <code>col_desc</code> is set to use the <a href="https://dev.mysql.com/doc/refman/8.0/en/string-type-syntax.html">text type</a>, which will allow for more verbose strings. A primary key has not been set as this table is not meant to be integrated with other tables but instead to be read by the researcher.</p>
+<p><strong>Conventions</strong> - The following definition table conventions are implemented in the LaBar Lab:</p>
+<ul>
+<li>A definition table should exist for every data table that does not hold standardized items (e.g. PANAS, ERQ) that could be looked up in a resource (but a definition table is still recommended).</li>
+<li>Definition tables should not be used to hold item interpretations, e.g. storing what is meant when <code>tbl_panas.item_panas = 1</code> (the text of the PANAS’s first item). These belong in a reference table.</li>
+<li>The table uses the same name as the data table, but replacing ‘tbl_’ with ‘def_’.</li>
+<li>The table contains the column <code>col_name</code>, which itself only contains the names of columns from the data table.</li>
+<li>All columns not involved in ID from the data table are specified in <code>col_name</code>.</li>
+<li>The table contains the column <code>col_desc</code>, which holds a human-readable description of the column.</li>
+<li>Additional columns can be add using the <code>col_</code> format, when required.</li>
+</ul>
+<p>The definition table <code>def_emofreq</code> can now be populated with text:</p>
+<pre><code>insert into def_emofreq
+    (col_name, col_desc)
+    values
+    (&#39;resp_frq&#39;, &#39;Participant response to frequency prompt&#39;),
+    (&#39;resp_int&#39;, &#39;Participant response to intensity prompt&#39;),
+    (&#39;resp_sal&#39;, &#39;Participant response to salience prompt&#39;);</code></pre>
+</div>
+</div>
+<div id="insert_data" class="section level2 hasAnchor" number="7.5">
+<h2><span class="header-section-number">7.5</span> Insert Data<a href="databases.html#insert_data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Building on our example for building <a href="databases.html#create_database">databases</a> and <a href="databases.html#create_table">tables</a>, now that a database and tables are properly specified we can begin adding data to the tables. Adding data is easily accomplished via the <a href="https://dev.mysql.com/doc/refman/8.0/en/insert.html"><code>insert into</code></a> command, and we have seen a few examples already when building the <a href="databases.html#reference_tables">reference</a> and <a href="databases.html#definition_tables">definition</a> tables.</p>
+<p>To add a single row (or several) of data into a table, we specify the table, columns, and values:</p>
+<pre><code>use db_test;
+insert ignore into tbl_erq
+  (subj_id, sess_id, item_erq, resp_erq)
+  values
+  (1, 1, 1, 6),
+  (1, 2, 1, 4),
+  (1, 3, 1, 2);</code></pre>
+<p>Working within our example database <code>db_test</code> we have added three new rows of data to <code>tbl_erq</code>. The <code>insert ignore into</code> skips the insertion if the same values already exist, avoiding overwriting existing data in <code>tbl_erq</code>. The relevant columns were referenced, and then participant 1 (ref <code>ref_subj.subj_name</code>) responses to the first ERQ item were added for each session. We can check that the insertion was successful by selecting our data:</p>
+<pre><code>mysql&gt; select * from tbl_erq;
++---------+---------+----------+----------+
+| subj_id | sess_id | item_erq | resp_erq |
++---------+---------+----------+----------+
+|       1 |       1 |        1 |        6 |
+|       1 |       2 |        1 |        4 |
+|       1 |       3 |        1 |        2 |
++---------+---------+----------+----------+
+3 rows in set (0.01 sec)</code></pre>
+<p>Obviously, manually entering every row is untenable and error prone. The insert command of single rows was shown for practice and also to be leveraged algorithmically in a workflow.</p>
+<p>If CSV files (or similar formats) already exist in the same format as your table, then entire tables can be inserted as well. The following shell syntax can be used to generate some random data for <code>tbl_erq</code> (and should be modified to build input data for <code>ref_subj</code>, <code>tbl_panas</code>, and <code>tbl_emofreq</code>), and note that a row will be skipped during <code>load data</code> if the <code>subj_id</code> does not appear in <code>ref_subj</code>:</p>
+<pre><code>#!/bin/bash
+
+echo &quot;subj_id,sess_id,item_erq,resp_erq&quot; &gt;${HOME}/Desktop/erq_data.csv
+for subj in {1..9}; do
+    for sess in {1..3}; do
+        for item in {1..10}; do
+            resp=$(((RANDOM % 10) + 1))
+            echo &quot;${subj},${sess},${item},${resp}&quot; &gt;&gt;${HOME}/Desktop/erq_data.csv
+        done
+    done
+done</code></pre>
+<p>Having built properly formatted CSV files for <code>tbl_panas</code>, <code>tbl_erq</code>, and <code>tbl_emofreq</code>, and assuming that <a href="https://stackoverflow.com/questions/59993844/error-loading-local-data-is-disabled-this-must-be-enabled-on-both-the-client">local infiles are allowed</a>, <a href="databases.html#login">login</a> to the server using the local-infile option. Using this options allows the server to read a file on the local machine.</p>
+<pre><code>$mysql --local-infile=1 -u &lt;user&gt; -p db_test</code></pre>
+<p>Entire CSVs from the Desktop can now be loaded via the <a href="https://dev.mysql.com/doc/refman/8.0/en/load-data.html"><code>load data</code></a> command (and note that rows will be skipped for <code>subj_id</code> values not found in <code>ref_subj</code>):</p>
+<pre><code>delete from tbl_erq; --clear example inputs
+
+load data local infile &#39;/path/Desktop/erq_data.csv&#39;
+into table tbl_erq
+fields terminated by &#39;,&#39;
+enclosed by &#39;&quot;&#39;
+lines terminated by &#39;\n&#39;
+ignore 1 rows;</code></pre>
+<p>As specified, <code>local infile</code> supplies the path to the CSV file. Then, extra options are specified to help parse the file; such as specifying that the CSV is comma-delimited, strings are enclosed by a double quote, line endings use a linefeed, and a header exists in the CSV. <em>Note:</em> the infile string will require editing to point to the erq_data.csv on your local machine.</p>
+<p>This method is faster than, and preferred over, manually inserting each row. We can again verify that the table was updated, but limit the return to 10 rows:</p>
+<pre><code>mysql&gt; select * from tbl_erq limit 10;
++---------+---------+----------+----------+
+| subj_id | sess_id | item_erq | resp_erq |
++---------+---------+----------+----------+
+|       1 |       1 |        1 |        6 |
+|       1 |       1 |        2 |        3 |
+|       1 |       1 |        3 |        6 |
+|       1 |       1 |        4 |        1 |
+|       1 |       1 |        5 |        3 |
+|       1 |       1 |        6 |        1 |
+|       1 |       1 |        7 |        5 |
+|       1 |       1 |        8 |        5 |
+|       1 |       1 |        9 |        3 |
+|       1 |       1 |       10 |        5 |
++---------+---------+----------+----------+
+10 rows in set (0.00 sec)</code></pre>
+</div>
+<div id="select-data" class="section level2 hasAnchor" number="7.6">
+<h2><span class="header-section-number">7.6</span> Select Data<a href="databases.html#select-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Data from tables is accessible with the <a href="https://dev.mysql.com/doc/refman/8.0/en/select.html">select</a> command. Simply, the anatomy of this command is to specify which columns from which tables are desired (and using an ’*’ when all columns are desired). This section will provide examples of how to extract data from tables using <code>select</code> and <code>join</code>.</p>
+<div id="basic-usage" class="section level3 hasAnchor" number="7.6.1">
+<h3><span class="header-section-number">7.6.1</span> Basic Usage<a href="databases.html#basic-usage" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>After logging into the server and activating the appropriate database (<code>$mysql -u &lt;user&gt; -p db_test</code>), a list of available tables is accessible via <a href="https://dev.mysql.com/doc/refman/8.0/en/show.html">show</a>, and <a href="https://dev.mysql.com/doc/refman/8.0/en/describe.html">describe</a> can be used to see the number, name, and type of columns:</p>
+<pre><code>mysql&gt; show tables;
++-------------------+
+| Tables_in_db_test |
++-------------------+
+| def_emofreq       |
+| ref_emo           |
+| ref_sess          |
+| ref_subj          |
+| tbl_emofreq       |
+| tbl_erq           |
+| tbl_panas         |
++-------------------+
+7 rows in set (0.00 sec)
+
+mysql&gt; describe tbl_erq;
++----------+------+------+-----+---------+-------+
+| Field    | Type | Null | Key | Default | Extra |
++----------+------+------+-----+---------+-------+
+| subj_id  | int  | NO   | PRI | NULL    |       |
+| sess_id  | int  | NO   | PRI | NULL    |       |
+| item_erq | int  | NO   | PRI | NULL    |       |
+| resp_erq | int  | YES  |     | NULL    |       |
++----------+------+------+-----+---------+-------+
+4 rows in set (0.00 sec)</code></pre>
+<p>Accordingly, we can select all columns of <code>tbl_erq</code> (and limit the selection to the first 5 rows) with <code>select</code>:</p>
+<pre><code>mysql&gt; select * from tbl_erq limit 5;
++---------+---------+----------+----------+
+| subj_id | sess_id | item_erq | resp_erq |
++---------+---------+----------+----------+
+|       1 |       1 |        1 |        7 |
+|       1 |       1 |        2 |        7 |
+|       1 |       1 |        3 |       10 |
+|       1 |       1 |        4 |        1 |
+|       1 |       1 |        5 |        6 |
++---------+---------+----------+----------+
+5 rows in set (0.00 sec)</code></pre>
+<p>We can also count the number of rows (<code>select count(*) ...</code>) as well as how many entries a specific subject has (<code>select count(*) ... where subj_id = 1</code>):</p>
+<pre><code>mysql&gt; select count(*) from tbl_erq;
++----------+
+| count(*) |
++----------+
+|      270 |
++----------+
+1 row in set (0.01 sec)
+
+mysql&gt; select count(*) from tbl_erq where subj_id = 1;
++----------+
+| count(*) |
++----------+
+|       30 |
++----------+
+1 row in set (0.00 sec)</code></pre>
+<p>Finally, we can select only desired columns (and rows of a specific session ID):</p>
+<pre><code>mysql&gt; select subj_id, item_erq, resp_erq
+    -&gt; from tbl_erq
+    -&gt; where sess_id = 1
+    -&gt; limit 5;
++---------+----------+----------+
+| subj_id | item_erq | resp_erq |
++---------+----------+----------+
+|       1 |        1 |        7 |
+|       1 |        2 |        7 |
+|       1 |        3 |       10 |
+|       1 |        4 |        1 |
+|       1 |        5 |        6 |
++---------+----------+----------+
+5 rows in set (0.00 sec)</code></pre>
+</div>
+<div id="join-tables" class="section level3 hasAnchor" number="7.6.2">
+<h3><span class="header-section-number">7.6.2</span> Join Tables<a href="databases.html#join-tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="accessing-reference-tables" class="section level4 hasAnchor" number="7.6.2.1">
+<h4><span class="header-section-number">7.6.2.1</span> Accessing Reference Tables<a href="databases.html#accessing-reference-tables" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Our example database has a number of tables containing different information. Specifically, the <a href="databases.html#reference_tables">reference</a> tables contain values that are expected to appear across multiple tables while the <a href="databases.html#data_tables">data</a> tables hold actual participant responses and information, which themselves are linked to the reference tables via foreign keys. Previously, we selected data from <code>tbl_erq</code> but did not interpret the <code>subj_id</code> or <code>sess_id</code> columns, whose values exist in <code>ref_subj</code> and <code>ref_sess</code>, respectively.</p>
+<p>Combining information from multiple tables is accomplished with the <a href="https://dev.mysql.com/doc/refman/8.0/en/join.html">join</a> command. This <code>join</code> is appended to the <code>select</code> command to modify what is returned from the query:</p>
+<pre><code>select 
+  ref_subj.subj_name, ref_sess.sess_name, tbl_erq.item_erq, 
+    tbl_erq.resp_erq
+  from tbl_erq
+  join ref_subj on ref_subj.subj_id = tbl_erq.subj_id
+  join ref_sess on ref_sess.sess_id = tbl_erq.sess_id
+  where tbl_erq.sess_id = 2
+  limit 5;</code></pre>
+<p>Here, the values (names) of <code>tbl_erq.subj_id</code> and <code>tbl_erq.sess_id</code> are interpreted and included in the output by joining the <code>ref_subj</code> and <code>ref_sess</code> tables. First, columns from three different tables are selected: the <code>name</code> columns from the relevant reference tables as well as the <code>item</code> and <code>resp</code> columns from <code>tbl_erq</code>. Next, the table containing the relevant data is specified (<code>from tbl_erq</code>), and then <code>tbl_erq</code> is joined with the reference tables by specifying which columns will match between the data and reference tables. Specifically, the query is instructed to join <code>ref_subj</code> to <code>tbl_erq</code>, and to match the column values in <code>ref_subj.subj_id</code> and <code>tbl_erq.subj_id</code> to guide the join (and the same for <code>ref_sess</code>) in order to return the specified columns. This <code>join</code> functionality is the bread-and-butter of RDBMS and the reason for which the conventions for both reference and data tables (above) have been specified.</p>
+<p>Table (and database) names can get large and unwieldy, making for overly verbose <code>select</code> commands. Below is an equivalent command which also assigns the table names to separate variables (a, b, and c):</p>
+<pre><code>select
+    a.subj_name, b.sess_name, b.item_erq, b.resp_erq
+    from tbl_erq c
+    join ref_subj a on a.subj_id = c.subj_id
+    join ref_sess b on b.sess_id = c.sess_id
+    where c.sess_id = 2
+    limit 5;</code></pre>
+<p>Given this selection, we expect the query to return a matrix containing the subject name, session name, and ERQ item and participant responses limited to the second session (and only the first 5 rows).</p>
+<pre><code>+-----------+-----------+----------+----------+
+| subj_name | sess_name | item_erq | resp_erq |
++-----------+-----------+----------+----------+
+| SUB1      | day2      |        1 |        1 |
+| SUB1      | day2      |        2 |        6 |
+| SUB1      | day2      |        3 |        2 |
+| SUB1      | day2      |        4 |        6 |
+| SUB1      | day2      |        5 |        7 |
++-----------+-----------+----------+----------+
+5 rows in set (0.00 sec)</code></pre>
+<p><em>Admin Note:</em> this example assumes <a href="https://stackoverflow.com/questions/41887460/select-list-is-not-in-group-by-clause-and-contains-nonaggregated-column-inc"><code>sql_mode=only_full_group_by</code></a>.</p>
+</div>
+<div id="joining-data-tables" class="section level4 hasAnchor" number="7.6.2.2">
+<h4><span class="header-section-number">7.6.2.2</span> Joining Data Tables<a href="databases.html#joining-data-tables" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Conducting analyses usually involve combining data across multiple measures, perhaps to investigate the relationship of X and Y or to see if controlling for Z has any impact on an X-Y relationship. In our example, participant responses to different measures (e.g. ERQ, PANAS) are kept in separate data tables (<code>tbl_erq</code> and <code>tbl_panas</code>, respectively), and these data can be aggregated into a single matrix with <code>join</code>.</p>
+<p>Using simulated data (for syntax, see <a href="databases.html#insert_data">insert data</a>), the <code>tbl_erq</code> has 10 items, and <code>tbl_panas</code> 20, that were administered to 9 participants for each of 3 sessions:</p>
+<pre><code>mysql&gt; select distinct(item_erq) from tbl_erq;
++----------+
+| item_erq |
++----------+
+|        1 |
+|        2 |
+..
+|        9 |
+|       10 |
++----------+
+10 rows in set (0.00 sec)
+
+mysql&gt; select count(*) from tbl_erq;
++----------+
+| count(*) |
++----------+
+|      270 |
++----------+
+1 row in set (0.00 sec)
+
+mysql&gt; select distinct(item_panas) from tbl_panas;
++------------+
+| item_panas |
++------------+
+|          1 |
+|          2 |
+..
+|         19 |
+|         20 |
++------------+
+20 rows in set (0.00 sec)
+
+mysql&gt; select count(*) from tbl_panas;
++----------+
+| count(*) |
++----------+
+|      540 |
++----------+
+1 row in set (0.01 sec)</code></pre>
+<p>We can join our reference, ERQ, and PANAS tables, then, using an extension of the join example above:</p>
+<pre><code>-- Long format
+select
+    a.subj_name, b.sess_name, c.item_erq, c.resp_erq,
+        d.item_panas, d.resp_panas
+    from tbl_erq c
+    join ref_subj a on a.subj_id = c.subj_id
+    join ref_sess b on b.sess_id = c.sess_id
+    join tbl_panas d on d.subj_id = c.subj_id
+        and d.sess_id = c.sess_id
+    where c.subj_id = 1 and c.sess_id = 1
+    limit 15
+    ;</code></pre>
+<p>As before, values from the reference tables are incorporated into output matrix, and this time we add a <code>join</code> of <code>tbl_erq</code> with <code>tbl_panas</code> using both <code>subj_id</code> and <code>sess_id</code>. Additionally, the output is limited to rows for the first subject and session ID.</p>
+<p>This output is long formatted, and accordingly we can see that <em>each</em> ERQ response is reported for <em>every</em> PANAS item:</p>
+<pre><code>+-----------+-----------+----------+----------+------------+------------+
+| subj_name | sess_name | item_erq | resp_erq | item_panas | resp_panas |
++-----------+-----------+----------+----------+------------+------------+
+| SUB1      | day1      |       10 |        5 |          1 |          6 |
+| SUB1      | day1      |        9 |        5 |          1 |          6 |
+| SUB1      | day1      |        8 |        2 |          1 |          6 |
+| SUB1      | day1      |        7 |        5 |          1 |          6 |
+| SUB1      | day1      |        6 |        9 |          1 |          6 |
+| SUB1      | day1      |        5 |        6 |          1 |          6 |
+| SUB1      | day1      |        4 |        1 |          1 |          6 |
+| SUB1      | day1      |        3 |       10 |          1 |          6 |
+| SUB1      | day1      |        2 |        7 |          1 |          6 |
+| SUB1      | day1      |        1 |        7 |          1 |          6 |
+| SUB1      | day1      |       10 |        5 |          2 |          5 |
+| SUB1      | day1      |        9 |        5 |          2 |          5 |
+| SUB1      | day1      |        8 |        2 |          2 |          5 |
+| SUB1      | day1      |        7 |        5 |          2 |          5 |
+| SUB1      | day1      |        6 |        9 |          2 |          5 |
++-----------+-----------+----------+----------+------------+------------+
+15 rows in set (0.00 sec)</code></pre>
+<p>While perfectly acceptable, the output matrix has a lot of redundant information. One solution is to craft an output matrix in <a href="https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html">tidy</a> format. That is, rather than pulling both <code>tbl_erq.item_erq</code> and <code>tbl_panas.item_panas</code>, as they are both integer, we could instead create a column titled <code>item_num</code> that has the full range of items. This would allow us to join the response columns, <code>tbl_erq.resp_erq</code> and <code>tbl_panas.resp_panas</code> by their item values.</p>
+<p>Caution is warranted, however, given the nature of the default <code>join</code> performance (<a href="https://www.w3schools.com/sql/sql_join.asp">inner</a>) since ERQ and PANAS have a different number of items. Accordingly, we will use <code>tbl_panas.item_panas</code> to create the new <code>item_num</code> column and a <code>left</code> join:</p>
+<pre><code>-- Tidy format
+select
+    a.subj_name, b.sess_name, d.item_panas as item_num,
+        c.resp_erq, d.resp_panas
+    from tbl_panas d
+    join ref_subj a on a.subj_id = d.subj_id
+    join ref_sess b on b.sess_id = d.sess_id
+    left join tbl_erq c on c.subj_id = d.subj_id
+        and c.sess_id = d.sess_id and c.item_erq = d.item_panas
+    where d.sess_id = 1
+    limit 22
+    ;</code></pre>
+<p>The output tidy matrix, then, does not have the repeating response values found in the long format but NULL values are instead filled for <code>resp_erq</code> when a corresponding item value does not exist.</p>
+<pre><code>+-----------+-----------+----------+----------+------------+
+| subj_name | sess_name | item_num | resp_erq | resp_panas |
++-----------+-----------+----------+----------+------------+
+| SUB1      | day1      |        1 |        7 |          6 |
+| SUB1      | day1      |        2 |        7 |          5 |
+| SUB1      | day1      |        3 |       10 |          7 |
+| SUB1      | day1      |        4 |        1 |          5 |
+| SUB1      | day1      |        5 |        6 |          2 |
+| SUB1      | day1      |        6 |        9 |          7 |
+| SUB1      | day1      |        7 |        5 |          5 |
+| SUB1      | day1      |        8 |        2 |         10 |
+| SUB1      | day1      |        9 |        5 |         10 |
+| SUB1      | day1      |       10 |        5 |          3 |
+| SUB1      | day1      |       11 |     NULL |          1 |
+| SUB1      | day1      |       12 |     NULL |          3 |
+| SUB1      | day1      |       13 |     NULL |          2 |
+| SUB1      | day1      |       14 |     NULL |          2 |
+| SUB1      | day1      |       15 |     NULL |          7 |
+| SUB1      | day1      |       16 |     NULL |          9 |
+| SUB1      | day1      |       17 |     NULL |          1 |
+| SUB1      | day1      |       18 |     NULL |          1 |
+| SUB1      | day1      |       19 |     NULL |          7 |
+| SUB1      | day1      |       20 |     NULL |         10 |
+| SUB2      | day1      |        1 |        4 |          9 |
+| SUB2      | day1      |        2 |       10 |          8 |
++-----------+-----------+----------+----------+------------+
+22 rows in set (0.00 sec)</code></pre>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="programming.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/07-databases.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["labarlab.github.io.pdf", "labarlab.github.io.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

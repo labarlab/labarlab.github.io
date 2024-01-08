@@ -106,3 +106,17 @@ cli
 python-1
 documentation
 python-2
+databases
+create-an-account
+login
+create_database
+create_table
+reference_tables
+data_tables
+definition_tables
+insert_data
+select-data
+basic-usage
+join-tables
+accessing-reference-tables
+joining-data-tables

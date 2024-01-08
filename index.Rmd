@@ -28,13 +28,12 @@ This digital book contains resources and learning materials compiled for Kevin L
 * Chapter \@ref(psychtoolbox), Psychtoolbox
 * Chapter \@ref(fmri), Functional MRI
 * Chapter \@ref(programming), Programming
+* Chapter \@ref(databases), Databases
 
 ## Planned content additions {-}
 
 - Git tutorial
-- Shell scripting
-- Shell scripting, advanced
-- Matlab scripting
-- Python, R, and Shell best practices
+- Programming in python, R, shell, Matlab
+- Databases
 - NeuroImaging and the Duke Compute Cluster
 - FMRI processing and analyses guide
