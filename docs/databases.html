@@ -210,7 +210,7 @@
 </ul></li>
 <li class="chapter" data-level="7" data-path="databases.html"><a href="databases.html"><i class="fa fa-check"></i><b>7</b> Databases</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="databases.html"><a href="databases.html#create-an-account"><i class="fa fa-check"></i><b>7.1</b> Create an Account</a></li>
+<li class="chapter" data-level="7.1" data-path="databases.html"><a href="databases.html#create_account"><i class="fa fa-check"></i><b>7.1</b> Create an Account</a></li>
 <li class="chapter" data-level="7.2" data-path="databases.html"><a href="databases.html#login"><i class="fa fa-check"></i><b>7.2</b> Login</a></li>
 <li class="chapter" data-level="7.3" data-path="databases.html"><a href="databases.html#create_database"><i class="fa fa-check"></i><b>7.3</b> Create a Database</a></li>
 <li class="chapter" data-level="7.4" data-path="databases.html"><a href="databases.html#create_table"><i class="fa fa-check"></i><b>7.4</b> Create a Table</a>
@@ -228,6 +228,9 @@
 <li class="chapter" data-level="7.7" data-path="databases.html"><a href="databases.html#connecting-with-python"><i class="fa fa-check"></i><b>7.7</b> Connecting with Python</a>
 <ul>
 <li class="chapter" data-level="7.7.1" data-path="databases.html"><a href="databases.html#local-connection"><i class="fa fa-check"></i><b>7.7.1</b> Local Connection</a></li>
+<li class="chapter" data-level="7.7.2" data-path="databases.html"><a href="databases.html#remote-connection"><i class="fa fa-check"></i><b>7.7.2</b> Remote Connection</a></li>
+<li class="chapter" data-level="7.7.3" data-path="databases.html"><a href="databases.html#selecting-data"><i class="fa fa-check"></i><b>7.7.3</b> Selecting Data</a></li>
+<li class="chapter" data-level="7.7.4" data-path="databases.html"><a href="databases.html#closing-the-connection"><i class="fa fa-check"></i><b>7.7.4</b> Closing the Connection</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -256,8 +259,8 @@
 <p>This chapter is under construction</p>
 <p>A <a href="https://dev.mysql.com/doc/">MySQL</a> server is installed on labarserv2 which allows for project data to be stored within a relational database management system (<a href="https://en.wikipedia.org/wiki/Relational_database">RDBMS</a>). Utilizing a RDBMS allows the researcher to centralize, better manage, flexibly access, and share their data. Additionally, the dedicated structures will help maintain data consistency across users and projects.</p>
 <p>This chapter will serve as a brief tutorial and reference for setting up and then using project-specific databases.</p>
-<div id="create-an-account" class="section level2 hasAnchor" number="7.1">
-<h2><span class="header-section-number">7.1</span> Create an Account<a href="databases.html#create-an-account" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="create_account" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Create an Account<a href="databases.html#create_account" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Admins of labarserv2 create accounts and grant access to the mysql server and databases. Start by logging into the server as admin <code>$sudo mysql</code>.</p>
 <p>Current user and host information are available at <code>mysql.user</code>:</p>
 <pre><code>use mysql;
@@ -804,9 +807,7 @@ select
 <div id="local-connection" class="section level3 hasAnchor" number="7.7.1">
 <h3><span class="header-section-number">7.7.1</span> Local Connection<a href="databases.html#local-connection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To interact with a MySQL database locally, start by installing <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html">mysql-connector-python</a> into your python environment:</p>
-<pre><code>$pip install mysql-connector-python
-or
-$conda install -c conda-forge mysql-connector-python</code></pre>
+<pre><code>pip install mysql-connector-python</code></pre>
 <p>Next, we can start a python file and import <code>mysql.connector</code>, and also <code>pandas</code> to be used later.</p>
 <pre><code>import mysql.connector
 import pandas as pd</code></pre>
@@ -825,8 +826,47 @@ db_con = mysql.connector.connect(
 )</code></pre>
 <p>With a connection established, we next create a <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor.html">cursor</a> object. This cursor object is used to interact with the MySQL server, allowing for the execution of statements or commands, which is to say that the cursor object has a number of <a href="https://www.tutorialspoint.com/python_data_access/python_mysql_cursor_object.htm">methods</a> available. The cursor is available as an attribute of the connection object:</p>
 <pre><code>db_cur = db_con.cursor()</code></pre>
-<div id="selecting-data" class="section level4 hasAnchor" number="7.7.1.1">
-<h4><span class="header-section-number">7.7.1.1</span> Selecting Data<a href="databases.html#selecting-data" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+</div>
+<div id="remote-connection" class="section level3 hasAnchor" number="7.7.2">
+<h3><span class="header-section-number">7.7.2</span> Remote Connection<a href="databases.html#remote-connection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Given that the MySQL server exists on labarserv2, it may not always be feasible to login to labarserv2 to execute SQL queries. For instance, large analyses may require time or resources that are not reasonable for labarserv2. In this case, processes would be conducted on the Duke Compute Cluster (DCC) but access to the database is still necessary, and manually exporting dataframes to copy to the DCC is an inefficient workflow. Another example, again involving the DCC, involves updating the database with output computed on the DCC. It would likewise be inefficient to manually copy files from the DCC to labarserv2 just to update the database.</p>
+<p>Practically speaking, it is more common to interact with a SQL database over the network (remotely), such as is the case when a researcher is working on their personal/work machine with data that exists on a remote server. Here we will describe setting up an <a href="https://www.ssh.com/academy/ssh/tunneling">SSH Tunnel</a> that will allow us to connect to the remote server.</p>
+<p>We will use a number of packages: <a href="https://pypi.org/project/pymysql/">pymysql</a> (which works better than <code>mysql-connector-python</code> for the <code>DCC-labarserv2</code> connection for whatever reason), <a href="https://www.paramiko.org/">paramiko</a>, and <a href="https://sshtunnel.readthedocs.io/en/latest/">sshtunnel</a>. To start, install the required python packages via <code>pip</code> or <code>conda</code>:</p>
+<pre><code>pip install pymsql
+pip install paramiko
+pip install sshtunnel</code></pre>
+<p>Next, we need to make sure that we have an <a href="https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server">RSA key</a> set up on our local machine for the remote (or on the DCC for labarserv2). Additionally, we should store our MySQL password (for the account which exists on the remote server) in our operating system. I have my RSA key to labarserv2 accessible via <code>$RSA_LS2</code>, and my MySQL password via <code>$SQL_PASS</code>.</p>
+<p>Starting a new python file, we can import the relevant packages and then access the RSA key with paramiko:</p>
+<pre><code>import os
+import pandas as pd
+import pymysql
+import paramiko
+import sshtunnel as SSHTunnelForwarder
+
+rsa_ls2 = paramiko.RSAKey.from_private_key_file(os.environ[&quot;RSA_LS2&quot;])</code></pre>
+<p>Next, we can set up for the SSH Tunnel. The remote IP of labarserv2 is <code>ccn-labarserv2.vm.duke.edu</code>, my user name for labarserv2 <code>nmm51</code>, and we will bind the default MySQL port <code>3306</code> to <code>127.0.0.1</code>:</p>
+<pre><code>ssh_tunnel = SSHTunnelForwarder(
+    (&quot;ccn-labarserv2.vm.duke.edu&quot;, 22),
+    ssh_username=&quot;nmm51&quot;,
+    ssh_pkey=rsa_ls2,
+    remote_bind_address=(&quot;127.0.0.1&quot;, 3306),
+)</code></pre>
+<p>Finally, the tunnel is started:</p>
+<pre><code>ssh_tunnel.start()</code></pre>
+<p>With an SSH tunnel established, we can then establish a connection to the MySQL database as we did above, referencing the host and newly established tunnel/port.</p>
+<pre><code>db_con = pymysql.connect(
+    host=&quot;127.0.0.1&quot;,
+    user=&quot;nmm51&quot;,
+    passwd=os.environ[&quot;SQL_PASS&quot;],
+    db=&quot;db_test&quot;,
+    port=ssh_tunnel.local_bind_port,
+)</code></pre>
+<p>Note (a) that the options for specifying the password and database differ from above (which used <code>mysql.connector.connect</code>), and (b) such a <code>'user'@'host'</code> <a href="databases.html#create_account">account</a> will have to exist in the MySQL server, in this case <code>'nmm51'@'127.0.0.1'</code>.</p>
+<p>A cursor can the be established in the same way as above:</p>
+<pre><code>db_cur = db_con.cursor()</code></pre>
+</div>
+<div id="selecting-data" class="section level3 hasAnchor" number="7.7.3">
+<h3><span class="header-section-number">7.7.3</span> Selecting Data<a href="databases.html#selecting-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>With a connection and cursor established, we are ready to setup some syntax to execute on the server. We’ll start by selecting the first 10 rows of <code>tbl_erq</code>. To do this, we can assign a python variable to hold the SQL syntax as a string, and then incorporate the syntax in the cursor’s <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html">execute</a> method:</p>
 <pre><code>query = &quot;select * from tbl_erq limit 10&quot;
 db_cur.execute(query)</code></pre>
@@ -858,8 +898,8 @@ df_subj = pd.DataFrame(
     columns=[&quot;subj_id&quot;, &quot;sess_id&quot;, &quot;item_erq&quot;, &quot;resp_erq&quot;],
 )</code></pre>
 </div>
-<div id="closing-the-connection" class="section level4 hasAnchor" number="7.7.1.2">
-<h4><span class="header-section-number">7.7.1.2</span> Closing the Connection<a href="databases.html#closing-the-connection" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div id="closing-the-connection" class="section level3 hasAnchor" number="7.7.4">
+<h3><span class="header-section-number">7.7.4</span> Closing the Connection<a href="databases.html#closing-the-connection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To avoid crashing the MySQL server, it is import to close the connection with the server once all requests are finished. This can be done as simply as using the <code>close</code> method:</p>
 <pre><code>db_con.close()</code></pre>
 <p>Another option is to utilize Python’s <a href="https://peps.python.org/pep-0343/"><code>with</code></a> syntax to aid in connection closing:</p>
@@ -875,9 +915,9 @@ df_subj = pd.DataFrame(
         db_cur.fetchall(),
         columns=[&quot;subj_id&quot;, &quot;sess_id&quot;, &quot;item_erq&quot;, &quot;resp_erq&quot;],
     )</code></pre>
-<!-- ### Network Connection -->
+<p>Likewise, SSH tunnels need to be closed when working remotely:</p>
+<pre><code>ssh_tunnel.stop()</code></pre>
 
-</div>
 </div>
 </div>
 </div>

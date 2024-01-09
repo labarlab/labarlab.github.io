@@ -9,7 +9,7 @@ A [MySQL](https://dev.mysql.com/doc/) server is installed on labarserv2 which al
 This chapter will serve as a brief tutorial and reference for setting up and then using project-specific databases.
 
 
-## Create an Account
+## Create an Account {#create_account}
 
 Admins of labarserv2 create accounts and grant access to the mysql server and databases. Start by logging into the server as admin `$sudo mysql`.
 
@@ -727,9 +727,7 @@ Python can be used to connect to the MySQL server both locally (labarserv2) and 
 To interact with a MySQL database locally, start by installing [mysql-connector-python](https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html) into your python environment:
 
 ```
-$pip install mysql-connector-python
-or
-$conda install -c conda-forge mysql-connector-python
+pip install mysql-connector-python
 ```
 
 Next, we can start a python file and import `mysql.connector`, and also `pandas` to be used later.
@@ -767,7 +765,72 @@ db_cur = db_con.cursor()
 ```
 
 
-#### Selecting Data
+### Remote Connection
+
+Given that the MySQL server exists on labarserv2, it may not always be feasible to login to labarserv2 to execute SQL queries. For instance, large analyses may require time or resources that are not reasonable for labarserv2. In this case, processes would be conducted on the Duke Compute Cluster (DCC) but access to the database is still necessary, and manually exporting dataframes to copy to the DCC is an inefficient workflow. Another example, again involving the DCC, involves updating the database with output computed on the DCC. It would likewise be inefficient to manually copy files from the DCC to labarserv2 just to update the database. 
+
+Practically speaking, it is more common to interact with a SQL database over the network (remotely), such as is the case when a researcher is working on their personal/work machine with data that exists on a remote server. Here we will describe setting up an [SSH Tunnel](https://www.ssh.com/academy/ssh/tunneling) that will allow us to connect to the remote server.
+
+We will use a number of packages: [pymysql](https://pypi.org/project/pymysql/) (which works better than `mysql-connector-python` for the `DCC-labarserv2` connection for whatever reason), [paramiko](https://www.paramiko.org/), and [sshtunnel](https://sshtunnel.readthedocs.io/en/latest/). To start, install the required python packages via `pip` or `conda`:
+
+```
+pip install pymsql
+pip install paramiko
+pip install sshtunnel
+```
+
+Next, we need to make sure that we have an [RSA key](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server) set up on our local machine for the remote (or on the DCC for labarserv2). Additionally, we should store our MySQL password (for the account which exists on the remote server) in our operating system. I have my RSA key to labarserv2 accessible via `$RSA_LS2`, and my MySQL password via `$SQL_PASS`. 
+
+Starting a new python file, we can import the relevant packages and then access the RSA key with paramiko:
+
+```
+import os
+import pandas as pd
+import pymysql
+import paramiko
+import sshtunnel as SSHTunnelForwarder
+
+rsa_ls2 = paramiko.RSAKey.from_private_key_file(os.environ["RSA_LS2"])
+```
+
+Next, we can set up for the SSH Tunnel. The remote IP of labarserv2 is `ccn-labarserv2.vm.duke.edu`, my user name for labarserv2 `nmm51`, and we will bind the default MySQL port `3306` to `127.0.0.1`:
+
+```
+ssh_tunnel = SSHTunnelForwarder(
+    ("ccn-labarserv2.vm.duke.edu", 22),
+    ssh_username="nmm51",
+    ssh_pkey=rsa_ls2,
+    remote_bind_address=("127.0.0.1", 3306),
+)
+```
+
+Finally, the tunnel is started:
+
+```
+ssh_tunnel.start()
+```
+
+With an SSH tunnel established, we can then establish a connection to the MySQL database as we did above, referencing the host and newly established tunnel/port.
+
+```
+db_con = pymysql.connect(
+    host="127.0.0.1",
+    user="nmm51",
+    passwd=os.environ["SQL_PASS"],
+    db="db_test",
+    port=ssh_tunnel.local_bind_port,
+)
+```
+Note (a) that the options for specifying the password and database differ from above (which used `mysql.connector.connect`), and (b) such a `'user'@'host'` [account](#create_account) will have to exist in the MySQL server, in this case `'nmm51'@'127.0.0.1'`.
+
+A cursor can the be established in the same way as above:
+
+```
+db_cur = db_con.cursor()
+```
+
+
+### Selecting Data
 
 With a connection and cursor established, we are ready to setup some syntax to execute on the server. We'll start by selecting the first 10 rows of `tbl_erq`. To do this, we can assign a python variable to hold the SQL syntax as a string, and then incorporate the syntax in the cursor's [execute](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html) method:
 
@@ -815,7 +878,7 @@ df_subj = pd.DataFrame(
 )
 ```
 
-#### Closing the Connection
+### Closing the Connection
 
 To avoid crashing the MySQL server, it is import to close the connection with the server once all requests are finished. This can be done as simply as using the `close` method:
 
@@ -840,4 +903,8 @@ with mysql.connector.connect(
     )
 ```
 
-<!-- ### Network Connection -->
+Likewise, SSH tunnels need to be closed when working remotely:
+
+```
+ssh_tunnel.stop()
+```
