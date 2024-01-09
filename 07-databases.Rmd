@@ -547,7 +547,7 @@ Table (and database) names can get large and unwieldy, making for overly verbose
 
 ```
 select
-    a.subj_name, b.sess_name, b.item_erq, b.resp_erq
+    a.subj_name, b.sess_name, c.item_erq, c.resp_erq
     from tbl_erq c
     join ref_subj a on a.subj_id = c.subj_id
     join ref_sess b on b.sess_id = c.sess_id
@@ -573,7 +573,7 @@ Given this selection, we expect the query to return a matrix containing the subj
 *Admin Note:* this example assumes [`sql_mode=only_full_group_by`](https://stackoverflow.com/questions/41887460/select-list-is-not-in-group-by-clause-and-contains-nonaggregated-column-inc).
 
 
-#### Joining Data Tables
+#### Joining Data Tables {#joining_data_tables}
 
 Conducting analyses usually involve combining data across multiple measures, perhaps to investigate the relationship of X and Y or to see if controlling for Z has any impact on an X-Y relationship. In our example, participant responses to different measures (e.g. ERQ, PANAS) are kept in separate data tables (`tbl_erq` and `tbl_panas`, respectively), and these data can be aggregated into a single matrix with `join`.
 
@@ -715,3 +715,129 @@ The output tidy matrix, then, does not have the repeating response values found 
 +-----------+-----------+----------+----------+------------+
 22 rows in set (0.00 sec)
 ```
+
+
+## Connecting with Python
+
+Python can be used to connect to the MySQL server both locally (labarserv2) and remotely (e.g. from the Duke Compute Cluster). A number of packages are available to support this, but here we will focus on [mysql-connector-python](https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html) (local; also, [here](https://pypi.org/project/mysql-connector-python/)) and [pymysql](https://pypi.org/project/pymysql/) (remote) as they seem to be most stable at the time of this writing. By utilizing Python, we can automate database management and data pulls.
+
+
+### Local Connection
+
+To interact with a MySQL database locally, start by installing [mysql-connector-python](https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html) into your python environment:
+
+```
+$pip install mysql-connector-python
+or
+$conda install -c conda-forge mysql-connector-python
+```
+
+Next, we can start a python file and import `mysql.connector`, and also `pandas` to be used later.
+
+```
+import mysql.connector
+import pandas as pd
+```
+
+Next, we need to establish a connection between Python and the MySQL server. This is done by creating a [connect](https://dev.mysql.com/doc/connector-python/en/connector-python-example-connecting.html) object using `mysql.connector`. When establishing the connection, the user, host, password, and database name are specified. For the user `nate` and password of `foobar`, we could then create the connection object with the `db_test` database via:
+
+```
+db_con = mysql.connector.connect(
+    host="localhost", user="nate", password="foobar", database="db_test"
+)
+```
+
+It is bad practice to use actual passwords in your code, particularly if you intend to track changes with Git and/or make your repository public. A better option would be to store your password somewhere and then access it through the operating system. Here, I have my password accessible from the variable `$SQL_PASS`:
+
+```
+import os
+
+db_con = mysql.connector.connect(
+    host="localhost",
+    user="nate",
+    password=os.environ["SQL_PASS"],
+    database="db_test",
+)
+```
+
+With a connection established, we next create a [cursor](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor.html) object. This cursor object is used to interact with the MySQL server, allowing for the execution of statements or commands, which is to say that the cursor object has a number of [methods](https://www.tutorialspoint.com/python_data_access/python_mysql_cursor_object.htm) available. The cursor is available as an attribute of the connection object:
+
+```
+db_cur = db_con.cursor()
+```
+
+
+#### Selecting Data
+
+With a connection and cursor established, we are ready to setup some syntax to execute on the server. We'll start by selecting the first 10 rows of `tbl_erq`. To do this, we can assign a python variable to hold the SQL syntax as a string, and then incorporate the syntax in the cursor's [execute](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html) method:
+
+```
+query = "select * from tbl_erq limit 10"
+db_cur.execute(query)
+```
+
+With the execution complete, we are able to [fetch](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-fetchall.html) results from the query. The `fetchall` method returns a list of tuples, which themselves can be used to build a pandas dataframe:
+
+```
+result = db_cur.fetchall()
+df_erq = pd.DataFrame(
+    result, columns=["subj_id", "sess_id", "item_erq", "resp_erq"]
+)
+```
+
+A more useful `select` command will likely involve [joining](#joining_data_tables) across tables. For instance, perhaps we are interested in all day2 data from `tbl_erq` (limited to the first 5 rows):
+
+```
+query = """select
+    a.subj_name, b.sess_name, c.item_erq, c.resp_erq
+    from tbl_erq c
+    join ref_subj a on a.subj_id = c.subj_id
+    join ref_sess b on b.sess_id = c.sess_id
+    where c.sess_id = 2
+    limit 5;
+"""
+db_cur.execute(query)
+df_join = pd.DataFrame(
+    db_cur.fetchall(),
+    columns=["subj_name", "sess_name", "item_erq", "resp_erq"],
+)
+```
+
+It is likely useful to note that python variables can be included in the query string. Here we select all data from a single subject by their ID:
+
+```
+subj_id = 1
+query = f"select * from tbl_erq where subj_id = {subj_id}"
+db_cur.execute(query)
+df_subj = pd.DataFrame(
+    db_cur.fetchall(),
+    columns=["subj_id", "sess_id", "item_erq", "resp_erq"],
+)
+```
+
+#### Closing the Connection
+
+To avoid crashing the MySQL server, it is import to close the connection with the server once all requests are finished. This can be done as simply as using the `close` method:
+
+```
+db_con.close()
+```
+
+Another option is to utilize Python's [`with`](https://peps.python.org/pep-0343/) syntax to aid in connection closing:
+
+```
+with mysql.connector.connect(
+    host="localhost",
+    user="nate",
+    password=os.environ["SQL_PASS"],
+    database="db_test",
+) as db_con:
+    db_cur = db_con.cursor()
+    db_cur.execute("select * from tbl_erq limit 10")
+    df_erq = pd.DataFrame(
+        db_cur.fetchall(),
+        columns=["subj_id", "sess_id", "item_erq", "resp_erq"],
+    )
+```
+
+<!-- ### Network Connection -->

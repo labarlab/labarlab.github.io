@@ -23,7 +23,7 @@
 <meta name="author" content="Nathan Muncy" />
 
 
-<meta name="date" content="2024-01-08" />
+<meta name="date" content="2024-01-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -224,6 +224,10 @@
 <ul>
 <li class="chapter" data-level="7.6.1" data-path="databases.html"><a href="databases.html#basic-usage"><i class="fa fa-check"></i><b>7.6.1</b> Basic Usage</a></li>
 <li class="chapter" data-level="7.6.2" data-path="databases.html"><a href="databases.html#join_tables"><i class="fa fa-check"></i><b>7.6.2</b> Join Tables</a></li>
+</ul></li>
+<li class="chapter" data-level="7.7" data-path="databases.html"><a href="databases.html#connecting-with-python"><i class="fa fa-check"></i><b>7.7</b> Connecting with Python</a>
+<ul>
+<li class="chapter" data-level="7.7.1" data-path="databases.html"><a href="databases.html#local-connection"><i class="fa fa-check"></i><b>7.7.1</b> Local Connection</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -652,7 +656,7 @@ mysql&gt; select count(*) from tbl_erq where subj_id = 1;
 <p>Here, the values (names) of <code>tbl_erq.subj_id</code> and <code>tbl_erq.sess_id</code> are interpreted and included in the output by joining the <code>ref_subj</code> and <code>ref_sess</code> tables. First, columns from three different tables are selected: the <code>name</code> columns from the relevant reference tables as well as the <code>item</code> and <code>resp</code> columns from <code>tbl_erq</code>. Next, the table containing the relevant data is specified (<code>from tbl_erq</code>), and then <code>tbl_erq</code> is joined with the reference tables by specifying which columns will match between the data and reference tables. Specifically, the query is instructed to join <code>ref_subj</code> to <code>tbl_erq</code>, and to match the column values in <code>ref_subj.subj_id</code> and <code>tbl_erq.subj_id</code> to guide the join (and the same for <code>ref_sess</code>) in order to return the specified columns. This <code>join</code> functionality is the bread-and-butter of RDBMS and the reason for which the conventions for both reference and data tables (above) have been specified.</p>
 <p>Table (and database) names can get large and unwieldy, making for overly verbose <code>select</code> commands. Below is an equivalent command which also assigns the table names to separate variables (a, b, and c):</p>
 <pre><code>select
-    a.subj_name, b.sess_name, b.item_erq, b.resp_erq
+    a.subj_name, b.sess_name, c.item_erq, c.resp_erq
     from tbl_erq c
     join ref_subj a on a.subj_id = c.subj_id
     join ref_sess b on b.sess_id = c.sess_id
@@ -671,8 +675,8 @@ mysql&gt; select count(*) from tbl_erq where subj_id = 1;
 5 rows in set (0.00 sec)</code></pre>
 <p><em>Admin Note:</em> this example assumes <a href="https://stackoverflow.com/questions/41887460/select-list-is-not-in-group-by-clause-and-contains-nonaggregated-column-inc"><code>sql_mode=only_full_group_by</code></a>.</p>
 </div>
-<div id="joining-data-tables" class="section level4 hasAnchor" number="7.6.2.2">
-<h4><span class="header-section-number">7.6.2.2</span> Joining Data Tables<a href="databases.html#joining-data-tables" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div id="joining_data_tables" class="section level4 hasAnchor" number="7.6.2.2">
+<h4><span class="header-section-number">7.6.2.2</span> Joining Data Tables<a href="databases.html#joining_data_tables" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Conducting analyses usually involve combining data across multiple measures, perhaps to investigate the relationship of X and Y or to see if controlling for Z has any impact on an X-Y relationship. In our example, participant responses to different measures (e.g. ERQ, PANAS) are kept in separate data tables (<code>tbl_erq</code> and <code>tbl_panas</code>, respectively), and these data can be aggregated into a single matrix with <code>join</code>.</p>
 <p>Using simulated data (for syntax, see <a href="databases.html#insert_data">insert data</a>), the <code>tbl_erq</code> has 10 items, and <code>tbl_panas</code> 20, that were administered to 9 participants for each of 3 sessions:</p>
 <pre><code>mysql&gt; select distinct(item_erq) from tbl_erq;
@@ -791,6 +795,87 @@ select
 | SUB2      | day1      |        2 |       10 |          8 |
 +-----------+-----------+----------+----------+------------+
 22 rows in set (0.00 sec)</code></pre>
+</div>
+</div>
+</div>
+<div id="connecting-with-python" class="section level2 hasAnchor" number="7.7">
+<h2><span class="header-section-number">7.7</span> Connecting with Python<a href="databases.html#connecting-with-python" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Python can be used to connect to the MySQL server both locally (labarserv2) and remotely (e.g. from the Duke Compute Cluster). A number of packages are available to support this, but here we will focus on <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html">mysql-connector-python</a> (local; also, <a href="https://pypi.org/project/mysql-connector-python/">here</a>) and <a href="https://pypi.org/project/pymysql/">pymysql</a> (remote) as they seem to be most stable at the time of this writing. By utilizing Python, we can automate database management and data pulls.</p>
+<div id="local-connection" class="section level3 hasAnchor" number="7.7.1">
+<h3><span class="header-section-number">7.7.1</span> Local Connection<a href="databases.html#local-connection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To interact with a MySQL database locally, start by installing <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html">mysql-connector-python</a> into your python environment:</p>
+<pre><code>$pip install mysql-connector-python
+or
+$conda install -c conda-forge mysql-connector-python</code></pre>
+<p>Next, we can start a python file and import <code>mysql.connector</code>, and also <code>pandas</code> to be used later.</p>
+<pre><code>import mysql.connector
+import pandas as pd</code></pre>
+<p>Next, we need to establish a connection between Python and the MySQL server. This is done by creating a <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-example-connecting.html">connect</a> object using <code>mysql.connector</code>. When establishing the connection, the user, host, password, and database name are specified. For the user <code>nate</code> and password of <code>foobar</code>, we could then create the connection object with the <code>db_test</code> database via:</p>
+<pre><code>db_con = mysql.connector.connect(
+    host=&quot;localhost&quot;, user=&quot;nate&quot;, password=&quot;foobar&quot;, database=&quot;db_test&quot;
+)</code></pre>
+<p>It is bad practice to use actual passwords in your code, particularly if you intend to track changes with Git and/or make your repository public. A better option would be to store your password somewhere and then access it through the operating system. Here, I have my password accessible from the variable <code>$SQL_PASS</code>:</p>
+<pre><code>import os
+
+db_con = mysql.connector.connect(
+    host=&quot;localhost&quot;,
+    user=&quot;nate&quot;,
+    password=os.environ[&quot;SQL_PASS&quot;],
+    database=&quot;db_test&quot;,
+)</code></pre>
+<p>With a connection established, we next create a <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor.html">cursor</a> object. This cursor object is used to interact with the MySQL server, allowing for the execution of statements or commands, which is to say that the cursor object has a number of <a href="https://www.tutorialspoint.com/python_data_access/python_mysql_cursor_object.htm">methods</a> available. The cursor is available as an attribute of the connection object:</p>
+<pre><code>db_cur = db_con.cursor()</code></pre>
+<div id="selecting-data" class="section level4 hasAnchor" number="7.7.1.1">
+<h4><span class="header-section-number">7.7.1.1</span> Selecting Data<a href="databases.html#selecting-data" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>With a connection and cursor established, we are ready to setup some syntax to execute on the server. We’ll start by selecting the first 10 rows of <code>tbl_erq</code>. To do this, we can assign a python variable to hold the SQL syntax as a string, and then incorporate the syntax in the cursor’s <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html">execute</a> method:</p>
+<pre><code>query = &quot;select * from tbl_erq limit 10&quot;
+db_cur.execute(query)</code></pre>
+<p>With the execution complete, we are able to <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-fetchall.html">fetch</a> results from the query. The <code>fetchall</code> method returns a list of tuples, which themselves can be used to build a pandas dataframe:</p>
+<pre><code>result = db_cur.fetchall()
+df_erq = pd.DataFrame(
+    result, columns=[&quot;subj_id&quot;, &quot;sess_id&quot;, &quot;item_erq&quot;, &quot;resp_erq&quot;]
+)</code></pre>
+<p>A more useful <code>select</code> command will likely involve <a href="databases.html#joining_data_tables">joining</a> across tables. For instance, perhaps we are interested in all day2 data from <code>tbl_erq</code> (limited to the first 5 rows):</p>
+<pre><code>query = &quot;&quot;&quot;select
+    a.subj_name, b.sess_name, c.item_erq, c.resp_erq
+    from tbl_erq c
+    join ref_subj a on a.subj_id = c.subj_id
+    join ref_sess b on b.sess_id = c.sess_id
+    where c.sess_id = 2
+    limit 5;
+&quot;&quot;&quot;
+db_cur.execute(query)
+df_join = pd.DataFrame(
+    db_cur.fetchall(),
+    columns=[&quot;subj_name&quot;, &quot;sess_name&quot;, &quot;item_erq&quot;, &quot;resp_erq&quot;],
+)</code></pre>
+<p>It is likely useful to note that python variables can be included in the query string. Here we select all data from a single subject by their ID:</p>
+<pre><code>subj_id = 1
+query = f&quot;select * from tbl_erq where subj_id = {subj_id}&quot;
+db_cur.execute(query)
+df_subj = pd.DataFrame(
+    db_cur.fetchall(),
+    columns=[&quot;subj_id&quot;, &quot;sess_id&quot;, &quot;item_erq&quot;, &quot;resp_erq&quot;],
+)</code></pre>
+</div>
+<div id="closing-the-connection" class="section level4 hasAnchor" number="7.7.1.2">
+<h4><span class="header-section-number">7.7.1.2</span> Closing the Connection<a href="databases.html#closing-the-connection" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To avoid crashing the MySQL server, it is import to close the connection with the server once all requests are finished. This can be done as simply as using the <code>close</code> method:</p>
+<pre><code>db_con.close()</code></pre>
+<p>Another option is to utilize Python’s <a href="https://peps.python.org/pep-0343/"><code>with</code></a> syntax to aid in connection closing:</p>
+<pre><code>with mysql.connector.connect(
+    host=&quot;localhost&quot;,
+    user=&quot;nate&quot;,
+    password=os.environ[&quot;SQL_PASS&quot;],
+    database=&quot;db_test&quot;,
+) as db_con:
+    db_cur = db_con.cursor()
+    db_cur.execute(&quot;select * from tbl_erq limit 10&quot;)
+    df_erq = pd.DataFrame(
+        db_cur.fetchall(),
+        columns=[&quot;subj_id&quot;, &quot;sess_id&quot;, &quot;item_erq&quot;, &quot;resp_erq&quot;],
+    )</code></pre>
+<!-- ### Network Connection -->
 
 </div>
 </div>
