@@ -107,7 +107,7 @@ python-1
 documentation
 python-2
 databases
-create-an-account
+create_account
 login
 create_database
 create_table
@@ -119,4 +119,9 @@ select-data
 basic-usage
 join_tables
 accessing-reference-tables
-joining-data-tables
+joining_data_tables
+connecting-with-python
+local-connection
+remote-connection
+selecting-data
+closing-the-connection
