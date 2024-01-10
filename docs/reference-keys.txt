@@ -120,9 +120,9 @@ basic-usage
 join_tables
 accessing-reference-tables
 joining_data_tables
-connecting-with-python
-local-connection
-remote-connection
-inserting-data
-selecting-data
-closing-the-connection
+python-and-mysql
+connecting-locally
+connecting-remotely
+inserting-with-python
+selecting-with-python
+closing-connections

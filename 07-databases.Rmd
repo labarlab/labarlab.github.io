@@ -1,8 +1,6 @@
-# Databases {#databases}
+# MySQL Databases {#databases}
 
 Written by Nathan Muncy.
-
-This chapter is under construction
 
 A [MySQL](https://dev.mysql.com/doc/) server is installed on labarserv2 which allows for project data to be stored within a relational database management system ([RDBMS](https://en.wikipedia.org/wiki/Relational_database)). Utilizing a RDBMS allows the researcher to centralize, better manage, flexibly access, and share their data. Additionally, the dedicated structures will help maintain data consistency across users and projects.
 
@@ -51,13 +49,13 @@ The user should then be able to login to the server via `$mysql -u test -p`, ent
 
 Users that have an account can login to the mysql server via
 
-`$mysql -u user_name -p`
+`$mysql -u <user_name> -p`
 
-and then supply their password when prompted. Databases to which the user has access can be listed via `show databases;`. After selecting a database for use (`use db_some_name;`), available tables can be listed via `show tables;`.
+replacing `<user_name>` with their account name and then supply their password when prompted. Databases to which the user has access can be listed via `show databases;`. After selecting a database for use (`use db_some_name;`), available tables can be listed via `show tables;`.
 
 A database can also be specified at login:
 
-`$mysql -u user_name -p db_some_name`
+`$mysql -u <user_name> -p db_some_name`
 
 Exit the server via `exit;` or `quit;`.
 
@@ -717,12 +715,12 @@ The output tidy matrix, then, does not have the repeating response values found 
 ```
 
 
-## Connecting with Python
+## Python and MySQL
 
-Python can be used to connect to the MySQL server both locally (labarserv2) and remotely (e.g. from the Duke Compute Cluster). A number of packages are available to support this, but here we will focus on [mysql-connector-python](https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html) (local; also, [here](https://pypi.org/project/mysql-connector-python/)) and [pymysql](https://pypi.org/project/pymysql/) (remote) as they seem to be most stable at the time of this writing. By utilizing Python, we can automate database management and data pulls.
+Python can be used to connect to the MySQL server both locally (i.e. on labarserv2) and remotely (e.g. from the Duke Compute Cluster). A number of packages are available to support this, but here we will focus on [mysql-connector-python](https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html) (also, [here](https://pypi.org/project/mysql-connector-python/)) and [pymysql](https://pypi.org/project/pymysql/) as they seem to work best with our compute environments at the time of this writing. While everything Python does can be done manually when working on the MySQL server directly, we can leverage Python to automate updating, managing, and downloading from the databases.
 
 
-### Local Connection
+### Connecting Locally
 
 To interact with a MySQL database locally, start by installing [mysql-connector-python](https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html) into your python environment:
 
@@ -730,7 +728,7 @@ To interact with a MySQL database locally, start by installing [mysql-connector-
 pip install mysql-connector-python
 ```
 
-Next, we can start a python file, import `mysql.connector`, and establish a connection between Python and the MySQL server. This is done by creating a [connect](https://dev.mysql.com/doc/connector-python/en/connector-python-example-connecting.html) object using `mysql.connector`. When establishing the connection, the user, host, password, and database name are specified. For the user `nate` and password of `foobar`, we could then create the connection object with the `db_test` database via:
+Next, we can start a python file, import `mysql.connector`, and establish a connection between Python and the MySQL server. This is done by creating a [connect](https://dev.mysql.com/doc/connector-python/en/connector-python-example-connecting.html) object using `mysql.connector`. When establishing the connection, the user, host, password, and database name are specified. For the user `nate` and password of `foobar`, we would then create the connection object with the `db_test` database via:
 
 ```
 import mysql.connector
@@ -761,11 +759,11 @@ db_cur = db_con.cursor()
 ```
 
 
-### Remote Connection
+### Connecting Remotely
 
-Given that the MySQL server exists on labarserv2, it may not always be feasible to login to labarserv2 to execute SQL queries. For instance, large analyses may require time or resources that are not reasonable for labarserv2. In this case, processes would be conducted on the Duke Compute Cluster (DCC) but access to the database is still necessary, and manually exporting dataframes to copy to the DCC is an inefficient workflow. Another example, again involving the DCC, involves updating the database with output computed on the DCC. It would likewise be inefficient to manually copy files from the DCC to labarserv2 just to update the database. 
+Given that the MySQL server exists on labarserv2, it may not always be feasible to login to labarserv2 to execute SQL queries due to time or resource constraints. For instance, a complex analysis could be conducted on the Duke Compute Cluster (DCC) that require interacting with databases on labarserv2, and manually moving CSVs between servers is ill-advised and inefficient.
 
-Practically speaking, it is more common to interact with a SQL database over the network (remotely), such as is the case when a researcher is working on their personal/work machine with data that exists on a remote server. Here we will describe setting up an [SSH Tunnel](https://www.ssh.com/academy/ssh/tunneling) that will allow us to connect to the remote server.
+Practically speaking, it is more common to interact with a SQL database over the network (remotely), such is the case when a researcher is working on their personal/work machine with data that exists on a remote server. Here we will describe setting up an [SSH Tunnel](https://www.ssh.com/academy/ssh/tunneling) that will allow us to connect to the remote server.
 
 We will use a number of packages: [pymysql](https://pypi.org/project/pymysql/) (which works better than `mysql-connector-python` for the `DCC-labarserv2` connection for whatever reason), [paramiko](https://www.paramiko.org/), and [sshtunnel](https://sshtunnel.readthedocs.io/en/latest/). To start, install the required python packages via `pip` or `conda`:
 
@@ -818,14 +816,14 @@ db_con = pymysql.connect(
 ```
 Note (a) that the options for specifying the password and database differ from above (which used `mysql.connector.connect`), and (b) such a `'user'@'host'` [account](#create_account) will have to exist in the MySQL server, in this case `'nmm51'@'127.0.0.1'`.
 
-A cursor can the be established in the same way as above:
+A cursor can then be established in the same way as above:
 
 ```
 db_cur = db_con.cursor()
 ```
 
 
-### Inserting Data
+### Inserting with Python
 
 With a connection and cursor established, we are ready to setup some syntax to execute on the server. In this example, we have a CSV available of ERQ responses formatted for `tbl_erq` available at `${HOME}/erq_data.csv` (see [Insert Data](#insert_data)). This data can be loaded as dataframe:
 
@@ -836,7 +834,7 @@ import pandas as pd
 df_erq = pd.read_csv(os.path.join(os.environ["HOME"], "erq_data.csv"))
 ```
 
-Inserting data into tables can be accomplished by the cursor's [`execute`](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html) method, which requires two arguments -- the operation (SQL syntax) and a tuple of data. Accordingly, we ready for data insertion by building the first argument, and specify a MySQL variable via `%s` in the `values` field rather than actual data:
+Inserting data into tables can be accomplished by the cursor's [`execute`](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html) method, which requires two arguments -- the operation/command and a tuple of data. Accordingly, we ready for data insertion by building the first argument, a string that contains SQL syntax and utilizes the MySQL variable `%s` in the `values` field rather than actual data:
 
 ```
 in_cmd = (
@@ -852,7 +850,7 @@ Next we can extract the first row of `df_erq` as a tuple to create the second `e
 in_val = tuple([int(x) for x in df_erq.values[0]])
 ```
 
-With both `execute` arguments specified, we can then insert the data into `tbl_erq` by triggering the cursor's `execute` method followed by the connection's [`commit`](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-commit.html) method. *Note:* if following this tutorial, it might be useful to login to the server and delete the `tbl_erq` data which was [previously](#insert_data) inserted, to verify that these commands are working (`mysql> delete from tbl_erq;`).
+With both `execute` arguments specified, we can insert the data into `tbl_erq` by triggering the cursor's `execute` method, followed by the connection's [`commit`](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-commit.html) method. *Note:* if following this tutorial, it might be useful to login to the server and delete the `tbl_erq` data which was [previously](#insert_data) inserted in order to verify that these commands are working (`mysql> delete from tbl_erq;`).
 
 ```
 db_cur.execute(in_cmd, in_val)
@@ -869,7 +867,7 @@ for idx in df_erq.index:
     db_con.commit()
 ```
 
-While working with each row is fast enough for small datasets, this quickly becomes (extremely) inefficient when they are larger and accordingly is not the recommended method. A much better way to upload an entire dataset is with the cursor's [`executemany`](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-executemany.html) method. Similar to `execute`, `executemany` also take two arguments -- the operation and a list of tuples. In preparation, then, we can create a list of tuples from our dataframe via pandas' [`itertuples`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.itertuples.html):
+While working with each row is fast enough for small datasets, this quickly becomes (extremely) inefficient when datasets are larger and accordingly a row-wise approach is not the recommended. A much better way to upload an entire dataset is with the cursor's [`executemany`](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-executemany.html) method. Similar to `execute`, `executemany` takes two arguments -- the operation and a list of tuples. In preparation, then, we can create a list of tuples from our dataframe via pandas' [`itertuples`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.itertuples.html):
 
 ```
 in_val = list(
@@ -879,7 +877,7 @@ in_val = list(
 )
 ```
 
-And finally we upload the entire dataset via `executemany`:
+Lastly, we upload the entire dataset via `executemany`:
 
 ```
 db_cur.executemany(in_cmd, in_val)
@@ -887,9 +885,9 @@ db_con.commit()
 ```
 
 
-### Selecting Data
+### Selecting with Python
 
-As with inserting data (above), given a connection and cursor established we can begin specifying SQL commands for execution. We'll start by selecting the first 10 rows of `tbl_erq`. To do this, we can assign a python variable to hold the SQL syntax as a string, and then incorporate the syntax in the cursor's [execute](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html) method:
+To retrieve data from our database tables, we can begin specifying SQL commands for execution once a connection and cursor have been established. We'll start by selecting the first 10 rows of `tbl_erq`. As with inserting data, we will use the cursor's [`execute`](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html) method, but this time only a single argument containin SQL syntax will be required:
 
 ```
 query = "select * from tbl_erq limit 10"
@@ -937,7 +935,7 @@ df_subj = pd.DataFrame(
 )
 ```
 
-### Closing the Connection
+### Closing Connections
 
 To avoid crashing the MySQL server, it is import to close the connection with the server once all requests are finished. This can be done as simply as using the `close` method:
 
