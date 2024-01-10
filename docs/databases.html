@@ -23,7 +23,7 @@
 <meta name="author" content="Nathan Muncy" />
 
 
-<meta name="date" content="2024-01-09" />
+<meta name="date" content="2024-01-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -229,8 +229,9 @@
 <ul>
 <li class="chapter" data-level="7.7.1" data-path="databases.html"><a href="databases.html#local-connection"><i class="fa fa-check"></i><b>7.7.1</b> Local Connection</a></li>
 <li class="chapter" data-level="7.7.2" data-path="databases.html"><a href="databases.html#remote-connection"><i class="fa fa-check"></i><b>7.7.2</b> Remote Connection</a></li>
-<li class="chapter" data-level="7.7.3" data-path="databases.html"><a href="databases.html#selecting-data"><i class="fa fa-check"></i><b>7.7.3</b> Selecting Data</a></li>
-<li class="chapter" data-level="7.7.4" data-path="databases.html"><a href="databases.html#closing-the-connection"><i class="fa fa-check"></i><b>7.7.4</b> Closing the Connection</a></li>
+<li class="chapter" data-level="7.7.3" data-path="databases.html"><a href="databases.html#inserting-data"><i class="fa fa-check"></i><b>7.7.3</b> Inserting Data</a></li>
+<li class="chapter" data-level="7.7.4" data-path="databases.html"><a href="databases.html#selecting-data"><i class="fa fa-check"></i><b>7.7.4</b> Selecting Data</a></li>
+<li class="chapter" data-level="7.7.5" data-path="databases.html"><a href="databases.html#closing-the-connection"><i class="fa fa-check"></i><b>7.7.5</b> Closing the Connection</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -808,15 +809,15 @@ select
 <h3><span class="header-section-number">7.7.1</span> Local Connection<a href="databases.html#local-connection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To interact with a MySQL database locally, start by installing <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html">mysql-connector-python</a> into your python environment:</p>
 <pre><code>pip install mysql-connector-python</code></pre>
-<p>Next, we can start a python file and import <code>mysql.connector</code>, and also <code>pandas</code> to be used later.</p>
+<p>Next, we can start a python file, import <code>mysql.connector</code>, and establish a connection between Python and the MySQL server. This is done by creating a <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-example-connecting.html">connect</a> object using <code>mysql.connector</code>. When establishing the connection, the user, host, password, and database name are specified. For the user <code>nate</code> and password of <code>foobar</code>, we could then create the connection object with the <code>db_test</code> database via:</p>
 <pre><code>import mysql.connector
-import pandas as pd</code></pre>
-<p>Next, we need to establish a connection between Python and the MySQL server. This is done by creating a <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-example-connecting.html">connect</a> object using <code>mysql.connector</code>. When establishing the connection, the user, host, password, and database name are specified. For the user <code>nate</code> and password of <code>foobar</code>, we could then create the connection object with the <code>db_test</code> database via:</p>
-<pre><code>db_con = mysql.connector.connect(
+
+db_con = mysql.connector.connect(
     host=&quot;localhost&quot;, user=&quot;nate&quot;, password=&quot;foobar&quot;, database=&quot;db_test&quot;
 )</code></pre>
 <p>It is bad practice to use actual passwords in your code, particularly if you intend to track changes with Git and/or make your repository public. A better option would be to store your password somewhere and then access it through the operating system. Here, I have my password accessible from the variable <code>$SQL_PASS</code>:</p>
 <pre><code>import os
+import mysql.connector
 
 db_con = mysql.connector.connect(
     host=&quot;localhost&quot;,
@@ -838,7 +839,6 @@ pip install sshtunnel</code></pre>
 <p>Next, we need to make sure that we have an <a href="https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server">RSA key</a> set up on our local machine for the remote (or on the DCC for labarserv2). Additionally, we should store our MySQL password (for the account which exists on the remote server) in our operating system. I have my RSA key to labarserv2 accessible via <code>$RSA_LS2</code>, and my MySQL password via <code>$SQL_PASS</code>.</p>
 <p>Starting a new python file, we can import the relevant packages and then access the RSA key with paramiko:</p>
 <pre><code>import os
-import pandas as pd
 import pymysql
 import paramiko
 import sshtunnel as SSHTunnelForwarder
@@ -865,13 +865,49 @@ rsa_ls2 = paramiko.RSAKey.from_private_key_file(os.environ[&quot;RSA_LS2&quot;])
 <p>A cursor can the be established in the same way as above:</p>
 <pre><code>db_cur = db_con.cursor()</code></pre>
 </div>
-<div id="selecting-data" class="section level3 hasAnchor" number="7.7.3">
-<h3><span class="header-section-number">7.7.3</span> Selecting Data<a href="databases.html#selecting-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<p>With a connection and cursor established, we are ready to setup some syntax to execute on the server. We’ll start by selecting the first 10 rows of <code>tbl_erq</code>. To do this, we can assign a python variable to hold the SQL syntax as a string, and then incorporate the syntax in the cursor’s <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html">execute</a> method:</p>
+<div id="inserting-data" class="section level3 hasAnchor" number="7.7.3">
+<h3><span class="header-section-number">7.7.3</span> Inserting Data<a href="databases.html#inserting-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>With a connection and cursor established, we are ready to setup some syntax to execute on the server. In this example, we have a CSV available of ERQ responses formatted for <code>tbl_erq</code> available at <code>${HOME}/erq_data.csv</code> (see <a href="databases.html#insert_data">Insert Data</a>). This data can be loaded as dataframe:</p>
+<pre><code>import os
+import pandas as pd
+
+df_erq = pd.read_csv(os.path.join(os.environ[&quot;HOME&quot;], &quot;erq_data.csv&quot;))</code></pre>
+<p>Inserting data into tables can be accomplished by the cursor’s <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html"><code>execute</code></a> method, which requires two arguments – the operation (SQL syntax) and a tuple of data. Accordingly, we ready for data insertion by building the first argument, and specify a MySQL variable via <code>%s</code> in the <code>values</code> field rather than actual data:</p>
+<pre><code>in_cmd = (
+  &quot;insert into tbl_erq &quot;
+  + &quot;(subj_id, sess_id, item_erq, resp_erq) &quot;
+  + &quot;values (%s, %s, %s, %s)&quot;
+)</code></pre>
+<p>Next we can extract the first row of <code>df_erq</code> as a tuple to create the second <code>execute</code> argument. MySQL does not support <code>int64</code> types, the default integer value in <code>df_erq</code>, so we will convert the values to <code>int</code> when creating the tuple.</p>
+<pre><code>in_val = tuple([int(x) for x in df_erq.values[0]])</code></pre>
+<p>With both <code>execute</code> arguments specified, we can then insert the data into <code>tbl_erq</code> by triggering the cursor’s <code>execute</code> method followed by the connection’s <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-commit.html"><code>commit</code></a> method. <em>Note:</em> if following this tutorial, it might be useful to login to the server and delete the <code>tbl_erq</code> data which was <a href="databases.html#insert_data">previously</a> inserted, to verify that these commands are working (<code>mysql&gt; delete from tbl_erq;</code>).</p>
+<pre><code>db_cur.execute(in_cmd, in_val)
+db_con.commit()</code></pre>
+<p>With this basic insertion method working, we could then loop through <code>pandas</code> dataframes to build or update tables. Here we will add all contents of <code>df_erq</code> to <code>tbl_erq</code>, row-by-row (and also change the <code>df_erq</code> column types to simply the tuple generation):</p>
+<pre><code>df_erq = df_erq.astype(&quot;object&quot;)
+for idx in df_erq.index:
+    in_val = tuple(df_erq.values[idx])
+    db_cur.execute(in_cmd, in_val)
+    db_con.commit()</code></pre>
+<p>While working with each row is fast enough for small datasets, this quickly becomes (extremely) inefficient when they are larger and accordingly is not the recommended method. A much better way to upload an entire dataset is with the cursor’s <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-executemany.html"><code>executemany</code></a> method. Similar to <code>execute</code>, <code>executemany</code> also take two arguments – the operation and a list of tuples. In preparation, then, we can create a list of tuples from our dataframe via pandas’ <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.itertuples.html"><code>itertuples</code></a>:</p>
+<pre><code>in_val = list(
+    df_erq[[&quot;subj_id&quot;, &quot;sess_id&quot;, &quot;item_erq&quot;, &quot;resp_erq&quot;]].itertuples(
+        index=False, name=None
+    )
+)</code></pre>
+<p>And finally we upload the entire dataset via <code>executemany</code>:</p>
+<pre><code>db_cur.executemany(in_cmd, in_val)
+db_con.commit()</code></pre>
+</div>
+<div id="selecting-data" class="section level3 hasAnchor" number="7.7.4">
+<h3><span class="header-section-number">7.7.4</span> Selecting Data<a href="databases.html#selecting-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>As with inserting data (above), given a connection and cursor established we can begin specifying SQL commands for execution. We’ll start by selecting the first 10 rows of <code>tbl_erq</code>. To do this, we can assign a python variable to hold the SQL syntax as a string, and then incorporate the syntax in the cursor’s <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html">execute</a> method:</p>
 <pre><code>query = &quot;select * from tbl_erq limit 10&quot;
 db_cur.execute(query)</code></pre>
 <p>With the execution complete, we are able to <a href="https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-fetchall.html">fetch</a> results from the query. The <code>fetchall</code> method returns a list of tuples, which themselves can be used to build a pandas dataframe:</p>
-<pre><code>result = db_cur.fetchall()
+<pre><code>import pandas as pd
+
+result = db_cur.fetchall()
 df_erq = pd.DataFrame(
     result, columns=[&quot;subj_id&quot;, &quot;sess_id&quot;, &quot;item_erq&quot;, &quot;resp_erq&quot;]
 )</code></pre>
@@ -898,8 +934,8 @@ df_subj = pd.DataFrame(
     columns=[&quot;subj_id&quot;, &quot;sess_id&quot;, &quot;item_erq&quot;, &quot;resp_erq&quot;],
 )</code></pre>
 </div>
-<div id="closing-the-connection" class="section level3 hasAnchor" number="7.7.4">
-<h3><span class="header-section-number">7.7.4</span> Closing the Connection<a href="databases.html#closing-the-connection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="closing-the-connection" class="section level3 hasAnchor" number="7.7.5">
+<h3><span class="header-section-number">7.7.5</span> Closing the Connection<a href="databases.html#closing-the-connection" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To avoid crashing the MySQL server, it is import to close the connection with the server once all requests are finished. This can be done as simply as using the <code>close</code> method:</p>
 <pre><code>db_con.close()</code></pre>
 <p>Another option is to utilize Python’s <a href="https://peps.python.org/pep-0343/"><code>with</code></a> syntax to aid in connection closing:</p>
@@ -915,7 +951,7 @@ df_subj = pd.DataFrame(
         db_cur.fetchall(),
         columns=[&quot;subj_id&quot;, &quot;sess_id&quot;, &quot;item_erq&quot;, &quot;resp_erq&quot;],
     )</code></pre>
-<p>Likewise, SSH tunnels need to be closed when working remotely:</p>
+<p>Likewise, SSH tunnels need to be closed at the end of the process when working remotely:</p>
 <pre><code>ssh_tunnel.stop()</code></pre>
 
 </div>

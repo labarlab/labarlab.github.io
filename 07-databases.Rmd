@@ -730,16 +730,11 @@ To interact with a MySQL database locally, start by installing [mysql-connector-
 pip install mysql-connector-python
 ```
 
-Next, we can start a python file and import `mysql.connector`, and also `pandas` to be used later.
+Next, we can start a python file, import `mysql.connector`, and establish a connection between Python and the MySQL server. This is done by creating a [connect](https://dev.mysql.com/doc/connector-python/en/connector-python-example-connecting.html) object using `mysql.connector`. When establishing the connection, the user, host, password, and database name are specified. For the user `nate` and password of `foobar`, we could then create the connection object with the `db_test` database via:
 
 ```
 import mysql.connector
-import pandas as pd
-```
 
-Next, we need to establish a connection between Python and the MySQL server. This is done by creating a [connect](https://dev.mysql.com/doc/connector-python/en/connector-python-example-connecting.html) object using `mysql.connector`. When establishing the connection, the user, host, password, and database name are specified. For the user `nate` and password of `foobar`, we could then create the connection object with the `db_test` database via:
-
-```
 db_con = mysql.connector.connect(
     host="localhost", user="nate", password="foobar", database="db_test"
 )
@@ -749,6 +744,7 @@ It is bad practice to use actual passwords in your code, particularly if you int
 
 ```
 import os
+import mysql.connector
 
 db_con = mysql.connector.connect(
     host="localhost",
@@ -785,7 +781,6 @@ Starting a new python file, we can import the relevant packages and then access 
 
 ```
 import os
-import pandas as pd
 import pymysql
 import paramiko
 import sshtunnel as SSHTunnelForwarder
@@ -830,9 +825,71 @@ db_cur = db_con.cursor()
 ```
 
 
+### Inserting Data
+
+With a connection and cursor established, we are ready to setup some syntax to execute on the server. In this example, we have a CSV available of ERQ responses formatted for `tbl_erq` available at `${HOME}/erq_data.csv` (see [Insert Data](#insert_data)). This data can be loaded as dataframe:
+
+```
+import os
+import pandas as pd
+
+df_erq = pd.read_csv(os.path.join(os.environ["HOME"], "erq_data.csv"))
+```
+
+Inserting data into tables can be accomplished by the cursor's [`execute`](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html) method, which requires two arguments -- the operation (SQL syntax) and a tuple of data. Accordingly, we ready for data insertion by building the first argument, and specify a MySQL variable via `%s` in the `values` field rather than actual data:
+
+```
+in_cmd = (
+  "insert into tbl_erq "
+  + "(subj_id, sess_id, item_erq, resp_erq) "
+  + "values (%s, %s, %s, %s)"
+)
+```
+
+Next we can extract the first row of `df_erq` as a tuple to create the second `execute` argument. MySQL does not support `int64` types, the default integer value in `df_erq`, so we will convert the values to `int` when creating the tuple.
+
+```
+in_val = tuple([int(x) for x in df_erq.values[0]])
+```
+
+With both `execute` arguments specified, we can then insert the data into `tbl_erq` by triggering the cursor's `execute` method followed by the connection's [`commit`](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlconnection-commit.html) method. *Note:* if following this tutorial, it might be useful to login to the server and delete the `tbl_erq` data which was [previously](#insert_data) inserted, to verify that these commands are working (`mysql> delete from tbl_erq;`).
+
+```
+db_cur.execute(in_cmd, in_val)
+db_con.commit()
+```
+
+With this basic insertion method working, we could then loop through `pandas` dataframes to build or update tables. Here we will add all contents of `df_erq` to `tbl_erq`, row-by-row (and also change the `df_erq` column types to simply the tuple generation):
+
+```
+df_erq = df_erq.astype("object")
+for idx in df_erq.index:
+    in_val = tuple(df_erq.values[idx])
+    db_cur.execute(in_cmd, in_val)
+    db_con.commit()
+```
+
+While working with each row is fast enough for small datasets, this quickly becomes (extremely) inefficient when they are larger and accordingly is not the recommended method. A much better way to upload an entire dataset is with the cursor's [`executemany`](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-executemany.html) method. Similar to `execute`, `executemany` also take two arguments -- the operation and a list of tuples. In preparation, then, we can create a list of tuples from our dataframe via pandas' [`itertuples`](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.itertuples.html):
+
+```
+in_val = list(
+    df_erq[["subj_id", "sess_id", "item_erq", "resp_erq"]].itertuples(
+        index=False, name=None
+    )
+)
+```
+
+And finally we upload the entire dataset via `executemany`:
+
+```
+db_cur.executemany(in_cmd, in_val)
+db_con.commit()
+```
+
+
 ### Selecting Data
 
-With a connection and cursor established, we are ready to setup some syntax to execute on the server. We'll start by selecting the first 10 rows of `tbl_erq`. To do this, we can assign a python variable to hold the SQL syntax as a string, and then incorporate the syntax in the cursor's [execute](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html) method:
+As with inserting data (above), given a connection and cursor established we can begin specifying SQL commands for execution. We'll start by selecting the first 10 rows of `tbl_erq`. To do this, we can assign a python variable to hold the SQL syntax as a string, and then incorporate the syntax in the cursor's [execute](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-execute.html) method:
 
 ```
 query = "select * from tbl_erq limit 10"
@@ -842,6 +899,8 @@ db_cur.execute(query)
 With the execution complete, we are able to [fetch](https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-fetchall.html) results from the query. The `fetchall` method returns a list of tuples, which themselves can be used to build a pandas dataframe:
 
 ```
+import pandas as pd
+
 result = db_cur.fetchall()
 df_erq = pd.DataFrame(
     result, columns=["subj_id", "sess_id", "item_erq", "resp_erq"]
@@ -903,7 +962,7 @@ with mysql.connector.connect(
     )
 ```
 
-Likewise, SSH tunnels need to be closed when working remotely:
+Likewise, SSH tunnels need to be closed at the end of the process when working remotely:
 
 ```
 ssh_tunnel.stop()
