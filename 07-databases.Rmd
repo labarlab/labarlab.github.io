@@ -1052,6 +1052,72 @@ dbListTables(db_con)
 ```
 
 
-<!-- ### Inserting with R -->
+### Inserting with R
 
-<!-- With a connection established between R and MySQL, we can begin -->
+With a connection between R and MySQL established, we can begin to interact with the database. In this example, we have a CSV available of ERQ responses formatted for `tbl_erq` available at `${HOME}/erq_data.csv` (see [Insert Data](#insert_data)). This data can be loaded as a dataframe:
+
+```
+df_erq <- read.csv(paste(Sys.getenv("HOME"), "erq_data.csv", sep = "/"))
+```
+
+One method of inserting data into a table is by building an `insert` command with [`sqlInterpolate`](https://dbi.r-dbi.org/reference/sqlInterpolate.html), and then passing this command to [`dbSendQuery`](https://www.rdocumentation.org/packages/RMySQL/versions/0.9-3/topics/dbSendQuery-methods). The function `sqlInterpolate` takes three arguments: the connection object, a SQL command, and data. As we have the connection object saved as `db_con`, we can next specify a SQL [insert](#insert_data) command that uses `?foo` to identify the variable `foo`:
+
+```
+in_cmd <- "insert into tbl_erq
+(subj_id, sess_id, item_erq, resp_erq)
+values (?val1, ?val2, ?val3, ?val4)"
+```
+
+Here, four variables are set (val1-4) to serve as placeholders for data.
+
+To specify data (for the third argument of `sqlInterpolate`), we create a [named list](https://www.r-tutor.com/r-introduction/list/named-list-members) which uses the SQL variables from the insert command (val1-4). Doing this for a single row of data, we can assign each `df_erq` column to their respective variable:
+
+```
+in_val <- c(
+  val1 = df_erq[1, 1],
+  val2 = df_erq[1, 2],
+  val3 = df_erq[1, 3],
+  val4 = df_erq[1, 4]
+)
+```
+
+Finally we build out insert object with `sqlInterpolate`, and pass that object to `dbSendQuery`, which submits and then executes our `insert` command.
+
+```
+insert <- sqlInterpolate(db_con, in_cmd, .dots = in_val)
+dbSendQuery(db_con, insert)
+```
+
+With this simple insertion method working, we could loop through the dataframe to iteratively `insert` data into `tbl_erq`. Here we submit data row-by-row:
+
+```
+for (row in 1:nrow(df_erq)) {
+  in_val <- c(
+    val1 = df_erq[row, 1],
+    val2 = df_erq[row, 2],
+    val3 = df_erq[row, 3],
+    val4 = df_erq[row, 4]
+  )
+  insert <- sqlInterpolate(db_con, in_cmd, .dots = in_val)
+  dbSendQuery(db_con, insert)
+}
+```
+
+A few words of caution -- first this insertion method will always append the table, which can potentially result in rows that contain identical data, which can potentially corrupt a database. Second, while fast enough for illustrative purposes, inserting each row quickly becomes extremely inefficient as dataframes grow.
+
+We can overcome these issues by utilizing [`dbWriteTable`](https://rdrr.io/cran/RMySQL/man/dbWriteTable.html) instead of `sqlInterpolate` and `dbSendQuery`
+, which also has a simplified specification. For instance, we can add the first row of `df_erq` to the table `tbl_erq` easily via :
+
+```
+dbWriteTable(db_con, "tbl_erq", df_erq[1, ], row.names = FALSE)
+```
+
+If this data already existed in the table then this command would return an error rather than simply adding an identical row of data to the table. Additionally, to resolve or avoid these errors, `dbWriteTable` has `append` and `overwrite` options that can be selected.
+
+
+Finally, and perhaps more usefully, entire dataframes can be written to the `tbl_erq` table:
+
+```
+dbWriteTable(db_con, "tbl_erq", df_erq, overwrite = TRUE, row.names = FALSE)
+```
+
