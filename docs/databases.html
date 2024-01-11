@@ -238,6 +238,8 @@
 <li class="chapter" data-level="7.8.1" data-path="databases.html"><a href="databases.html#connecting-locally-1"><i class="fa fa-check"></i><b>7.8.1</b> Connecting Locally</a></li>
 <li class="chapter" data-level="7.8.2" data-path="databases.html"><a href="databases.html#connecting-remotely-1"><i class="fa fa-check"></i><b>7.8.2</b> Connecting Remotely</a></li>
 <li class="chapter" data-level="7.8.3" data-path="databases.html"><a href="databases.html#inserting-with-r"><i class="fa fa-check"></i><b>7.8.3</b> Inserting with R</a></li>
+<li class="chapter" data-level="7.8.4" data-path="databases.html"><a href="databases.html#selecting-with-r"><i class="fa fa-check"></i><b>7.8.4</b> Selecting with R</a></li>
+<li class="chapter" data-level="7.8.5" data-path="databases.html"><a href="databases.html#closing-connections-1"><i class="fa fa-check"></i><b>7.8.5</b> Closing Connections</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -1045,6 +1047,38 @@ dbSendQuery(db_con, insert)</code></pre>
 <p>If this data already existed in the table then this command would return an error rather than simply adding an identical row of data to the table. Additionally, to resolve or avoid these errors, <code>dbWriteTable</code> has <code>append</code> and <code>overwrite</code> options that can be selected.</p>
 <p>Finally, and perhaps more usefully, entire dataframes can be written to the <code>tbl_erq</code> table:</p>
 <pre><code>dbWriteTable(db_con, &quot;tbl_erq&quot;, df_erq, overwrite = TRUE, row.names = FALSE)</code></pre>
+</div>
+<div id="selecting-with-r" class="section level3 hasAnchor" number="7.8.4">
+<h3><span class="header-section-number">7.8.4</span> Selecting with R<a href="databases.html#selecting-with-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To retrieve from the database, we can utilize <a href="https://www.rdocumentation.org/packages/RMySQL/versions/0.9-3/topics/dbSendQuery-methods"><code>dbSendQuery</code></a> which requires two arguments: the connection object (which we have as <code>db_con</code>) and a SQL statement. Note that while <code>dbSendQuery</code> submits and executes commands on the SQL server (as we saw above), it does not extract data and accordingly we save the object.</p>
+<pre><code>query &lt;- dbSendQuery(db_con, &quot;select * from tbl_erq&quot;)</code></pre>
+<p>The output matrix of the <code>select</code> command can then be loaded into R via <a href="https://dbi.r-dbi.org/reference/dbFetch.html"><code>dbFetch</code></a>:</p>
+<pre><code>df_erq &lt;- dbFetch(query, n = -1)
+dbClearResult(query)</code></pre>
+<p>All records selected in the <code>query</code> are retrieved into <code>df_erq</code> by specifying <code>n = -1</code>, and we are required to close this query via <a href="https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbClearResult"><code>dbClearResult</code></a> whenever some object is obtained from <code>dbSendQuery</code> (i.e. we do not have to <code>dbClearResult</code> when using <code>dbWriteTable</code>).</p>
+<p>When working in larger workflows and with complicated selection commands, it might be useful to save SQL syntax as its own file and then read said file when building the query object. For instance, the following statement joins the <code>tbl_erq</code> and <code>tbl_panas</code>, while also converting from long to tidy format, and is saved at <code>${HOME}/dl_erq.sql</code>:</p>
+<pre><code>select
+    a.subj_name, b.sess_name, d.item_panas as item_num,
+        c.resp_erq, d.resp_panas
+    from tbl_panas d
+    join ref_subj a on a.subj_id = d.subj_id
+    join ref_sess b on b.sess_id = d.sess_id
+    left join tbl_erq c on c.subj_id = d.subj_id
+        and c.sess_id = d.sess_id and c.item_erq = d.item_panas
+    where d.sess_id = 1
+    limit 22
+    ;</code></pre>
+<p>This SQL file can then be read by the <a href="https://cran.r-project.org/web/packages/readr/index.html"><code>readr</code></a> package, and incorporated into the <code>dbSendQuery</code> command:</p>
+<pre><code>sel_erq &lt;- paste(Sys.getenv(&quot;HOME&quot;), &quot;dl_erq.sql&quot;, sep = &quot;/&quot;)
+query &lt;- dbSendQuery(db_con, statement = readr::read_file(sel_erq))
+df_join &lt;- dbFetch(query, n = -1)
+dbClearResult(query)</code></pre>
+</div>
+<div id="closing-connections-1" class="section level3 hasAnchor" number="7.8.5">
+<h3><span class="header-section-number">7.8.5</span> Closing Connections<a href="databases.html#closing-connections-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Once interacting with the MySQL database is no longer necessary, it is important to close the connection in order to avoid crashing the server. This is easily accomplished with <a href="https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbDisconnect"><code>dbDisconnect</code></a>:</p>
+<pre><code>dbDisconnect(db_con)</code></pre>
+<p>Likewise, an SSH Tunnel can be closed with <code>ctl-C</code> or by terminating the process via <code>pkill</code>.</p>
 
 </div>
 </div>

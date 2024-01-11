@@ -1121,3 +1121,56 @@ Finally, and perhaps more usefully, entire dataframes can be written to the `tbl
 dbWriteTable(db_con, "tbl_erq", df_erq, overwrite = TRUE, row.names = FALSE)
 ```
 
+
+### Selecting with R
+
+To retrieve from the database, we can utilize [`dbSendQuery`](https://www.rdocumentation.org/packages/RMySQL/versions/0.9-3/topics/dbSendQuery-methods) which requires two arguments: the connection object (which we have as `db_con`) and a SQL statement. Note that while `dbSendQuery` submits and executes commands on the SQL server (as we saw above), it does not extract data and accordingly we save the object.
+
+```
+query <- dbSendQuery(db_con, "select * from tbl_erq")
+```
+
+The output matrix of the `select` command can then be loaded into R via [`dbFetch`](https://dbi.r-dbi.org/reference/dbFetch.html):
+
+```
+df_erq <- dbFetch(query, n = -1)
+dbClearResult(query)
+```
+
+All records selected in the `query` are retrieved into `df_erq` by specifying `n = -1`, and we are required to close this query via [`dbClearResult`](https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbClearResult) whenever some object is obtained from `dbSendQuery` (i.e. we do not have to `dbClearResult` when using `dbWriteTable`).
+
+When working in larger workflows and with complicated selection commands, it might be useful to save SQL syntax as its own file and then read said file when building the query object. For instance, the following statement joins the `tbl_erq` and `tbl_panas`, while also converting from long to tidy format, and is saved at `${HOME}/dl_erq.sql`:
+
+```
+select
+    a.subj_name, b.sess_name, d.item_panas as item_num,
+        c.resp_erq, d.resp_panas
+    from tbl_panas d
+    join ref_subj a on a.subj_id = d.subj_id
+    join ref_sess b on b.sess_id = d.sess_id
+    left join tbl_erq c on c.subj_id = d.subj_id
+        and c.sess_id = d.sess_id and c.item_erq = d.item_panas
+    where d.sess_id = 1
+    limit 22
+    ;
+```
+
+This SQL file can then be read by the [`readr`](https://cran.r-project.org/web/packages/readr/index.html) package, and incorporated into the `dbSendQuery` command:
+
+```
+sel_erq <- paste(Sys.getenv("HOME"), "dl_erq.sql", sep = "/")
+query <- dbSendQuery(db_con, statement = readr::read_file(sel_erq))
+df_join <- dbFetch(query, n = -1)
+dbClearResult(query)
+```
+
+
+### Closing Connections
+
+Once interacting with the MySQL database is no longer necessary, it is important to close the connection in order to avoid crashing the server. This is easily accomplished with [`dbDisconnect`](https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbDisconnect):
+
+```
+dbDisconnect(db_con)
+```
+
+Likewise, an SSH Tunnel can be closed with `ctl-C` or by terminating the process via `pkill`.
