@@ -986,7 +986,7 @@ install.packages("DBI")
 
 ### Connecting Locally
 
-To interact with a MySQL database locally, we first start by establishing a connection between R and MySQL. Start a new R file, load the `RMySQL` library, and setup a connection via [`dbConnect`](https://www.rdocumentation.org/packages/DBI/versions/1.2.0/topics/dbConnect) and specify that we are using the [`MySQL`](https://rdrr.io/cran/RMySQL/man/dbConnect-MySQLDriver-method.html) driver:
+To interact with a MySQL database locally, we first start by establishing a connection between R and MySQL. Start a new R file, load the `RMySQL` library, and setup a connection via [`dbConnect`](https://www.rdocumentation.org/packages/DBI/versions/1.2.0/topics/dbConnect) that specifies we are using the [`MySQL`](https://rdrr.io/cran/RMySQL/man/dbConnect-MySQLDriver-method.html) driver:
 
 ```
 library("RMySQL")
@@ -1012,7 +1012,7 @@ dbListTables(db_con)
 
 ### Connecting Remotely
 
-Given that the MySQL server exists on labarserv2, it may not always be feasible to login to labarserv2 to execute SQL queries due to time or resource constraints. Commonly, analysis scripts may exist locally on a work station and the researcher aims to bring data locally for analyses.
+Given that the MySQL server exists on labarserv2, it may not always be feasible to login to labarserv2 to execute SQL queries due to time or resource constraints. Commonly, analysis scripts exist locally on a work station and the researcher aims to download data for local analyses.
 
 One approach is to setup an [SSH Tunnel](https://builtin.com/software-engineering-perspectives/ssh-port-forwarding) between our local machine and labarserv2: 
 
@@ -1023,7 +1023,7 @@ $ssh -i $RSA_LS2 \
   -N
 ```
 
-Here, I have specified an [SSH](https://www.digitalocean.com/community/tutorials/how-to-use-ssh-to-connect-to-a-remote-server) connection and supplied a number of [options](https://man7.org/linux/man-pages/man1/ssh.1.html). Specifically, I supply my [RSA key](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server) for labarserv2 (available via `$RSA_LS2`) with the `-i` option, I bind my local port `3308` with the default MySQL IP of `127.0.0.1` and port of `3306` via the `-L` option. Finally, the `-N` option is useful to port forwarding as it does not execute a remote command (see `$man ssh`).
+Here, I have specified an [SSH](https://www.digitalocean.com/community/tutorials/how-to-use-ssh-to-connect-to-a-remote-server) connection and supplied a number of [options](https://man7.org/linux/man-pages/man1/ssh.1.html). Specifically, I supply my [RSA key](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server) for labarserv2 (available in the OS via `$RSA_LS2`) with the `-i` option, I bind my local port `3308` with the default MySQL IP of `127.0.0.1` and MySQL port of `3306` via the `-L` option. Finally, the `-N` option is useful for port forwarding as a remote command is not executed.
 
 This `ssh` command will cause the terminal to hang, and I can also check that the port is open via `$ps aux`:
 
@@ -1060,7 +1060,7 @@ With a connection between R and MySQL established, we can begin to interact with
 df_erq <- read.csv(paste(Sys.getenv("HOME"), "erq_data.csv", sep = "/"))
 ```
 
-One method of inserting data into a table is by building an `insert` command with [`sqlInterpolate`](https://dbi.r-dbi.org/reference/sqlInterpolate.html), and then passing this command to [`dbSendQuery`](https://www.rdocumentation.org/packages/RMySQL/versions/0.9-3/topics/dbSendQuery-methods). The function `sqlInterpolate` takes three arguments: the connection object, a SQL command, and data. As we have the connection object saved as `db_con`, we can next specify a SQL [insert](#insert_data) command that uses `?foo` to identify the variable `foo`:
+One method of inserting data into a table is by building an `insert` object with [`sqlInterpolate`](https://dbi.r-dbi.org/reference/sqlInterpolate.html) and then passing this object to [`dbSendQuery`](https://www.rdocumentation.org/packages/RMySQL/versions/0.9-3/topics/dbSendQuery-methods). The function `sqlInterpolate` takes three arguments: the connection object, a SQL command, and data. As we have the connection object saved as `db_con` (above), we can next specify a SQL [insert](#insert_data) command that uses `?val` to identify the variable `val`:
 
 ```
 in_cmd <- "insert into tbl_erq
@@ -1070,7 +1070,7 @@ values (?val1, ?val2, ?val3, ?val4)"
 
 Here, four variables are set (val1-4) to serve as placeholders for data.
 
-To specify data (for the third argument of `sqlInterpolate`), we create a [named list](https://www.r-tutor.com/r-introduction/list/named-list-members) which uses the SQL variables from the insert command (val1-4). Doing this for a single row of data, we can assign each `df_erq` column to their respective variable:
+To specify data (the third argument of `sqlInterpolate`), we create a [named list](https://www.r-tutor.com/r-introduction/list/named-list-members) which uses the SQL variables from the insert command (val1-4). Doing this for a single row of data (`df_erq[1, ]`), we can assign each `df_erq` column to their respective variable:
 
 ```
 in_val <- c(
@@ -1081,14 +1081,14 @@ in_val <- c(
 )
 ```
 
-Finally we build out insert object with `sqlInterpolate`, and pass that object to `dbSendQuery`, which submits and then executes our `insert` command.
+Finally we build our insert object with `sqlInterpolate`, and pass that object to `dbSendQuery`. The function of `dbSendQuery` is to submit and the execute whatever statement is supplied as the second argument, here our `insert` object.
 
 ```
 insert <- sqlInterpolate(db_con, in_cmd, .dots = in_val)
 dbSendQuery(db_con, insert)
 ```
 
-With this simple insertion method working, we could loop through the dataframe to iteratively `insert` data into `tbl_erq`. Here we submit data row-by-row:
+With this simple insertion method working, we can loop through the dataframe to iteratively `insert` data into `tbl_erq`. Here we submit data row-by-row:
 
 ```
 for (row in 1:nrow(df_erq)) {
@@ -1103,10 +1103,10 @@ for (row in 1:nrow(df_erq)) {
 }
 ```
 
-A few words of caution -- first this insertion method will always append the table, which can potentially result in rows that contain identical data, which can potentially corrupt a database. Second, while fast enough for illustrative purposes, inserting each row quickly becomes extremely inefficient as dataframes grow.
+A few words of caution -- first this insertion method will always append the table, which can potentially result in rows that contain identical data (and potentially corrupt a database). Second, while fast enough for illustrative purposes, inserting each row quickly becomes extremely inefficient as the size of the dataframe increases.
 
 We can overcome these issues by utilizing [`dbWriteTable`](https://rdrr.io/cran/RMySQL/man/dbWriteTable.html) instead of `sqlInterpolate` and `dbSendQuery`
-, which also has a simplified specification. For instance, we can add the first row of `df_erq` to the table `tbl_erq` easily via :
+, which has the added benefit of a simplified specification. For instance, we can add the first row of `df_erq` to the table `tbl_erq` via :
 
 ```
 dbWriteTable(db_con, "tbl_erq", df_erq[1, ], row.names = FALSE)
