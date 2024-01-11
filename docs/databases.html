@@ -23,7 +23,7 @@
 <meta name="author" content="Nathan Muncy" />
 
 
-<meta name="date" content="2024-01-10" />
+<meta name="date" content="2024-01-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -232,6 +232,11 @@
 <li class="chapter" data-level="7.7.3" data-path="databases.html"><a href="databases.html#inserting-with-python"><i class="fa fa-check"></i><b>7.7.3</b> Inserting with Python</a></li>
 <li class="chapter" data-level="7.7.4" data-path="databases.html"><a href="databases.html#selecting-with-python"><i class="fa fa-check"></i><b>7.7.4</b> Selecting with Python</a></li>
 <li class="chapter" data-level="7.7.5" data-path="databases.html"><a href="databases.html#closing-connections"><i class="fa fa-check"></i><b>7.7.5</b> Closing Connections</a></li>
+</ul></li>
+<li class="chapter" data-level="7.8" data-path="databases.html"><a href="databases.html#r-and-mysql"><i class="fa fa-check"></i><b>7.8</b> R and MySQL</a>
+<ul>
+<li class="chapter" data-level="7.8.1" data-path="databases.html"><a href="databases.html#connecting-locally-1"><i class="fa fa-check"></i><b>7.8.1</b> Connecting Locally</a></li>
+<li class="chapter" data-level="7.8.2" data-path="databases.html"><a href="databases.html#connecting-remotely-1"><i class="fa fa-check"></i><b>7.8.2</b> Connecting Remotely</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -952,6 +957,57 @@ df_subj = pd.DataFrame(
     )</code></pre>
 <p>Likewise, SSH tunnels need to be closed at the end of the process when working remotely:</p>
 <pre><code>ssh_tunnel.stop()</code></pre>
+</div>
+</div>
+<div id="r-and-mysql" class="section level2 hasAnchor" number="7.8">
+<h2><span class="header-section-number">7.8</span> R and MySQL<a href="databases.html#r-and-mysql" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>R can be used to connect to the MySQL server both locally (i.e. on labarserv2) and remotely (e.g. from a work station). While a number of packages exist that can manage the connection between the R and MySQL servers, here we will focus on <a href="https://cran.r-project.org/web/packages/DBI/index.html"><code>DBI</code></a> and <a href="https://cran.r-project.org/web/packages/RMySQL/index.html"><code>RMySQL</code></a>. <code>DBI</code> allows for communication between R and an RDBMS and supplies many of the functions we will use to interact with the database and tables. <code>RMySQL</code> facilitates an interface directly with MySQL (see <a href="https://www.r-bloggers.com/2011/05/accessing-mysql-through-r/">here</a> for a quick usage reference).</p>
+<p>Start by installing <code>RMySQL</code>:</p>
+<pre><code>install.packages(&quot;RMySQL&quot;)</code></pre>
+<p><code>RMySQL</code> should also install <code>DBI</code> as a dependency, but if it does not then we can make sure we have <code>DBI</code>:</p>
+<pre><code>install.packages(&quot;DBI&quot;)</code></pre>
+<div id="connecting-locally-1" class="section level3 hasAnchor" number="7.8.1">
+<h3><span class="header-section-number">7.8.1</span> Connecting Locally<a href="databases.html#connecting-locally-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To interact with a MySQL database locally, we first start by establishing a connection between R and MySQL. Start a new R file, load the <code>RMySQL</code> library, and setup a connection via <a href="https://www.rdocumentation.org/packages/DBI/versions/1.2.0/topics/dbConnect"><code>dbConnect</code></a> and specify that we are using the <a href="https://rdrr.io/cran/RMySQL/man/dbConnect-MySQLDriver-method.html"><code>MySQL</code></a> driver:</p>
+<pre><code>library(&quot;RMySQL&quot;)
+
+db_con &lt;- dbConnect(
+  RMySQL::MySQL(),
+  dbname = &quot;db_test&quot;,
+  host = &quot;localhost&quot;,
+  port = 3306,
+  user = &quot;nate&quot;,
+  password = Sys.getenv(&quot;SQL_PASS&quot;)
+)</code></pre>
+<p>Here, I specify the desired database via the <code>dbname</code> option, and used default <code>host</code> and <code>port</code> arguments. Additionally, as it is bad practice to embed passwords in code (particularly when tracking changes with Git or when taking the code public!) I have my MySQL password saved in the <a href="https://support.posit.co/hc/en-us/articles/360047157094-Managing-R-with-Rprofile-Renviron-Rprofile-site-Renviron-site-rsession-conf-and-repos-conf"><code>.RProfile</code></a> and available via <code>SQL_PASS</code>.</p>
+<p>Finally, we can check our connection to the database by listing tables via <a href="https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbListTables"><code>dbListTables</code></a>:</p>
+<pre><code>dbListTables(db_con)</code></pre>
+</div>
+<div id="connecting-remotely-1" class="section level3 hasAnchor" number="7.8.2">
+<h3><span class="header-section-number">7.8.2</span> Connecting Remotely<a href="databases.html#connecting-remotely-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Given that the MySQL server exists on labarserv2, it may not always be feasible to login to labarserv2 to execute SQL queries due to time or resource constraints. Commonly, analysis scripts may exist locally on a work station and the researcher aims to bring data locally for analyses.</p>
+<p>One approach is to setup an <a href="https://builtin.com/software-engineering-perspectives/ssh-port-forwarding">SSH Tunnel</a> between our local machine and labarserv2:</p>
+<pre><code>$ssh -i $RSA_LS2 \
+  nmm51@ccn-labarserv2.vm.duke.edu \
+  -L 3308:127.0.0.1:3306 \
+  -N</code></pre>
+<p>Here, I have specified an <a href="https://www.digitalocean.com/community/tutorials/how-to-use-ssh-to-connect-to-a-remote-server">SSH</a> connection and supplied a number of <a href="https://man7.org/linux/man-pages/man1/ssh.1.html">options</a>. Specifically, I supply my <a href="https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server">RSA key</a> for labarserv2 (available via <code>$RSA_LS2</code>) with the <code>-i</code> option, I bind my local port <code>3308</code> with the default MySQL IP of <code>127.0.0.1</code> and port of <code>3306</code> via the <code>-L</code> option. Finally, the <code>-N</code> option is useful to port forwarding as it does not execute a remote command (see <code>$man ssh</code>).</p>
+<p>This <code>ssh</code> command will cause the terminal to hang, and I can also check that the port is open via <code>$ps aux</code>:</p>
+<pre><code>$ps aux | grep ssh | grep 3308
+Nathan    195108  0.0  0.0  14708  6404 pts/4    S+   12:49   0:00 ssh -i /home/Nathan/.ssh/id_rsa_labarser2 nmm51@ccn-labarserv2.vm.duke.edu -L 3308:127.0.0.1:3306 -N</code></pre>
+<p>With an SSH tunnel established, we can then create a connection between R and MySQL using a nearly identical command as above, save only that we specify our local port and the MyServer IP:</p>
+<pre><code>db_con &lt;- dbConnect(
+  RMySQL::MySQL(),
+  dbname = &quot;db_test&quot;,
+  host = &quot;127.0.0.1&quot;,
+  port = 3308,
+  user = &quot;nate&quot;,
+  password = Sys.getenv(&quot;SQL_PASS&quot;)
+)</code></pre>
+<p>Finally, we can check our connection to the database by listing tables via <a href="https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbListTables"><code>dbListTables</code></a>:</p>
+<pre><code>dbListTables(db_con)</code></pre>
+<!-- ### Inserting with R -->
+<!-- With a connection established between R and MySQL, we can begin -->
 
 </div>
 </div>

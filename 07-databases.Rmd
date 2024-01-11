@@ -965,3 +965,93 @@ Likewise, SSH tunnels need to be closed at the end of the process when working r
 ```
 ssh_tunnel.stop()
 ```
+
+
+## R and MySQL
+
+R can be used to connect to the MySQL server both locally (i.e. on labarserv2) and remotely (e.g. from a work station). While a number of packages exist that can manage the connection between the R and MySQL servers, here we will focus on [`DBI`](https://cran.r-project.org/web/packages/DBI/index.html) and [`RMySQL`](https://cran.r-project.org/web/packages/RMySQL/index.html). `DBI` allows for communication between R and an RDBMS and supplies many of the functions we will use to interact with the database and tables. `RMySQL` facilitates an interface directly with MySQL (see [here](https://www.r-bloggers.com/2011/05/accessing-mysql-through-r/) for a quick usage reference).
+
+Start by installing `RMySQL`:
+
+```
+install.packages("RMySQL")
+```
+
+`RMySQL` should also install `DBI` as a dependency, but if it does not then we can make sure we have `DBI`:
+
+```
+install.packages("DBI")
+```
+
+
+### Connecting Locally
+
+To interact with a MySQL database locally, we first start by establishing a connection between R and MySQL. Start a new R file, load the `RMySQL` library, and setup a connection via [`dbConnect`](https://www.rdocumentation.org/packages/DBI/versions/1.2.0/topics/dbConnect) and specify that we are using the [`MySQL`](https://rdrr.io/cran/RMySQL/man/dbConnect-MySQLDriver-method.html) driver:
+
+```
+library("RMySQL")
+
+db_con <- dbConnect(
+  RMySQL::MySQL(),
+  dbname = "db_test",
+  host = "localhost",
+  port = 3306,
+  user = "nate",
+  password = Sys.getenv("SQL_PASS")
+)
+```
+
+Here, I specify the desired database via the `dbname` option, and used default `host` and `port` arguments. Additionally, as it is bad practice to embed passwords in code (particularly when tracking changes with Git or when taking the code public!) I have my MySQL password saved in the [`.RProfile`](https://support.posit.co/hc/en-us/articles/360047157094-Managing-R-with-Rprofile-Renviron-Rprofile-site-Renviron-site-rsession-conf-and-repos-conf) and available via `SQL_PASS`.
+
+Finally, we can check our connection to the database by listing tables via [`dbListTables`](https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbListTables):
+
+```
+dbListTables(db_con)
+```
+
+
+### Connecting Remotely
+
+Given that the MySQL server exists on labarserv2, it may not always be feasible to login to labarserv2 to execute SQL queries due to time or resource constraints. Commonly, analysis scripts may exist locally on a work station and the researcher aims to bring data locally for analyses.
+
+One approach is to setup an [SSH Tunnel](https://builtin.com/software-engineering-perspectives/ssh-port-forwarding) between our local machine and labarserv2: 
+
+```
+$ssh -i $RSA_LS2 \
+  nmm51@ccn-labarserv2.vm.duke.edu \
+  -L 3308:127.0.0.1:3306 \
+  -N
+```
+
+Here, I have specified an [SSH](https://www.digitalocean.com/community/tutorials/how-to-use-ssh-to-connect-to-a-remote-server) connection and supplied a number of [options](https://man7.org/linux/man-pages/man1/ssh.1.html). Specifically, I supply my [RSA key](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server) for labarserv2 (available via `$RSA_LS2`) with the `-i` option, I bind my local port `3308` with the default MySQL IP of `127.0.0.1` and port of `3306` via the `-L` option. Finally, the `-N` option is useful to port forwarding as it does not execute a remote command (see `$man ssh`).
+
+This `ssh` command will cause the terminal to hang, and I can also check that the port is open via `$ps aux`:
+
+```
+$ps aux | grep ssh | grep 3308
+Nathan    195108  0.0  0.0  14708  6404 pts/4    S+   12:49   0:00 ssh -i /home/Nathan/.ssh/id_rsa_labarser2 nmm51@ccn-labarserv2.vm.duke.edu -L 3308:127.0.0.1:3306 -N
+```
+
+With an SSH tunnel established, we can then create a connection between R and MySQL using a nearly identical command as above, save only that we specify our local port and the MyServer IP:
+
+```
+db_con <- dbConnect(
+  RMySQL::MySQL(),
+  dbname = "db_test",
+  host = "127.0.0.1",
+  port = 3308,
+  user = "nate",
+  password = Sys.getenv("SQL_PASS")
+)
+```
+
+Finally, we can check our connection to the database by listing tables via [`dbListTables`](https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbListTables):
+
+```
+dbListTables(db_con)
+```
+
+
+<!-- ### Inserting with R -->
+
+<!-- With a connection established between R and MySQL, we can begin -->
