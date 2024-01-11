@@ -23,7 +23,7 @@
 <meta name="author" content="Nathan Muncy" />
 
 
-<meta name="date" content="2024-01-10" />
+<meta name="date" content="2024-01-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -232,6 +232,14 @@
 <li class="chapter" data-level="7.7.3" data-path="databases.html"><a href="databases.html#inserting-with-python"><i class="fa fa-check"></i><b>7.7.3</b> Inserting with Python</a></li>
 <li class="chapter" data-level="7.7.4" data-path="databases.html"><a href="databases.html#selecting-with-python"><i class="fa fa-check"></i><b>7.7.4</b> Selecting with Python</a></li>
 <li class="chapter" data-level="7.7.5" data-path="databases.html"><a href="databases.html#closing-connections"><i class="fa fa-check"></i><b>7.7.5</b> Closing Connections</a></li>
+</ul></li>
+<li class="chapter" data-level="7.8" data-path="databases.html"><a href="databases.html#r-and-mysql"><i class="fa fa-check"></i><b>7.8</b> R and MySQL</a>
+<ul>
+<li class="chapter" data-level="7.8.1" data-path="databases.html"><a href="databases.html#connecting-locally-1"><i class="fa fa-check"></i><b>7.8.1</b> Connecting Locally</a></li>
+<li class="chapter" data-level="7.8.2" data-path="databases.html"><a href="databases.html#connecting-remotely-1"><i class="fa fa-check"></i><b>7.8.2</b> Connecting Remotely</a></li>
+<li class="chapter" data-level="7.8.3" data-path="databases.html"><a href="databases.html#inserting-with-r"><i class="fa fa-check"></i><b>7.8.3</b> Inserting with R</a></li>
+<li class="chapter" data-level="7.8.4" data-path="databases.html"><a href="databases.html#selecting-with-r"><i class="fa fa-check"></i><b>7.8.4</b> Selecting with R</a></li>
+<li class="chapter" data-level="7.8.5" data-path="databases.html"><a href="databases.html#closing-connections-1"><i class="fa fa-check"></i><b>7.8.5</b> Closing Connections</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -952,6 +960,125 @@ df_subj = pd.DataFrame(
     )</code></pre>
 <p>Likewise, SSH tunnels need to be closed at the end of the process when working remotely:</p>
 <pre><code>ssh_tunnel.stop()</code></pre>
+</div>
+</div>
+<div id="r-and-mysql" class="section level2 hasAnchor" number="7.8">
+<h2><span class="header-section-number">7.8</span> R and MySQL<a href="databases.html#r-and-mysql" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>R can be used to connect to the MySQL server both locally (i.e. on labarserv2) and remotely (e.g. from a work station). While a number of packages exist that can manage the connection between the R and MySQL servers, here we will focus on <a href="https://cran.r-project.org/web/packages/DBI/index.html"><code>DBI</code></a> and <a href="https://cran.r-project.org/web/packages/RMySQL/index.html"><code>RMySQL</code></a>. <code>DBI</code> allows for communication between R and an RDBMS and supplies many of the functions we will use to interact with the database and tables. <code>RMySQL</code> facilitates an interface directly with MySQL (see <a href="https://www.r-bloggers.com/2011/05/accessing-mysql-through-r/">here</a> for a quick usage reference).</p>
+<p>Start by installing <code>RMySQL</code>:</p>
+<pre><code>install.packages(&quot;RMySQL&quot;)</code></pre>
+<p><code>RMySQL</code> should also install <code>DBI</code> as a dependency, but if it does not then we can make sure we have <code>DBI</code>:</p>
+<pre><code>install.packages(&quot;DBI&quot;)</code></pre>
+<div id="connecting-locally-1" class="section level3 hasAnchor" number="7.8.1">
+<h3><span class="header-section-number">7.8.1</span> Connecting Locally<a href="databases.html#connecting-locally-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To interact with a MySQL database locally, we first start by establishing a connection between R and MySQL. Start a new R file, load the <code>RMySQL</code> library, and setup a connection via <a href="https://www.rdocumentation.org/packages/DBI/versions/1.2.0/topics/dbConnect"><code>dbConnect</code></a> that specifies we are using the <a href="https://rdrr.io/cran/RMySQL/man/dbConnect-MySQLDriver-method.html"><code>MySQL</code></a> driver:</p>
+<pre><code>library(&quot;RMySQL&quot;)
+
+db_con &lt;- dbConnect(
+  RMySQL::MySQL(),
+  dbname = &quot;db_test&quot;,
+  host = &quot;localhost&quot;,
+  port = 3306,
+  user = &quot;nate&quot;,
+  password = Sys.getenv(&quot;SQL_PASS&quot;)
+)</code></pre>
+<p>Here, I specify the desired database via the <code>dbname</code> option, and used default <code>host</code> and <code>port</code> arguments. Additionally, as it is bad practice to embed passwords in code (particularly when tracking changes with Git or when taking the code public!) I have my MySQL password saved in the <a href="https://support.posit.co/hc/en-us/articles/360047157094-Managing-R-with-Rprofile-Renviron-Rprofile-site-Renviron-site-rsession-conf-and-repos-conf"><code>.RProfile</code></a> and available via <code>SQL_PASS</code>.</p>
+<p>Finally, we can check our connection to the database by listing tables via <a href="https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbListTables"><code>dbListTables</code></a>:</p>
+<pre><code>dbListTables(db_con)</code></pre>
+</div>
+<div id="connecting-remotely-1" class="section level3 hasAnchor" number="7.8.2">
+<h3><span class="header-section-number">7.8.2</span> Connecting Remotely<a href="databases.html#connecting-remotely-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Given that the MySQL server exists on labarserv2, it may not always be feasible to login to labarserv2 to execute SQL queries due to time or resource constraints. Commonly, analysis scripts exist locally on a work station and the researcher aims to download data for local analyses.</p>
+<p>One approach is to setup an <a href="https://builtin.com/software-engineering-perspectives/ssh-port-forwarding">SSH Tunnel</a> between our local machine and labarserv2:</p>
+<pre><code>$ssh -i $RSA_LS2 \
+  nmm51@ccn-labarserv2.vm.duke.edu \
+  -L 3308:127.0.0.1:3306 \
+  -N</code></pre>
+<p>Here, I have specified an <a href="https://www.digitalocean.com/community/tutorials/how-to-use-ssh-to-connect-to-a-remote-server">SSH</a> connection and supplied a number of <a href="https://man7.org/linux/man-pages/man1/ssh.1.html">options</a>. Specifically, I supply my <a href="https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server">RSA key</a> for labarserv2 (available in the OS via <code>$RSA_LS2</code>) with the <code>-i</code> option, I bind my local port <code>3308</code> with the default MySQL IP of <code>127.0.0.1</code> and MySQL port of <code>3306</code> via the <code>-L</code> option. Finally, the <code>-N</code> option is useful for port forwarding as a remote command is not executed.</p>
+<p>This <code>ssh</code> command will cause the terminal to hang, and I can also check that the port is open via <code>$ps aux</code>:</p>
+<pre><code>$ps aux | grep ssh | grep 3308
+Nathan    195108  0.0  0.0  14708  6404 pts/4    S+   12:49   0:00 ssh -i /home/Nathan/.ssh/id_rsa_labarser2 nmm51@ccn-labarserv2.vm.duke.edu -L 3308:127.0.0.1:3306 -N</code></pre>
+<p>With an SSH tunnel established, we can then create a connection between R and MySQL using a nearly identical command as above, save only that we specify our local port and the MyServer IP:</p>
+<pre><code>db_con &lt;- dbConnect(
+  RMySQL::MySQL(),
+  dbname = &quot;db_test&quot;,
+  host = &quot;127.0.0.1&quot;,
+  port = 3308,
+  user = &quot;nate&quot;,
+  password = Sys.getenv(&quot;SQL_PASS&quot;)
+)</code></pre>
+<p>Finally, we can check our connection to the database by listing tables via <a href="https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbListTables"><code>dbListTables</code></a>:</p>
+<pre><code>dbListTables(db_con)</code></pre>
+</div>
+<div id="inserting-with-r" class="section level3 hasAnchor" number="7.8.3">
+<h3><span class="header-section-number">7.8.3</span> Inserting with R<a href="databases.html#inserting-with-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>With a connection between R and MySQL established, we can begin to interact with the database. In this example, we have a CSV available of ERQ responses formatted for <code>tbl_erq</code> available at <code>${HOME}/erq_data.csv</code> (see <a href="databases.html#insert_data">Insert Data</a>). This data can be loaded as a dataframe:</p>
+<pre><code>df_erq &lt;- read.csv(paste(Sys.getenv(&quot;HOME&quot;), &quot;erq_data.csv&quot;, sep = &quot;/&quot;))</code></pre>
+<p>One method of inserting data into a table is by building an <code>insert</code> object with <a href="https://dbi.r-dbi.org/reference/sqlInterpolate.html"><code>sqlInterpolate</code></a> and then passing this object to <a href="https://www.rdocumentation.org/packages/RMySQL/versions/0.9-3/topics/dbSendQuery-methods"><code>dbSendQuery</code></a>. The function <code>sqlInterpolate</code> takes three arguments: the connection object, a SQL command, and data. As we have the connection object saved as <code>db_con</code> (above), we can next specify a SQL <a href="databases.html#insert_data">insert</a> command that uses <code>?val</code> to identify the variable <code>val</code>:</p>
+<pre><code>in_cmd &lt;- &quot;insert into tbl_erq
+(subj_id, sess_id, item_erq, resp_erq)
+values (?val1, ?val2, ?val3, ?val4)&quot;</code></pre>
+<p>Here, four variables are set (val1-4) to serve as placeholders for data.</p>
+<p>To specify data (the third argument of <code>sqlInterpolate</code>), we create a <a href="https://www.r-tutor.com/r-introduction/list/named-list-members">named list</a> which uses the SQL variables from the insert command (val1-4). Doing this for a single row of data (<code>df_erq[1, ]</code>), we can assign each <code>df_erq</code> column to their respective variable:</p>
+<pre><code>in_val &lt;- c(
+  val1 = df_erq[1, 1],
+  val2 = df_erq[1, 2],
+  val3 = df_erq[1, 3],
+  val4 = df_erq[1, 4]
+)</code></pre>
+<p>Finally we build our insert object with <code>sqlInterpolate</code>, and pass that object to <code>dbSendQuery</code>. The function of <code>dbSendQuery</code> is to submit and the execute whatever statement is supplied as the second argument, here our <code>insert</code> object.</p>
+<pre><code>insert &lt;- sqlInterpolate(db_con, in_cmd, .dots = in_val)
+dbSendQuery(db_con, insert)</code></pre>
+<p>With this simple insertion method working, we can loop through the dataframe to iteratively <code>insert</code> data into <code>tbl_erq</code>. Here we submit data row-by-row:</p>
+<pre><code>for (row in 1:nrow(df_erq)) {
+  in_val &lt;- c(
+    val1 = df_erq[row, 1],
+    val2 = df_erq[row, 2],
+    val3 = df_erq[row, 3],
+    val4 = df_erq[row, 4]
+  )
+  insert &lt;- sqlInterpolate(db_con, in_cmd, .dots = in_val)
+  dbSendQuery(db_con, insert)
+}</code></pre>
+<p>A few words of caution – first this insertion method will always append the table, which can potentially result in rows that contain identical data (and potentially corrupt a database). Second, while fast enough for illustrative purposes, inserting each row quickly becomes extremely inefficient as the size of the dataframe increases.</p>
+<p>We can overcome these issues by utilizing <a href="https://rdrr.io/cran/RMySQL/man/dbWriteTable.html"><code>dbWriteTable</code></a> instead of <code>sqlInterpolate</code> and <code>dbSendQuery</code>
+, which has the added benefit of a simplified specification. For instance, we can add the first row of <code>df_erq</code> to the table <code>tbl_erq</code> via :</p>
+<pre><code>dbWriteTable(db_con, &quot;tbl_erq&quot;, df_erq[1, ], row.names = FALSE)</code></pre>
+<p>If this data already existed in the table then this command would return an error rather than simply adding an identical row of data to the table. Additionally, to resolve or avoid these errors, <code>dbWriteTable</code> has <code>append</code> and <code>overwrite</code> options that can be selected.</p>
+<p>Finally, and perhaps more usefully, entire dataframes can be written to the <code>tbl_erq</code> table:</p>
+<pre><code>dbWriteTable(db_con, &quot;tbl_erq&quot;, df_erq, overwrite = TRUE, row.names = FALSE)</code></pre>
+</div>
+<div id="selecting-with-r" class="section level3 hasAnchor" number="7.8.4">
+<h3><span class="header-section-number">7.8.4</span> Selecting with R<a href="databases.html#selecting-with-r" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To retrieve from the database, we can utilize <a href="https://www.rdocumentation.org/packages/RMySQL/versions/0.9-3/topics/dbSendQuery-methods"><code>dbSendQuery</code></a> which requires two arguments: the connection object (which we have as <code>db_con</code>) and a SQL statement. Note that while <code>dbSendQuery</code> submits and executes commands on the SQL server (as we saw above), it does not extract data and accordingly we save the object.</p>
+<pre><code>query &lt;- dbSendQuery(db_con, &quot;select * from tbl_erq&quot;)</code></pre>
+<p>The output matrix of the <code>select</code> command can then be loaded into R via <a href="https://dbi.r-dbi.org/reference/dbFetch.html"><code>dbFetch</code></a>:</p>
+<pre><code>df_erq &lt;- dbFetch(query, n = -1)
+dbClearResult(query)</code></pre>
+<p>All records selected in the <code>query</code> are retrieved into <code>df_erq</code> by specifying <code>n = -1</code>, and we are required to close this query via <a href="https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbClearResult"><code>dbClearResult</code></a> whenever some object is obtained from <code>dbSendQuery</code> (i.e. we do not have to <code>dbClearResult</code> when using <code>dbWriteTable</code>).</p>
+<p>When working in larger workflows and with complicated selection commands, it might be useful to save SQL syntax as its own file and then read said file when building the query object. For instance, the following statement joins the <code>tbl_erq</code> and <code>tbl_panas</code>, while also converting from long to tidy format, and is saved at <code>${HOME}/dl_erq.sql</code>:</p>
+<pre><code>select
+    a.subj_name, b.sess_name, d.item_panas as item_num,
+        c.resp_erq, d.resp_panas
+    from tbl_panas d
+    join ref_subj a on a.subj_id = d.subj_id
+    join ref_sess b on b.sess_id = d.sess_id
+    left join tbl_erq c on c.subj_id = d.subj_id
+        and c.sess_id = d.sess_id and c.item_erq = d.item_panas
+    where d.sess_id = 1
+    limit 22
+    ;</code></pre>
+<p>This SQL file can then be read by the <a href="https://cran.r-project.org/web/packages/readr/index.html"><code>readr</code></a> package, and incorporated into the <code>dbSendQuery</code> command:</p>
+<pre><code>sel_erq &lt;- paste(Sys.getenv(&quot;HOME&quot;), &quot;dl_erq.sql&quot;, sep = &quot;/&quot;)
+query &lt;- dbSendQuery(db_con, statement = readr::read_file(sel_erq))
+df_join &lt;- dbFetch(query, n = -1)
+dbClearResult(query)</code></pre>
+</div>
+<div id="closing-connections-1" class="section level3 hasAnchor" number="7.8.5">
+<h3><span class="header-section-number">7.8.5</span> Closing Connections<a href="databases.html#closing-connections-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Once interacting with the MySQL database is no longer necessary, it is important to close the connection in order to avoid crashing the server. This is easily accomplished with <a href="https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbDisconnect"><code>dbDisconnect</code></a>:</p>
+<pre><code>dbDisconnect(db_con)</code></pre>
+<p>Likewise, an SSH Tunnel can be closed with <code>ctl-C</code> or by terminating the process via <code>pkill</code>.</p>
 
 </div>
 </div>

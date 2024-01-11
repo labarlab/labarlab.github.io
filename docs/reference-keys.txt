@@ -126,3 +126,9 @@ connecting-remotely
 inserting-with-python
 selecting-with-python
 closing-connections
+r-and-mysql
+connecting-locally-1
+connecting-remotely-1
+inserting-with-r
+selecting-with-r
+closing-connections-1

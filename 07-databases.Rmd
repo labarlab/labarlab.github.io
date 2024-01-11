@@ -965,3 +965,212 @@ Likewise, SSH tunnels need to be closed at the end of the process when working r
 ```
 ssh_tunnel.stop()
 ```
+
+
+## R and MySQL
+
+R can be used to connect to the MySQL server both locally (i.e. on labarserv2) and remotely (e.g. from a work station). While a number of packages exist that can manage the connection between the R and MySQL servers, here we will focus on [`DBI`](https://cran.r-project.org/web/packages/DBI/index.html) and [`RMySQL`](https://cran.r-project.org/web/packages/RMySQL/index.html). `DBI` allows for communication between R and an RDBMS and supplies many of the functions we will use to interact with the database and tables. `RMySQL` facilitates an interface directly with MySQL (see [here](https://www.r-bloggers.com/2011/05/accessing-mysql-through-r/) for a quick usage reference).
+
+Start by installing `RMySQL`:
+
+```
+install.packages("RMySQL")
+```
+
+`RMySQL` should also install `DBI` as a dependency, but if it does not then we can make sure we have `DBI`:
+
+```
+install.packages("DBI")
+```
+
+
+### Connecting Locally
+
+To interact with a MySQL database locally, we first start by establishing a connection between R and MySQL. Start a new R file, load the `RMySQL` library, and setup a connection via [`dbConnect`](https://www.rdocumentation.org/packages/DBI/versions/1.2.0/topics/dbConnect) that specifies we are using the [`MySQL`](https://rdrr.io/cran/RMySQL/man/dbConnect-MySQLDriver-method.html) driver:
+
+```
+library("RMySQL")
+
+db_con <- dbConnect(
+  RMySQL::MySQL(),
+  dbname = "db_test",
+  host = "localhost",
+  port = 3306,
+  user = "nate",
+  password = Sys.getenv("SQL_PASS")
+)
+```
+
+Here, I specify the desired database via the `dbname` option, and used default `host` and `port` arguments. Additionally, as it is bad practice to embed passwords in code (particularly when tracking changes with Git or when taking the code public!) I have my MySQL password saved in the [`.RProfile`](https://support.posit.co/hc/en-us/articles/360047157094-Managing-R-with-Rprofile-Renviron-Rprofile-site-Renviron-site-rsession-conf-and-repos-conf) and available via `SQL_PASS`.
+
+Finally, we can check our connection to the database by listing tables via [`dbListTables`](https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbListTables):
+
+```
+dbListTables(db_con)
+```
+
+
+### Connecting Remotely
+
+Given that the MySQL server exists on labarserv2, it may not always be feasible to login to labarserv2 to execute SQL queries due to time or resource constraints. Commonly, analysis scripts exist locally on a work station and the researcher aims to download data for local analyses.
+
+One approach is to setup an [SSH Tunnel](https://builtin.com/software-engineering-perspectives/ssh-port-forwarding) between our local machine and labarserv2: 
+
+```
+$ssh -i $RSA_LS2 \
+  nmm51@ccn-labarserv2.vm.duke.edu \
+  -L 3308:127.0.0.1:3306 \
+  -N
+```
+
+Here, I have specified an [SSH](https://www.digitalocean.com/community/tutorials/how-to-use-ssh-to-connect-to-a-remote-server) connection and supplied a number of [options](https://man7.org/linux/man-pages/man1/ssh.1.html). Specifically, I supply my [RSA key](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server) for labarserv2 (available in the OS via `$RSA_LS2`) with the `-i` option, I bind my local port `3308` with the default MySQL IP of `127.0.0.1` and MySQL port of `3306` via the `-L` option. Finally, the `-N` option is useful for port forwarding as a remote command is not executed.
+
+This `ssh` command will cause the terminal to hang, and I can also check that the port is open via `$ps aux`:
+
+```
+$ps aux | grep ssh | grep 3308
+Nathan    195108  0.0  0.0  14708  6404 pts/4    S+   12:49   0:00 ssh -i /home/Nathan/.ssh/id_rsa_labarser2 nmm51@ccn-labarserv2.vm.duke.edu -L 3308:127.0.0.1:3306 -N
+```
+
+With an SSH tunnel established, we can then create a connection between R and MySQL using a nearly identical command as above, save only that we specify our local port and the MyServer IP:
+
+```
+db_con <- dbConnect(
+  RMySQL::MySQL(),
+  dbname = "db_test",
+  host = "127.0.0.1",
+  port = 3308,
+  user = "nate",
+  password = Sys.getenv("SQL_PASS")
+)
+```
+
+Finally, we can check our connection to the database by listing tables via [`dbListTables`](https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbListTables):
+
+```
+dbListTables(db_con)
+```
+
+
+### Inserting with R
+
+With a connection between R and MySQL established, we can begin to interact with the database. In this example, we have a CSV available of ERQ responses formatted for `tbl_erq` available at `${HOME}/erq_data.csv` (see [Insert Data](#insert_data)). This data can be loaded as a dataframe:
+
+```
+df_erq <- read.csv(paste(Sys.getenv("HOME"), "erq_data.csv", sep = "/"))
+```
+
+One method of inserting data into a table is by building an `insert` object with [`sqlInterpolate`](https://dbi.r-dbi.org/reference/sqlInterpolate.html) and then passing this object to [`dbSendQuery`](https://www.rdocumentation.org/packages/RMySQL/versions/0.9-3/topics/dbSendQuery-methods). The function `sqlInterpolate` takes three arguments: the connection object, a SQL command, and data. As we have the connection object saved as `db_con` (above), we can next specify a SQL [insert](#insert_data) command that uses `?val` to identify the variable `val`:
+
+```
+in_cmd <- "insert into tbl_erq
+(subj_id, sess_id, item_erq, resp_erq)
+values (?val1, ?val2, ?val3, ?val4)"
+```
+
+Here, four variables are set (val1-4) to serve as placeholders for data.
+
+To specify data (the third argument of `sqlInterpolate`), we create a [named list](https://www.r-tutor.com/r-introduction/list/named-list-members) which uses the SQL variables from the insert command (val1-4). Doing this for a single row of data (`df_erq[1, ]`), we can assign each `df_erq` column to their respective variable:
+
+```
+in_val <- c(
+  val1 = df_erq[1, 1],
+  val2 = df_erq[1, 2],
+  val3 = df_erq[1, 3],
+  val4 = df_erq[1, 4]
+)
+```
+
+Finally we build our insert object with `sqlInterpolate`, and pass that object to `dbSendQuery`. The function of `dbSendQuery` is to submit and the execute whatever statement is supplied as the second argument, here our `insert` object.
+
+```
+insert <- sqlInterpolate(db_con, in_cmd, .dots = in_val)
+dbSendQuery(db_con, insert)
+```
+
+With this simple insertion method working, we can loop through the dataframe to iteratively `insert` data into `tbl_erq`. Here we submit data row-by-row:
+
+```
+for (row in 1:nrow(df_erq)) {
+  in_val <- c(
+    val1 = df_erq[row, 1],
+    val2 = df_erq[row, 2],
+    val3 = df_erq[row, 3],
+    val4 = df_erq[row, 4]
+  )
+  insert <- sqlInterpolate(db_con, in_cmd, .dots = in_val)
+  dbSendQuery(db_con, insert)
+}
+```
+
+A few words of caution -- first this insertion method will always append the table, which can potentially result in rows that contain identical data (and potentially corrupt a database). Second, while fast enough for illustrative purposes, inserting each row quickly becomes extremely inefficient as the size of the dataframe increases.
+
+We can overcome these issues by utilizing [`dbWriteTable`](https://rdrr.io/cran/RMySQL/man/dbWriteTable.html) instead of `sqlInterpolate` and `dbSendQuery`
+, which has the added benefit of a simplified specification. For instance, we can add the first row of `df_erq` to the table `tbl_erq` via :
+
+```
+dbWriteTable(db_con, "tbl_erq", df_erq[1, ], row.names = FALSE)
+```
+
+If this data already existed in the table then this command would return an error rather than simply adding an identical row of data to the table. Additionally, to resolve or avoid these errors, `dbWriteTable` has `append` and `overwrite` options that can be selected.
+
+
+Finally, and perhaps more usefully, entire dataframes can be written to the `tbl_erq` table:
+
+```
+dbWriteTable(db_con, "tbl_erq", df_erq, overwrite = TRUE, row.names = FALSE)
+```
+
+
+### Selecting with R
+
+To retrieve from the database, we can utilize [`dbSendQuery`](https://www.rdocumentation.org/packages/RMySQL/versions/0.9-3/topics/dbSendQuery-methods) which requires two arguments: the connection object (which we have as `db_con`) and a SQL statement. Note that while `dbSendQuery` submits and executes commands on the SQL server (as we saw above), it does not extract data and accordingly we save the object.
+
+```
+query <- dbSendQuery(db_con, "select * from tbl_erq")
+```
+
+The output matrix of the `select` command can then be loaded into R via [`dbFetch`](https://dbi.r-dbi.org/reference/dbFetch.html):
+
+```
+df_erq <- dbFetch(query, n = -1)
+dbClearResult(query)
+```
+
+All records selected in the `query` are retrieved into `df_erq` by specifying `n = -1`, and we are required to close this query via [`dbClearResult`](https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbClearResult) whenever some object is obtained from `dbSendQuery` (i.e. we do not have to `dbClearResult` when using `dbWriteTable`).
+
+When working in larger workflows and with complicated selection commands, it might be useful to save SQL syntax as its own file and then read said file when building the query object. For instance, the following statement joins the `tbl_erq` and `tbl_panas`, while also converting from long to tidy format, and is saved at `${HOME}/dl_erq.sql`:
+
+```
+select
+    a.subj_name, b.sess_name, d.item_panas as item_num,
+        c.resp_erq, d.resp_panas
+    from tbl_panas d
+    join ref_subj a on a.subj_id = d.subj_id
+    join ref_sess b on b.sess_id = d.sess_id
+    left join tbl_erq c on c.subj_id = d.subj_id
+        and c.sess_id = d.sess_id and c.item_erq = d.item_panas
+    where d.sess_id = 1
+    limit 22
+    ;
+```
+
+This SQL file can then be read by the [`readr`](https://cran.r-project.org/web/packages/readr/index.html) package, and incorporated into the `dbSendQuery` command:
+
+```
+sel_erq <- paste(Sys.getenv("HOME"), "dl_erq.sql", sep = "/")
+query <- dbSendQuery(db_con, statement = readr::read_file(sel_erq))
+df_join <- dbFetch(query, n = -1)
+dbClearResult(query)
+```
+
+
+### Closing Connections
+
+Once interacting with the MySQL database is no longer necessary, it is important to close the connection in order to avoid crashing the server. This is easily accomplished with [`dbDisconnect`](https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbDisconnect):
+
+```
+dbDisconnect(db_con)
+```
+
+Likewise, an SSH Tunnel can be closed with `ctl-C` or by terminating the process via `pkill`.
