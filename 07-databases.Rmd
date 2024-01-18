@@ -665,7 +665,7 @@ This output is long formatted, and accordingly we can see that _each_ ERQ respon
 
 While perfectly acceptable, the output matrix has a lot of redundant information. One solution is to craft an output matrix in [tidy](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) format. That is, rather than pulling both `tbl_erq.item_erq` and `tbl_panas.item_panas`, as they are both integer, we could instead create a column titled `item_num` that has the full range of items. This would allow us to join the response columns, `tbl_erq.resp_erq` and `tbl_panas.resp_panas` by their item values.
 
-Caution is warranted, however, given the nature of the default `join` performance ([inner](https://www.w3schools.com/sql/sql_join.asp)) since ERQ and PANAS have a different number of items. Accordingly, we will use `tbl_panas.item_panas` to create the new `item_num` column and a `left` join:
+Caution is warranted, however, given the nature of the default `join` performance (inner) since ERQ and PANAS have a different number of items. Briefly, an 'inner' join returns the requested values from where there is a match in both tables while a 'left' join returns all records from the first table even if no matching record is found in the second (see [here](https://www.w3schools.com/sql/sql_join.asp) for some helpful diagrams). Accordingly, we will use `tbl_panas.item_panas` to create the new `item_num` column and a `left` join:
 
 ```
 -- Tidy format
@@ -1139,7 +1139,7 @@ dbClearResult(query)
 
 All records selected in the `query` are retrieved into `df_erq` by specifying `n = -1`, and we are required to close this query via [`dbClearResult`](https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbClearResult) whenever some object is obtained from `dbSendQuery` (i.e. we do not have to `dbClearResult` when using `dbWriteTable`).
 
-When working in larger workflows and with complicated selection commands, it might be useful to save SQL syntax as its own file and then read said file when building the query object. For instance, the following statement joins the `tbl_erq` and `tbl_panas`, while also converting from long to tidy format, and is saved at `${HOME}/dl_erq.sql`:
+When working in larger workflows and with complicated selection commands, it might be useful to save SQL syntax as its own file and then read said file when building the query object. For instance, the following statement joins the `tbl_erq` and `tbl_panas`, while also converting from long to tidy format:
 
 ```
 select
@@ -1155,7 +1155,7 @@ select
     ;
 ```
 
-This SQL file can then be read by the [`readr`](https://cran.r-project.org/web/packages/readr/index.html) package, and incorporated into the `dbSendQuery` command:
+This SQL file (saved at `${HOME}/dl_erq.sql`) can then be read by the [`readr`](https://cran.r-project.org/web/packages/readr/index.html) package, and incorporated into the `dbSendQuery` command:
 
 ```
 sel_erq <- paste(Sys.getenv("HOME"), "dl_erq.sql", sep = "/")

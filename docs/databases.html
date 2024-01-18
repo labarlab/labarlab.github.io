@@ -23,7 +23,7 @@
 <meta name="author" content="Nathan Muncy" />
 
 
-<meta name="date" content="2024-01-11" />
+<meta name="date" content="2024-01-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -765,7 +765,7 @@ select
 +-----------+-----------+----------+----------+------------+------------+
 15 rows in set (0.00 sec)</code></pre>
 <p>While perfectly acceptable, the output matrix has a lot of redundant information. One solution is to craft an output matrix in <a href="https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html">tidy</a> format. That is, rather than pulling both <code>tbl_erq.item_erq</code> and <code>tbl_panas.item_panas</code>, as they are both integer, we could instead create a column titled <code>item_num</code> that has the full range of items. This would allow us to join the response columns, <code>tbl_erq.resp_erq</code> and <code>tbl_panas.resp_panas</code> by their item values.</p>
-<p>Caution is warranted, however, given the nature of the default <code>join</code> performance (<a href="https://www.w3schools.com/sql/sql_join.asp">inner</a>) since ERQ and PANAS have a different number of items. Accordingly, we will use <code>tbl_panas.item_panas</code> to create the new <code>item_num</code> column and a <code>left</code> join:</p>
+<p>Caution is warranted, however, given the nature of the default <code>join</code> performance (inner) since ERQ and PANAS have a different number of items. Briefly, an ‘inner’ join returns the requested values from where there is a match in both tables while a ‘left’ join returns all records from the first table even if no matching record is found in the second (see <a href="https://www.w3schools.com/sql/sql_join.asp">here</a> for some helpful diagrams). Accordingly, we will use <code>tbl_panas.item_panas</code> to create the new <code>item_num</code> column and a <code>left</code> join:</p>
 <pre><code>-- Tidy format
 select
     a.subj_name, b.sess_name, d.item_panas as item_num,
@@ -1056,7 +1056,7 @@ dbSendQuery(db_con, insert)</code></pre>
 <pre><code>df_erq &lt;- dbFetch(query, n = -1)
 dbClearResult(query)</code></pre>
 <p>All records selected in the <code>query</code> are retrieved into <code>df_erq</code> by specifying <code>n = -1</code>, and we are required to close this query via <a href="https://www.rdocumentation.org/packages/DBI/versions/0.5-1/topics/dbClearResult"><code>dbClearResult</code></a> whenever some object is obtained from <code>dbSendQuery</code> (i.e. we do not have to <code>dbClearResult</code> when using <code>dbWriteTable</code>).</p>
-<p>When working in larger workflows and with complicated selection commands, it might be useful to save SQL syntax as its own file and then read said file when building the query object. For instance, the following statement joins the <code>tbl_erq</code> and <code>tbl_panas</code>, while also converting from long to tidy format, and is saved at <code>${HOME}/dl_erq.sql</code>:</p>
+<p>When working in larger workflows and with complicated selection commands, it might be useful to save SQL syntax as its own file and then read said file when building the query object. For instance, the following statement joins the <code>tbl_erq</code> and <code>tbl_panas</code>, while also converting from long to tidy format:</p>
 <pre><code>select
     a.subj_name, b.sess_name, d.item_panas as item_num,
         c.resp_erq, d.resp_panas
@@ -1068,7 +1068,7 @@ dbClearResult(query)</code></pre>
     where d.sess_id = 1
     limit 22
     ;</code></pre>
-<p>This SQL file can then be read by the <a href="https://cran.r-project.org/web/packages/readr/index.html"><code>readr</code></a> package, and incorporated into the <code>dbSendQuery</code> command:</p>
+<p>This SQL file (saved at <code>${HOME}/dl_erq.sql</code>) can then be read by the <a href="https://cran.r-project.org/web/packages/readr/index.html"><code>readr</code></a> package, and incorporated into the <code>dbSendQuery</code> command:</p>
 <pre><code>sel_erq &lt;- paste(Sys.getenv(&quot;HOME&quot;), &quot;dl_erq.sql&quot;, sep = &quot;/&quot;)
 query &lt;- dbSendQuery(db_con, statement = readr::read_file(sel_erq))
 df_join &lt;- dbFetch(query, n = -1)
