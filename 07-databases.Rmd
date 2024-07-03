@@ -781,7 +781,7 @@ Starting a new python file, we can import the relevant packages and then access 
 import os
 import pymysql
 import paramiko
-import sshtunnel as SSHTunnelForwarder
+from sshtunnel impport SSHTunnelForwarder
 
 rsa_ls2 = paramiko.RSAKey.from_private_key_file(os.environ["RSA_LS2"])
 ```
