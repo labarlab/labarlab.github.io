@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 7 MySQL Databases | LaBaratory Manual</title>
   <meta name="description" content="Resources and references for Kevin Labar’s emotion and cognition lab." />
-  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 7 MySQL Databases | LaBaratory Manual" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Nathan Muncy" />
 
 
-<meta name="date" content="2024-01-18" />
+<meta name="date" content="2024-09-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -840,7 +840,7 @@ db_con = mysql.connector.connect(
 <p>Given that the MySQL server exists on labarserv2, it may not always be feasible to login to labarserv2 to execute SQL queries due to time or resource constraints. For instance, a complex analysis could be conducted on the Duke Compute Cluster (DCC) that require interacting with databases on labarserv2, and manually moving CSVs between servers is ill-advised and inefficient.</p>
 <p>Practically speaking, it is more common to interact with a SQL database over the network (remotely), such is the case when a researcher is working on their personal/work machine with data that exists on a remote server. Here we will describe setting up an <a href="https://www.ssh.com/academy/ssh/tunneling">SSH Tunnel</a> that will allow us to connect to the remote server.</p>
 <p>We will use a number of packages: <a href="https://pypi.org/project/pymysql/">pymysql</a> (which works better than <code>mysql-connector-python</code> for the <code>DCC-labarserv2</code> connection for whatever reason), <a href="https://www.paramiko.org/">paramiko</a>, and <a href="https://sshtunnel.readthedocs.io/en/latest/">sshtunnel</a>. To start, install the required python packages via <code>pip</code> or <code>conda</code>:</p>
-<pre><code>pip install pymsql
+<pre><code>pip install pymysql
 pip install paramiko
 pip install sshtunnel</code></pre>
 <p>Next, we need to make sure that we have an <a href="https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server">RSA key</a> set up on our local machine for the remote (or on the DCC for labarserv2). Additionally, we should store our MySQL password (for the account which exists on the remote server) in our operating system. I have my RSA key to labarserv2 accessible via <code>$RSA_LS2</code>, and my MySQL password via <code>$SQL_PASS</code>.</p>

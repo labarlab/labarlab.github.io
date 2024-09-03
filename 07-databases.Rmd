@@ -768,7 +768,7 @@ Practically speaking, it is more common to interact with a SQL database over the
 We will use a number of packages: [pymysql](https://pypi.org/project/pymysql/) (which works better than `mysql-connector-python` for the `DCC-labarserv2` connection for whatever reason), [paramiko](https://www.paramiko.org/), and [sshtunnel](https://sshtunnel.readthedocs.io/en/latest/). To start, install the required python packages via `pip` or `conda`:
 
 ```
-pip install pymsql
+pip install pymysql
 pip install paramiko
 pip install sshtunnel
 ```
